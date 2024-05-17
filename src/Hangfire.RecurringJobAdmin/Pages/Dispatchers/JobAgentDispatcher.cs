@@ -9,7 +9,7 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Hangfire.RecurringJobAdmin.Pages
+namespace Hangfire.RecurringJobAdmin.Pages.Dispatchers
 {
     internal sealed class JobAgentDispatcher : IDashboardDispatcher
     {

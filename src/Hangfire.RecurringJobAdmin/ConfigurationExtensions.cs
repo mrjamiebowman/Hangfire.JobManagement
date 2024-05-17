@@ -5,6 +5,7 @@ using Hangfire.RecurringJobAdmin.Pages;
 using System;
 using System.Linq;
 using System.Reflection;
+using Hangfire.RecurringJobAdmin.Pages.Dispatchers;
 
 namespace Hangfire.RecurringJobAdmin
 {

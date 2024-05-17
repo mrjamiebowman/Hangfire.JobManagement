@@ -7,7 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Hangfire.RecurringJobAdmin.Pages
+namespace Hangfire.RecurringJobAdmin.Pages.Dispatchers
 {
     internal sealed class GetJobsStoppedDispatcher : Dashboard.IDashboardDispatcher
     {

@@ -12,7 +12,7 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Hangfire.RecurringJobAdmin.Pages
+namespace Hangfire.RecurringJobAdmin.Pages.Dispatchers
 {
     internal sealed class GetJobDispatcher : Dashboard.IDashboardDispatcher
     {
@@ -33,11 +33,11 @@ namespace Hangfire.RecurringJobAdmin.Pages
 
             var recurringJob = _connection.GetRecurringJobs();
             var periodicJob = new List<PeriodicJob>();
-            
+
 
             CultureInfo US_TimeFormat = new CultureInfo("en-US");
 
-            if (recurringJob.Count >  0)
+            if (recurringJob.Count > 0)
             {
                 recurringJob.ForEach((x) =>
                 {
