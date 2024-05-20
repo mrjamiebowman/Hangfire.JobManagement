@@ -9,7 +9,7 @@ using Hangfire.RecurringJobAdmin.Pages.Dispatchers;
 
 namespace Hangfire.RecurringJobAdmin
 {
-    public static class ConfigurationExtensions
+    public static class Builder
     {
 
 

@@ -1,7 +1,6 @@
 ﻿using Hangfire.Dashboard;
-using Hangfire.RecurringJobAdmin.Core;
 
-namespace Hangfire.RecurringJobAdmin
+namespace Hangfire.RecurringJobAdmin.Core
 {
     public static class TagDashboardMetrics
     {

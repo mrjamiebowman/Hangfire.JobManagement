@@ -1,10 +1,9 @@
-﻿using Hangfire.RecurringJobAdmin.Core;
-using Hangfire.States;
+﻿using Hangfire.States;
 using System;
 using System.Linq;
 using System.Reflection;
 
-namespace Hangfire.RecurringJobAdmin
+namespace Hangfire.RecurringJobAdmin.Core
 {
     internal static class PeriodicJobBuilder
     {
@@ -29,7 +28,7 @@ namespace Hangfire.RecurringJobAdmin
                             var attr = method.GetCustomAttribute<RecurringJobAttribute>();
                         }
 
-                        if(!JobAgent.IsValidJobId(attribute.RecurringJobId) && !JobAgent.IsValidJobId(attribute.RecurringJobId, JobAgent.tagStopJob))
+                        if (!JobAgent.IsValidJobId(attribute.RecurringJobId) && !JobAgent.IsValidJobId(attribute.RecurringJobId, JobAgent.tagStopJob))
                         {
                             _registry.Register(
                                     attribute.RecurringJobId,
@@ -39,7 +38,7 @@ namespace Hangfire.RecurringJobAdmin
                                     attribute.Queue ?? EnqueuedState.DefaultQueue);
                         }
 
-                       
+
                     }
                 }
             }
