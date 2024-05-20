@@ -2,10 +2,11 @@
 #app {
     position: relative !important;
     left: 0px !important;
+    padding: 0 0;
+    margin: 0 0;
 }
 
 #app > div > div {
-    margin-top: 30px !important;
     width: 100% !important;
 }
 

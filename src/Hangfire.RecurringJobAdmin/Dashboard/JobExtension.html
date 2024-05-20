@@ -46,11 +46,8 @@
 </script>
 
 <div id="app">
-
     <modal v-if="showModal" @close="closeModal">
-
         <form slot="body" id="formJob">
-
             <div class="form-group">
                 <label for="jobId">Job Id</label>
                 <input type="text" class="form-control" v-model="job.Id" id="jobId" name="jobId" aria-describedby="emailHelp" placeholder="Enter Job Id">
@@ -103,12 +100,11 @@
     </modal>
 
     <div class="row">
-        <div class="col-md-12" style="margin-top: 30px">
+        <div class="col-md-12">
             <h1 class="page-header">Recurring Jobs <span class="badge badge-warning">{{getItems.length}}</span></h1>
             <button type="button" class="btn btn-primary" style="margin-bottom: 20px;" @click="OpenModal">Add new Job</button>
             <div class="table-responsive">
                 <table class="table">
-
                     <thead>
                         <tr>
                             <th>Id</th>
