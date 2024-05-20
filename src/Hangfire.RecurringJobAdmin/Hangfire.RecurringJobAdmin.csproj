@@ -89,6 +89,7 @@
     <PackageReference Include="HangFire.Core" Version="1.8.12" />
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Common" Version="8.0.5" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="System.Text.Json" Version="8.0.3" />
   </ItemGroup>
 
 </Project>
