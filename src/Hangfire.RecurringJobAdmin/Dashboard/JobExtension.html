@@ -138,7 +138,7 @@
                             <td>
                                 <button type="button" class="btn btn-primary">
                                     {{getTime(job.LastExecution)}}&nbsp;&nbsp;
-                                    <span class="badge" style="width: 124px;">{{capitalizeString(dayjs().from(dayjs(job.LastExecution)))}}</span>
+                                    <span class="badge" style="width: 124px;">{{getLastExecution(job.LastExecution)}}</span>
                                 </button>
                             </td>
                             <td>
@@ -386,7 +386,18 @@
                 return s.charAt(0).toUpperCase() + s.slice(1);
             },
             getTime(date) {
+                if (date == "N/A") {
+                    return 0;
+                }
                 return dayjs(date).format('hh:mm:ss A');
+            },
+            getLastExecution(lastExecution) {
+                debugger;
+                if (lastExecution == "N/A") {
+                    return "";
+                }
+                let str = this.capitalizeString(dayjs().from(dayjs(lastExecution)));
+                return str;
             },
             clickCallbackPagination(pageNum) {
                 this.pagination.currentPage = Number(pageNum);
