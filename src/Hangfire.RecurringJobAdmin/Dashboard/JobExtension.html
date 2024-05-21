@@ -176,27 +176,17 @@
                               :page-class="'page-item'">
                     </paginate>
                 </div>
-
             </div>
         </div>
     </div>
-
 </div>
 
-<script>
-    Vue.component('modal', {
-        template: '#modal-template',
-        methods: {
-            closeModal() {
-                this.$emit('close');
-            }
-        }
-    });
+<script setup lang="ts">
+    const { createApp, ref } = Vue
 
-    var appJob = new Vue({
-        el: '#app',
-        components: {
-            'paginate': VuejsPaginate
+    const app = createApp({
+        setup() {
+
         },
         data() {
             return {
@@ -231,7 +221,6 @@
             GetJob(_Id) {
                 this.title = 'Edit Job';
                 axios.get('JobConfiguration/GetJob?Id=' + _Id).then(response => {
-
                     if (response.data != null) {
                         this.showModal = true;
                         this.job.Id = response.data.Object.Id;
@@ -240,7 +229,6 @@
                         this.job.Class = response.data.Object.Class;
                         this.job.Method = response.data.Object.Method;
                         this.job.TimeZoneId = response.data.Object.TimeZoneId;
-
                     }
                 }).catch(e => {
                     console.log(e);
@@ -248,9 +236,7 @@
             },
             StartJob(_jobId) {
                 axios.get('JobConfiguration/JobAgent?Id=' + _jobId + "&Action=Start").then(response => {
-
                     if (!response.data.Status) {
-
                         this.showModal = false;
 
                         Swal.fire({
@@ -265,16 +251,13 @@
                         this.closeModal();
                         this.GetJobs();
                     }
-
                 }).catch(e => {
                     console.log(e);
                 });
             },
             StopJob(_jobId) {
                 axios.get('JobConfiguration/JobAgent?Id=' + _jobId + "&Action=Stop").then(response => {
-
                     if (!response.data.Status) {
-
                         this.showModal = false;
 
                         Swal.fire({
@@ -290,7 +273,6 @@
                         this.closeModal();
                         this.GetJobs();
                     }
-
                 }).catch(e => {
                     console.log(e);
                 });
@@ -308,7 +290,6 @@
                     var params = arr.join('&');
 
                     axios.get('JobConfiguration/UpdateJobs?' + params).then(response => {
-
                         if (!response.data.Status) {
 
                             this.showModal = false;
@@ -373,7 +354,6 @@
                 }
 
                 if (!this.errors.length) return true;
-
                 if (this.errors.length) return false;
 
                 //e.preventDefault();
@@ -403,15 +383,26 @@
             this.GetJobs();
         },
         computed: {
-            getItems: function () {
-                let current = this.pagination.currentPage * this.pagination.parPage;
-                let start = current - this.pagination.parPage;
-                if (this.jobs != null) return this.jobs.slice(start, current);
-                else return null;
-            },
-            getPageCount: function () {
-                return Math.ceil(this.jobs.length / this.pagination.parPage);
+                getItems: function () {
+                    let current = this.pagination.currentPage * this.pagination.parPage;
+                    let start = current - this.pagination.parPage;
+                    if (this.jobs != null) return this.jobs.slice(start, current);
+                    else return null;
+                },
+                getPageCount: function () {
+                    return Math.ceil(this.jobs.length / this.pagination.parPage);
+                }
             }
-        }
-    });
+        })
+        .component('paginate', VuejsPaginateNext)
+        .component('modal', {
+            template: '#modal-template',
+            methods: {
+                CloseModal() {
+                    this.$emit('close');
+                }
+            }
+        })
+        .mount('#app');
+
 </script>
