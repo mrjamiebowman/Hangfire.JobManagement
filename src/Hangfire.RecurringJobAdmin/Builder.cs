@@ -11,8 +11,6 @@ namespace Hangfire.RecurringJobAdmin
 {
     public static class Builder
     {
-
-
         /// <param name="includeReferences">If is true it will load all dlls references of the current project to find all jobs.</param>
         /// <param name="assemblies"></param>
         [PublicAPI]
@@ -103,7 +101,10 @@ namespace Hangfire.RecurringJobAdmin
             AddDashboardRouteToEmbeddedResource("/JobConfiguration/css/jobExtension", "text/css", "Hangfire.RecurringJobAdmin.Dashboard.Content.css.JobExtension.css");
             AddDashboardRouteToEmbeddedResource("/JobConfiguration/css/cron-expression-input", "text/css", "Hangfire.RecurringJobAdmin.Dashboard.Content.css.cron-expression-input.css");
             AddDashboardRouteToEmbeddedResource("/JobConfiguration/js/page", "application/javascript", "Hangfire.RecurringJobAdmin.Dashboard.Content.js.jobextension.js");
+
             AddDashboardRouteToEmbeddedResource("/JobConfiguration/js/vue", "application/javascript", "Hangfire.RecurringJobAdmin.Dashboard.Content.js.vue.js");
+            AddDashboardRouteToEmbeddedResource("/JobConfiguration/js/vue3", "application/javascript", "Hangfire.RecurringJobAdmin.Dashboard.Content.js.vue.3.4.27.js");
+
             AddDashboardRouteToEmbeddedResource("/JobConfiguration/js/axio", "application/javascript", "Hangfire.RecurringJobAdmin.Dashboard.Content.js.axios.min.js");
             AddDashboardRouteToEmbeddedResource("/JobConfiguration/js/daysjs", "application/javascript", "Hangfire.RecurringJobAdmin.Dashboard.Content.js.daysjs.min.js");
             AddDashboardRouteToEmbeddedResource("/JobConfiguration/js/relativeTime", "application/javascript", "Hangfire.RecurringJobAdmin.Dashboard.Content.js.relativeTime.min.js");
