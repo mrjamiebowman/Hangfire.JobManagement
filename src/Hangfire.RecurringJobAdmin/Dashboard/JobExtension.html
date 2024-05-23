@@ -106,62 +106,62 @@
             <div class="table-responsive">
                 <table class="table">
                     <thead>
-                        <tr>
-                            <th>Id</th>
-                            <th>Cron</th>
-                            <th>Queue</th>
-                            <th>State</th>
-                            <th>Class</th>
-                            <th>Method</th>
-                            <th>TimeZone</th>
-                            <th>Last Execution</th>
-                            <th>Next Execution</th>
-                            <th>Options</th>
-                        </tr>
+                    <tr>
+                        <th>Id</th>
+                        <th>Cron</th>
+                        <th>Queue</th>
+                        <th>State</th>
+                        <th>Class</th>
+                        <th>Method</th>
+                        <th>TimeZone</th>
+                        <th>Last Execution</th>
+                        <th>Next Execution</th>
+                        <th>Options</th>
+                    </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="job in getItems">
-                            <td>{{job.Id}}</td>
-                            <td>{{job.Cron}}</td>
-                            <td>{{job.Queue}}</td>
-                            <td>
-                                <span v-if="job.JobState == 'Running'" class="label label-success">{{job.JobState}}</span>
-                                <span v-if="job.JobState == 'Stopped'" class="label label-danger">{{job.JobState}}</span>
-                            </td>
-                            <td>{{job.Class}}</td>
-                            <td>{{job.Method}}</td>
-                            <td>{{job.TimeZoneId}}</td>
-                            <td>
-                                <button type="button" class="btn btn-primary">
-                                    {{getTime(job.LastExecution)}}&nbsp;&nbsp;
-                                    <span class="badge" style="width: 124px;">{{getLastExecution(job.LastExecution)}}</span>
-                                </button>
-                            </td>
-                            <td>
-                                <button type="button" class="btn btn-primary">
-                                    {{getTime(job.NextExecution)}}&nbsp;&nbsp;
-                                    <span class="badge" style="width: 124px;">{{capitalizeString(dayjs().to(dayjs(job.NextExecution)))}}</span>
-                                </button>
-                            </td>
-                            <td>
-                                <button type="button" class="btn btn-warning" style="padding-top: 10px; margin-right: 5px;">
-                                    <svg width="18px" height="18px" viewBox="0 0 16 16" class="bi bi-pencil-square" fill="currentColor" @click="GetJob(job.Id)">
-                                        <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456l-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
-                                        <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z" />
-                                    </svg>
-                                </button>
-                                <button v-if="job.JobState == 'Stopped'" type="button" class="btn btn-success" style="padding: 4px 10px;">
-                                    <svg width="24px" height="25px" viewBox="-1 -1.5 16 16" class="bi bi-play" fill="currentColor" @click="StartJob(job.Id)">
-                                        <path fill-rule="evenodd" d="M10.804 8L5 4.633v6.734L10.804 8zm.792-.696a.802.802 0 0 1 0 1.392l-6.363 3.692C4.713 12.69 4 12.345 4 11.692V4.308c0-.653.713-.998 1.233-.696l6.363 3.692z" />
-                                    </svg>
-                                </button>
-                                <button v-if="job.JobState == 'Running'" type="button" class="btn btn-danger" style="padding: 4px 10px;">
-                                    <svg width="24px" height="25px" viewBox="-0.5 -1.5 16 16" class="bi bi-stop" fill="currentColor" @click="StopJob(job.Id)">
-                                        <path fill-rule="evenodd" d="M3.5 5A1.5 1.5 0 0 1 5 3.5h6A1.5 1.5 0 0 1 12.5 5v6a1.5 1.5 0 0 1-1.5 1.5H5A1.5 1.5 0 0 1 3.5 11V5zM5 4.5a.5.5 0 0 0-.5.5v6a.5.5 0 0 0 .5.5h6a.5.5 0 0 0 .5-.5V5a.5.5 0 0 0-.5-.5H5z" />
-                                    </svg>
-                                </button>
-                            </td>
-                        </tr>
+                    <tr v-for="job in getItems">
+                        <td>{{job.Id}}</td>
+                        <td>{{job.Cron}}</td>
+                        <td>{{job.Queue}}</td>
+                        <td>
+                            <span v-if="job.JobState == 'Running'" class="label label-success">{{job.JobState}}</span>
+                            <span v-if="job.JobState == 'Stopped'" class="label label-danger">{{job.JobState}}</span>
+                        </td>
+                        <td>{{job.Class}}</td>
+                        <td>{{job.Method}}</td>
+                        <td>{{job.TimeZoneId}}</td>
+                        <td>
+                            <button type="button" class="btn btn-primary">
+                                {{getTime(job.LastExecution)}}&nbsp;&nbsp;
+                                <span class="badge" style="width: 124px;">{{getLastExecution(job.LastExecution)}}</span>
+                            </button>
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-primary">
+                                {{getTime(job.NextExecution)}}&nbsp;&nbsp;
+                                <span class="badge" style="width: 124px;">{{capitalizeString(dayjs().to(dayjs(job.NextExecution)))}}</span>
+                            </button>
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-warning" style="padding-top: 10px; margin-right: 5px;">
+                                <svg width="18px" height="18px" viewBox="0 0 16 16" class="bi bi-pencil-square" fill="currentColor" @click="GetJob(job.Id)">
+                                    <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456l-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
+                                    <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z" />
+                                </svg>
+                            </button>
+                            <button v-if="job.JobState == 'Stopped'" type="button" class="btn btn-success" style="padding: 4px 10px;">
+                                <svg width="24px" height="25px" viewBox="-1 -1.5 16 16" class="bi bi-play" fill="currentColor" @click="StartJob(job.Id)">
+                                    <path fill-rule="evenodd" d="M10.804 8L5 4.633v6.734L10.804 8zm.792-.696a.802.802 0 0 1 0 1.392l-6.363 3.692C4.713 12.69 4 12.345 4 11.692V4.308c0-.653.713-.998 1.233-.696l6.363 3.692z" />
+                                </svg>
+                            </button>
+                            <button v-if="job.JobState == 'Running'" type="button" class="btn btn-danger" style="padding: 4px 10px;">
+                                <svg width="24px" height="25px" viewBox="-0.5 -1.5 16 16" class="bi bi-stop" fill="currentColor" @click="StopJob(job.Id)">
+                                    <path fill-rule="evenodd" d="M3.5 5A1.5 1.5 0 0 1 5 3.5h6A1.5 1.5 0 0 1 12.5 5v6a1.5 1.5 0 0 1-1.5 1.5H5A1.5 1.5 0 0 1 3.5 11V5zM5 4.5a.5.5 0 0 0-.5.5v6a.5.5 0 0 0 .5.5h6a.5.5 0 0 0 .5-.5V5a.5.5 0 0 0-.5-.5H5z" />
+                                </svg>
+                            </button>
+                        </td>
+                    </tr>
                     </tbody>
                 </table>
 
@@ -181,8 +181,11 @@
     </div>
 </div>
 
+<script type="module">
+    import { Paginate as VuejsPaginateNext } from "vuejs-paginate-next";
+</script>
+
 <script setup lang="ts">
-    import Paginate from "vuejs-paginate-next";
 
     const { createApp, ref } = Vue
 
