@@ -1,5 +1,4 @@
 ﻿using Hangfire.Annotations;
-using Hangfire.Common;
 using Hangfire.RecurringJobAdmin.Core;
 using Hangfire.RecurringJobAdmin.Models;
 using Hangfire.Storage;
@@ -7,9 +6,6 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq.Expressions;
-using System.Net;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Hangfire.RecurringJobAdmin.Pages.Dispatchers
@@ -30,10 +26,8 @@ namespace Hangfire.RecurringJobAdmin.Pages.Dispatchers
                 return;
             }
 
-
             var recurringJob = _connection.GetRecurringJobs();
             var periodicJob = new List<PeriodicJob>();
-
 
             CultureInfo US_TimeFormat = new CultureInfo("en-US");
 
