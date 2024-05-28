@@ -13,7 +13,7 @@
    </PropertyGroup>
     
   <PropertyGroup>
-      <PackageId>Hangfire.JobManagement.2.0.0</PackageId>
+      <PackageId>mrjamiebowman.Hangfire.JobManagement</PackageId>
       <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
       <Authors>mrjamiebowman</Authors>
       <Company></Company>
