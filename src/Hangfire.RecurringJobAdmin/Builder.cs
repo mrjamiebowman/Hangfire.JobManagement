@@ -14,7 +14,7 @@ namespace Hangfire.JobManagement
         /// <param name="includeReferences">If is true it will load all dlls references of the current project to find all jobs.</param>
         /// <param name="assemblies"></param>
         [PublicAPI]
-        public static IGlobalConfiguration UseRecurringJobAdmin(this IGlobalConfiguration config, [NotNull] params string[] assemblies) {
+        public static IGlobalConfiguration UseJobManagement(this IGlobalConfiguration config, [NotNull] params string[] assemblies) {
             if (assemblies == null) throw new ArgumentNullException(nameof(assemblies));
 
             StorageAssemblySingleton.GetInstance().SetCurrentAssembly(assemblies: assemblies.Select(x => Type.GetType(x).Assembly).ToArray());
@@ -26,7 +26,7 @@ namespace Hangfire.JobManagement
         /// <param name="includeReferences">If is true it will load all dlls references of the current project to find all jobs.</param>
         /// <param name="assemblies"></param>
         [PublicAPI]
-        public static IGlobalConfiguration UseRecurringJobAdmin(this IGlobalConfiguration config, bool includeReferences = false, [NotNull] params string[] assemblies) {
+        public static IGlobalConfiguration UseJobManagement(this IGlobalConfiguration config, bool includeReferences = false, [NotNull] params string[] assemblies) {
             if (assemblies == null) throw new ArgumentNullException(nameof(assemblies));
 
             StorageAssemblySingleton.GetInstance().SetCurrentAssembly(includeReferences, assemblies.Select(x => Type.GetType(x).Assembly).ToArray());
@@ -38,7 +38,7 @@ namespace Hangfire.JobManagement
         /// <param name="includeReferences">If is true it will load all dlls references of the current project to find all jobs.</param>
         /// <param name="assemblies"></param>
         [PublicAPI]
-        public static IGlobalConfiguration UseRecurringJobAdmin(this IGlobalConfiguration config, [NotNull] params Assembly[] assemblies) {
+        public static IGlobalConfiguration UseJobManagement(this IGlobalConfiguration config, [NotNull] params Assembly[] assemblies) {
             if (assemblies == null) throw new ArgumentNullException(nameof(assemblies));
 
             StorageAssemblySingleton.GetInstance().SetCurrentAssembly(assemblies: assemblies);
@@ -50,7 +50,7 @@ namespace Hangfire.JobManagement
         /// <param name="includeReferences">If is true it will load all dlls references of the current project to find all jobs.</param>
         /// <param name="assembliess"></param>
         [PublicAPI]
-        public static IGlobalConfiguration UseRecurringJobAdmin(this IGlobalConfiguration config, bool includeReferences = false, [NotNull] params Assembly[] assemblies) {
+        public static IGlobalConfiguration UseJobManagement(this IGlobalConfiguration config, bool includeReferences = false, [NotNull] params Assembly[] assemblies) {
             if (assemblies == null) throw new ArgumentNullException(nameof(assemblies));
 
             StorageAssemblySingleton.GetInstance().SetCurrentAssembly(includeReferences, assemblies);
@@ -60,7 +60,7 @@ namespace Hangfire.JobManagement
         }
 
         [PublicAPI]
-        public static IGlobalConfiguration UseRecurringJobAdmin(this IGlobalConfiguration config) {
+        public static IGlobalConfiguration UseJobManagement(this IGlobalConfiguration config) {
             CreateManagementJob();
             return config;
         }
@@ -87,19 +87,19 @@ namespace Hangfire.JobManagement
                 Metric = DashboardMetrics.RecurringJobCount
             });
 
-            AddDashboardRouteToEmbeddedResource("/JobConfiguration/css/jobExtension", "text/css", "Hangfire.RecurringJobAdmin.Dashboard.Content.css.JobExtension.css");
-            AddDashboardRouteToEmbeddedResource("/JobConfiguration/css/cron-expression-input", "text/css", "Hangfire.RecurringJobAdmin.Dashboard.Content.css.cron-expression-input.css");
-            AddDashboardRouteToEmbeddedResource("/JobConfiguration/js/page", "application/javascript", "Hangfire.RecurringJobAdmin.Dashboard.Content.js.jobextension.js");
+            AddDashboardRouteToEmbeddedResource("/JobConfiguration/css/jobExtension", "text/css", "Hangfire.JobManagement.Dashboard.Content.css.JobExtension.css");
+            AddDashboardRouteToEmbeddedResource("/JobConfiguration/css/cron-expression-input", "text/css", "Hangfire.JobManagement.Dashboard.Content.css.cron-expression-input.css");
+            AddDashboardRouteToEmbeddedResource("/JobConfiguration/js/page", "application/javascript", "Hangfire.JobManagement.Dashboard.Content.js.jobextension.js");
 
-            AddDashboardRouteToEmbeddedResource("/JobConfiguration/js/vue", "application/javascript", "Hangfire.RecurringJobAdmin.Dashboard.Content.js.vue.js");
-            AddDashboardRouteToEmbeddedResource("/JobConfiguration/js/vue3", "application/javascript", "Hangfire.RecurringJobAdmin.Dashboard.Content.js.vue.3.4.27.js");
+            AddDashboardRouteToEmbeddedResource("/JobConfiguration/js/vue", "application/javascript", "Hangfire.JobManagement.Dashboard.Content.js.vue.js");
+            AddDashboardRouteToEmbeddedResource("/JobConfiguration/js/vue3", "application/javascript", "Hangfire.JobManagement.Dashboard.Content.js.vue.3.4.27.js");
 
-            AddDashboardRouteToEmbeddedResource("/JobConfiguration/js/axio", "application/javascript", "Hangfire.RecurringJobAdmin.Dashboard.Content.js.axios.min.js");
-            AddDashboardRouteToEmbeddedResource("/JobConfiguration/js/daysjs", "application/javascript", "Hangfire.RecurringJobAdmin.Dashboard.Content.js.daysjs.min.js");
-            AddDashboardRouteToEmbeddedResource("/JobConfiguration/js/relativeTime", "application/javascript", "Hangfire.RecurringJobAdmin.Dashboard.Content.js.relativeTime.min.js");
-            AddDashboardRouteToEmbeddedResource("/JobConfiguration/js/vuejsPaginate", "application/javascript", "Hangfire.RecurringJobAdmin.Dashboard.Content.js.vuejs-paginate.js");
-            AddDashboardRouteToEmbeddedResource("/JobConfiguration/js/sweetalert", "application/javascript", "Hangfire.RecurringJobAdmin.Dashboard.Content.js.sweetalert.js");
-            AddDashboardRouteToEmbeddedResource("/JobConfiguration/js/cron-expression-input", "application/javascript", "Hangfire.RecurringJobAdmin.Dashboard.Content.js.cron-expression-input.js");
+            AddDashboardRouteToEmbeddedResource("/JobConfiguration/js/axio", "application/javascript", "Hangfire.JobManagement.Dashboard.Content.js.axios.min.js");
+            AddDashboardRouteToEmbeddedResource("/JobConfiguration/js/daysjs", "application/javascript", "Hangfire.JobManagement.Dashboard.Content.js.daysjs.min.js");
+            AddDashboardRouteToEmbeddedResource("/JobConfiguration/js/relativeTime", "application/javascript", "Hangfire.JobManagement.Dashboard.Content.js.relativeTime.min.js");
+            AddDashboardRouteToEmbeddedResource("/JobConfiguration/js/vuejsPaginate", "application/javascript", "Hangfire.JobManagement.Dashboard.Content.js.vuejs-paginate.js");
+            AddDashboardRouteToEmbeddedResource("/JobConfiguration/js/sweetalert", "application/javascript", "Hangfire.JobManagement.Dashboard.Content.js.sweetalert.js");
+            AddDashboardRouteToEmbeddedResource("/JobConfiguration/js/cron-expression-input", "application/javascript", "Hangfire.JobManagement.Dashboard.Content.js.cron-expression-input.js");
         }
 
         private static void AddDashboardRouteToEmbeddedResource(string route, string contentType, string resourceName)
