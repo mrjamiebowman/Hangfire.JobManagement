@@ -5,7 +5,7 @@
 [![Official Site](https://img.shields.io/badge/site-hangfire.io-blue.svg)](http://hangfire.io)
 [![License MIT](https://img.shields.io/badge/license-MIT-green.svg)](http://opensource.org/licenses/MIT)
 
-
+This is a fork that's going a different direction. Just getting started... This will be updated.
 
 
 ![dashboard](Content/dashboard.png)
