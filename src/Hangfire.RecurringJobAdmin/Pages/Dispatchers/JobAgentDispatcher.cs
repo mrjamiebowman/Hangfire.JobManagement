@@ -1,27 +1,22 @@
 ﻿using Hangfire.Annotations;
 using Hangfire.Dashboard;
-using Hangfire.RecurringJobAdmin.Core;
-using Hangfire.RecurringJobAdmin.Models;
+using Hangfire.JobManagement.Core;
+using Hangfire.JobManagement.Models;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
 using System.Net;
-using System.Text;
 using System.Threading.Tasks;
 
-namespace Hangfire.RecurringJobAdmin.Pages.Dispatchers
+namespace Hangfire.JobManagement.Pages.Dispatchers
 {
     internal sealed class JobAgentDispatcher : IDashboardDispatcher
     {
-        public async Task Dispatch([NotNull] DashboardContext context)
-        {
+        public async Task Dispatch([NotNull] DashboardContext context) {
             var response = new Response() { Status = true };
 
             var jobId = context.Request.GetQuery("Id");
             var action = context.Request.GetQuery("Action");
 
-            if (!JobAgent.IsValidJobId(jobId))
-            {
+            if (!JobAgent.IsValidJobId(jobId)) {
                 response.Status = false;
                 response.Message = $"The Job Id {jobId} not found";
 
@@ -30,13 +25,11 @@ namespace Hangfire.RecurringJobAdmin.Pages.Dispatchers
                 return;
             }
 
-            if ("Stop".Equals(action))
-            {
+            if ("Stop".Equals(action)) {
                 JobAgent.StopBackgroundJob(jobId);
             }
 
-            if ("Start".Equals(action))
-            {
+            if ("Start".Equals(action)) {
                 JobAgent.StartBackgroundJob(jobId);
             }
 

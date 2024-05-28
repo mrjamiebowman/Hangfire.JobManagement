@@ -1,16 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Reflection;
-using System.Text;
 
-namespace Hangfire.RecurringJobAdmin
+namespace Hangfire.JobManagement.Core
 {
     /// <summary>
     /// Register <see cref="RecurringJob"/> dynamically.
     /// </summary>
     public interface IRecurringJobRegistry
     {
-      
+
         /// <summary>
         /// Register RecurringJob via <see cref="MethodInfo"/>.
         /// </summary>
@@ -20,6 +18,6 @@ namespace Hangfire.RecurringJobAdmin
         /// <param name="timeZone"><see cref="TimeZoneInfo"/></param>
         /// <param name="queue">Queue name</param>
         void Register(string recurringJobId, MethodInfo method, string cron, TimeZoneInfo timeZone, string queue);
-   
+
     }
 }

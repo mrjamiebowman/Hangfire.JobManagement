@@ -1,8 +1,8 @@
 ﻿using Hangfire.Dashboard;
 using Hangfire.Dashboard.Pages;
-using Hangfire.RecurringJobAdmin.Core;
+using Hangfire.JobManagement.Core;
 
-namespace Hangfire.RecurringJobAdmin.Pages
+namespace Hangfire.JobManagement.Pages
 {
     internal sealed class JobsStoppedPage : PageBase
     {
@@ -11,13 +11,11 @@ namespace Hangfire.RecurringJobAdmin.Pages
 
         private static readonly string PageHtml;
 
-        static JobsStoppedPage()
-        {
+        static JobsStoppedPage() {
             PageHtml = Utility.ReadStringResource("Hangfire.RecurringJobAdmin.Dashboard.JobsStopped.html");
         }
 
-        public override void Execute()
-        {
+        public override void Execute() {
             WriteEmptyLine();
             Layout = new LayoutPage(Title);
             Write(Html.JobsSidebar());
