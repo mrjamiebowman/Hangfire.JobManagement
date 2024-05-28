@@ -13,8 +13,10 @@
    </PropertyGroup>
     
   <PropertyGroup>
+      <PackageId>Hangfire.JobManagement.2.0.0</PackageId>
       <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
       <Authors>mrjamiebowman</Authors>
+      <Company></Company>
       <Copyright>Copyright © 2024</Copyright>
       <NeutralLanguage>en</NeutralLanguage>
       <PackageProjectUrl>https://github.com/mrjamiebowman/Hangfire.JobManagement.git</PackageProjectUrl>
@@ -23,6 +25,8 @@
       <PackOnBuild>true</PackOnBuild>
       <Description>A dashboard to manage Hangfire's recurring jobs.</Description>
       <Title>Hangfire.JobManagement</Title>
+      <PackageReadmeFile>README.md</PackageReadmeFile>
+      <IncludeSymbols>True</IncludeSymbols>
   </PropertyGroup>
 
   <ItemGroup>
@@ -77,6 +81,13 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Dashboard\JobsStopped.html" />
     <EmbeddedResource Include="Dashboard\JobExtension.html" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
   </ItemGroup>
 
   <!--<ItemGroup>
