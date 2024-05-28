@@ -10,7 +10,7 @@ This is a fork that's going a different direction. Just getting started... Below
 
 ![dashboard](Content/dashboard.png)
 
-A simple dashboard to manage Hangfire's recurring jobs.
+A simple dashboard to extend Hangfire's dashboard.
 
 ## Instructions
 Install a package from Nuget. 
