@@ -1,3 +1,3 @@
 Clear-Host
 
-dotnet pack -h
+dotnet pack -o nuget/
