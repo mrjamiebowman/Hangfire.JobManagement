@@ -14,12 +14,12 @@
     
   <PropertyGroup>
       <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-      <Authors>Brayan Mota</Authors>
+      <Authors>mrjamiebowman</Authors>
       <Copyright>Copyright © 2024</Copyright>
       <NeutralLanguage>en</NeutralLanguage>
-      <PackageProjectUrl>https://github.com/bamotav/Hangfire.RecurringJobAdmin.git</PackageProjectUrl>
-      <RepositoryUrl>https://github.com/bamotav/Hangfire.RecurringJobAdmin.git</RepositoryUrl>
-      <Version>1.0.0</Version>
+      <PackageProjectUrl>https://github.com/mrjamiebowman/Hangfire.JobManagement.git</PackageProjectUrl>
+      <RepositoryUrl>https://github.com/mrjamiebowman/Hangfire.JobManagement.git</RepositoryUrl>
+      <Version>2.0.0</Version>
       <PackOnBuild>true</PackOnBuild>
       <Description>A dashboard to manage Hangfire's recurring jobs.</Description>
       <Title>Hangfire.JobManagement</Title>
@@ -87,7 +87,6 @@
     <None Remove="Dashboard\Content\css\**" />
     <None Remove="Dashboard\Content\js\**" />
   </ItemGroup>-->
-
 
   <ItemGroup>
     <PackageReference Include="Cronos" Version="0.8.4" />
