@@ -12,7 +12,7 @@ namespace Hangfire.JobManagement.Core
         }
 
         private static StorageAssemblySingleton _instance;
-        private string[] prefixIgnore = new[] { "Hangfire.RecurringJobAdmin.dll", "Microsoft." };
+        private string[] prefixIgnore = new[] { "Hangfire.JobManagement.dll", "Microsoft." };
 
 
         public List<Assembly> currentAssembly { get; private set; } = new List<Assembly>();

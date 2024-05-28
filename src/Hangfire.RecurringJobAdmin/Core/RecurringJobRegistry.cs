@@ -10,7 +10,6 @@ namespace Hangfire.JobManagement.Core
 	/// </summary>
 	public class RecurringJobRegistry : IRecurringJobRegistry
     {
-
         /// <summary>
         /// Register RecurringJob via <see cref="MethodInfo"/>.
         /// </summary>

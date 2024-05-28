@@ -1,12 +1,11 @@
 ﻿using Hangfire.Annotations;
 using Hangfire.Dashboard;
+using Hangfire.JobManagement.Models;
 using Hangfire.Storage;
 using Newtonsoft.Json;
 using System;
 using System.Linq;
-
 using System.Threading.Tasks;
-using Hangfire.JobManagement.Models;
 
 namespace Hangfire.JobManagement.Pages.Dispatchers
 {
@@ -17,8 +16,9 @@ namespace Hangfire.JobManagement.Pages.Dispatchers
         public GetJobForEdit() {
             _connection = JobStorage.Current.GetConnection();
         }
-        public async Task Dispatch([NotNull] DashboardContext conterecurringJobt) {
 
+        public async Task Dispatch([NotNull] DashboardContext conterecurringJobt) 
+        {
             var response = new Response() { Status = true };
 
             if (!"GET".Equals(conterecurringJobt.Request.Method, StringComparison.InvariantCultureIgnoreCase)) {
@@ -59,8 +59,6 @@ namespace Hangfire.JobManagement.Pages.Dispatchers
             };
 
             response.Object = periodicJob;
-
-
 
             await conterecurringJobt.Response.WriteAsync(JsonConvert.SerializeObject(response));
         }

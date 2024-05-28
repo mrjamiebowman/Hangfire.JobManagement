@@ -34,6 +34,7 @@ namespace Hangfire.JobManagement.Pages.Dispatchers
             }
 
             context.Response.StatusCode = (int)HttpStatusCode.OK;
+
             await context.Response.WriteAsync(JsonConvert.SerializeObject(response));
         }
     }

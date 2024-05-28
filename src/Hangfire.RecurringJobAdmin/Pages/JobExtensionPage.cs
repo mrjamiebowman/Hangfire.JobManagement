@@ -1,9 +1,5 @@
-﻿using Hangfire.Dashboard;
-using Hangfire.Dashboard.Pages;
+﻿using Hangfire.Dashboard.Pages;
 using Hangfire.JobManagement.Core;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Hangfire.JobManagement.Pages
 {
@@ -15,7 +11,7 @@ namespace Hangfire.JobManagement.Pages
         private static readonly string PageHtml;
 
         static JobExtensionPage() {
-            PageHtml = Utility.ReadStringResource("Hangfire.RecurringJobAdmin.Dashboard.JobExtension.html");
+            PageHtml = Utility.ReadStringResource("Hangfire.JobManagement.Dashboard.JobExtension.html");
         }
 
         public override void Execute() {

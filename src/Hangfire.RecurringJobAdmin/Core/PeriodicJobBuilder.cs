@@ -32,8 +32,6 @@ namespace Hangfire.JobManagement.Core
                                     string.IsNullOrEmpty(attribute.TimeZone) ? TimeZoneInfo.Utc : TimeZoneInfo.FindSystemTimeZoneById(attribute.TimeZone),
                                     attribute.Queue ?? EnqueuedState.DefaultQueue);
                         }
-
-
                     }
                 }
             }

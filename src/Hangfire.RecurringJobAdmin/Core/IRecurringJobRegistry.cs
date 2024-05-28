@@ -18,6 +18,5 @@ namespace Hangfire.JobManagement.Core
         /// <param name="timeZone"><see cref="TimeZoneInfo"/></param>
         /// <param name="queue">Queue name</param>
         void Register(string recurringJobId, MethodInfo method, string cron, TimeZoneInfo timeZone, string queue);
-
     }
 }

@@ -1,5 +1,4 @@
-﻿using Hangfire.Dashboard;
-using Hangfire.Dashboard.Pages;
+﻿using Hangfire.Dashboard.Pages;
 using Hangfire.JobManagement.Core;
 
 namespace Hangfire.JobManagement.Pages

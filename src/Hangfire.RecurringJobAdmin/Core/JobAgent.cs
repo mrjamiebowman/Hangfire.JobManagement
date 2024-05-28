@@ -11,6 +11,7 @@ namespace Hangfire.JobManagement.Core
     {
         public const string tagRecurringJob = "recurring-job";
         public const string tagStopJob = "recurring-jobs-stop";
+
         public static void StartBackgroundJob(string JobId) {
             using (var connection = JobStorage.Current.GetConnection())
             using (var transaction = connection.CreateWriteTransaction()) {
@@ -19,6 +20,7 @@ namespace Hangfire.JobManagement.Core
                 transaction.Commit();
             }
         }
+
         public static void StopBackgroundJob(string JobId) {
             using (var connection = JobStorage.Current.GetConnection())
             using (var transaction = connection.CreateWriteTransaction()) {
@@ -109,7 +111,5 @@ namespace Hangfire.JobManagement.Core
             }
             return result;
         }
-
-
     }
 }

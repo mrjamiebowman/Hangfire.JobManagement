@@ -19,7 +19,7 @@ namespace Hangfire.JobManagement
 
             StorageAssemblySingleton.GetInstance().SetCurrentAssembly(assemblies: assemblies.Select(x => Type.GetType(x).Assembly).ToArray());
             PeriodicJobBuilder.GetAllJobs();
-            CreateManagmentJob();
+            CreateManagementJob();
             return config;
         }
 
@@ -31,11 +31,9 @@ namespace Hangfire.JobManagement
 
             StorageAssemblySingleton.GetInstance().SetCurrentAssembly(includeReferences, assemblies.Select(x => Type.GetType(x).Assembly).ToArray());
             PeriodicJobBuilder.GetAllJobs();
-            CreateManagmentJob();
+            CreateManagementJob();
             return config;
         }
-
-
 
         /// <param name="includeReferences">If is true it will load all dlls references of the current project to find all jobs.</param>
         /// <param name="assemblies"></param>
@@ -45,7 +43,7 @@ namespace Hangfire.JobManagement
 
             StorageAssemblySingleton.GetInstance().SetCurrentAssembly(assemblies: assemblies);
             PeriodicJobBuilder.GetAllJobs();
-            CreateManagmentJob();
+            CreateManagementJob();
             return config;
         }
 
@@ -57,18 +55,17 @@ namespace Hangfire.JobManagement
 
             StorageAssemblySingleton.GetInstance().SetCurrentAssembly(includeReferences, assemblies);
             PeriodicJobBuilder.GetAllJobs();
-            CreateManagmentJob();
+            CreateManagementJob();
             return config;
         }
-
 
         [PublicAPI]
         public static IGlobalConfiguration UseRecurringJobAdmin(this IGlobalConfiguration config) {
-            CreateManagmentJob();
+            CreateManagementJob();
             return config;
         }
 
-        private static void CreateManagmentJob() {
+        private static void CreateManagementJob() {
             DashboardRoutes.Routes.AddRazorPage(JobExtensionPage.PageRoute, x => new JobExtensionPage());
             DashboardRoutes.Routes.AddRazorPage(JobsStoppedPage.PageRoute, x => new JobsStoppedPage());
 

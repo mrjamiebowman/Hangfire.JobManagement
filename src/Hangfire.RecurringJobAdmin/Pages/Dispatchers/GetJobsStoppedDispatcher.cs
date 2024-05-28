@@ -12,9 +12,11 @@ namespace Hangfire.JobManagement.Pages.Dispatchers
     internal sealed class GetJobsStoppedDispatcher : Dashboard.IDashboardDispatcher
     {
         private readonly IStorageConnection _connection;
+
         public GetJobsStoppedDispatcher() {
             _connection = JobStorage.Current.GetConnection();
         }
+
         public async Task Dispatch([NotNull] Dashboard.DashboardContext context) {
             if (!"GET".Equals(context.Request.Method, StringComparison.InvariantCultureIgnoreCase)) {
                 context.Response.StatusCode = 405;

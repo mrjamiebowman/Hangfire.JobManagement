@@ -13,9 +13,11 @@ namespace Hangfire.JobManagement.Pages.Dispatchers
     internal sealed class GetJobDispatcher : Dashboard.IDashboardDispatcher
     {
         private readonly IStorageConnection _connection;
+
         public GetJobDispatcher() {
             _connection = JobStorage.Current.GetConnection();
         }
+
         public async Task Dispatch([NotNull] Dashboard.DashboardContext context) {
             if (!"GET".Equals(context.Request.Method, StringComparison.InvariantCultureIgnoreCase)) {
                 context.Response.StatusCode = 405;
@@ -48,6 +50,7 @@ namespace Hangfire.JobManagement.Pages.Dispatchers
                     });
                 });
             }
+
             //Add job was stopped:
             periodicJob.AddRange(JobAgent.GetAllJobStopped());
 
