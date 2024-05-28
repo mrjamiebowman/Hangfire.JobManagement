@@ -23,7 +23,6 @@ namespace Hangfire.JobManagement.Pages.Dispatchers
             _recurringJobRegistry = new RecurringJobRegistry();
         }
 
-
         public async Task Dispatch([NotNull] DashboardContext context) {
             var response = new Response() { Status = true };
 
@@ -96,7 +95,6 @@ namespace Hangfire.JobManagement.Pages.Dispatchers
             context.Response.StatusCode = (int)HttpStatusCode.OK;
 
             await context.Response.WriteAsync(JsonConvert.SerializeObject(response));
-
         }
     }
 }
