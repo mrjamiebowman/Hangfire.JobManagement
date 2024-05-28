@@ -13,7 +13,7 @@ This is a fork that's going a different direction. Just getting started... Below
 A simple dashboard to extend Hangfire's dashboard.
 
 ## Instructions
-Install a package from Nuget. 
+Install a package from NuGet. 
 ```
 Install-Package Hangfire.JobManagement
 ```
