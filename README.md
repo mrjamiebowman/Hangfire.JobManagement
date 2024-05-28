@@ -1,4 +1,4 @@
-# Hangfire.RecurringJobAdmin
+# Hangfire.JobManagement
 [![NuGet](https://buildstats.info/nuget/Hangfire.RecurringJobAdmin)](https://www.nuget.org/packages/Hangfire.RecurringJobAdmin/)
 [![Build status](https://ci.appveyor.com/api/projects/status/u2xrias2vk727beg/branch/master?svg=true)](https://ci.appveyor.com/project/bamotav/hangfire-recurringjobadmin/branch/master)
 [![Build Status](https://github.com/bamotav/Hangfire.RecurringJobAdmin/workflows/CI-HRJ/badge.svg)](https://github.com/bamotav/Hangfire.RecurringJobAdmin/actions)
