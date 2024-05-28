@@ -1,4 +1,4 @@
-﻿namespace Hangfire.RecurringJobAdmin
+﻿namespace Hangfire.JobManagement
 {
     public static class OTel
     {

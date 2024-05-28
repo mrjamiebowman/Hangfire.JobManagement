@@ -1,9 +1,7 @@
 ﻿using Hangfire.States;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace Hangfire.RecurringJobAdmin
+namespace Hangfire.JobManagement.Attributes
 {
     /// <summary>
 	/// Attribute to add or update <see cref="RecurringJob"/> automatically
@@ -51,8 +49,7 @@ namespace Hangfire.RecurringJobAdmin
         /// <param name="cron">Cron expressions</param>
         /// <param name="timeZone">Converts to <see cref="TimeZoneInfo"/> via method <seealso cref="TimeZoneInfo.FindSystemTimeZoneById(string)"/>.</param>
         /// <param name="queue">Queue name</param>
-        public RecurringJobAttribute(string cron, string timeZone, string queue)
-        {
+        public RecurringJobAttribute(string cron, string timeZone, string queue) {
             if (string.IsNullOrEmpty(cron)) throw new ArgumentNullException(nameof(cron));
             if (string.IsNullOrEmpty(timeZone)) throw new ArgumentNullException(nameof(timeZone));
             if (string.IsNullOrEmpty(queue)) throw new ArgumentNullException(nameof(queue));

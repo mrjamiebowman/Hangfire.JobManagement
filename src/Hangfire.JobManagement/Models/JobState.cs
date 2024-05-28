@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Hangfire.RecurringJobAdmin
+﻿namespace Hangfire.JobManagement.Models
 {
     public enum JobState
     {
@@ -10,5 +6,4 @@ namespace Hangfire.RecurringJobAdmin
         FailedState,
         EnqueuedState,
     }
-
 }

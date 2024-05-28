@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
-using System.Text;
 
-namespace Hangfire.RecurringJobAdmin.Core
+namespace Hangfire.JobManagement.Core
 {
     /// <summary>
 	/// Register <see cref="RecurringJob"/> dynamically.
@@ -12,7 +10,6 @@ namespace Hangfire.RecurringJobAdmin.Core
 	/// </summary>
 	public class RecurringJobRegistry : IRecurringJobRegistry
     {
-       
         /// <summary>
         /// Register RecurringJob via <see cref="MethodInfo"/>.
         /// </summary>
@@ -21,8 +18,7 @@ namespace Hangfire.RecurringJobAdmin.Core
         /// <param name="cron">Cron expressions</param>
         /// <param name="timeZone"><see cref="TimeZoneInfo"/></param>
         /// <param name="queue">Queue name</param>
-        public void Register(string recurringJobId, MethodInfo method, string cron, TimeZoneInfo timeZone, string queue)
-        {
+        public void Register(string recurringJobId, MethodInfo method, string cron, TimeZoneInfo timeZone, string queue) {
             if (recurringJobId == null) throw new ArgumentNullException(nameof(recurringJobId));
             if (method == null) throw new ArgumentNullException(nameof(method));
             if (cron == null) throw new ArgumentNullException(nameof(cron));
@@ -33,8 +29,7 @@ namespace Hangfire.RecurringJobAdmin.Core
 
             Expression[] args = new Expression[parameters.Length];
 
-            for (int i = 0; i < parameters.Length; i++)
-            {
+            for (int i = 0; i < parameters.Length; i++) {
                 args[i] = Expression.Default(parameters[i].ParameterType);
             }
 

@@ -1,48 +1,38 @@
 ﻿using Hangfire.Annotations;
-using Hangfire.Common;
-using Hangfire.RecurringJobAdmin.Core;
-using Hangfire.RecurringJobAdmin.Models;
+using Hangfire.JobManagement.Core;
+using Hangfire.JobManagement.Models;
 using Hangfire.Storage;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq.Expressions;
-using System.Net;
-using System.Text;
 using System.Threading.Tasks;
 
-namespace Hangfire.RecurringJobAdmin.Pages.Dispatchers
+namespace Hangfire.JobManagement.Pages.Dispatchers
 {
     internal sealed class GetJobDispatcher : Dashboard.IDashboardDispatcher
     {
         private readonly IStorageConnection _connection;
-        public GetJobDispatcher()
-        {
+
+        public GetJobDispatcher() {
             _connection = JobStorage.Current.GetConnection();
         }
-        public async Task Dispatch([NotNull] Dashboard.DashboardContext context)
-        {
-            if (!"GET".Equals(context.Request.Method, StringComparison.InvariantCultureIgnoreCase))
-            {
+
+        public async Task Dispatch([NotNull] Dashboard.DashboardContext context) {
+            if (!"GET".Equals(context.Request.Method, StringComparison.InvariantCultureIgnoreCase)) {
                 context.Response.StatusCode = 405;
 
                 return;
             }
 
-
             var recurringJob = _connection.GetRecurringJobs();
             var periodicJob = new List<PeriodicJob>();
 
-
             CultureInfo US_TimeFormat = new CultureInfo("en-US");
 
-            if (recurringJob.Count > 0)
-            {
-                recurringJob.ForEach((x) =>
-                {
-                    periodicJob.Add(new PeriodicJob
-                    {
+            if (recurringJob.Count > 0) {
+                recurringJob.ForEach((x) => {
+                    periodicJob.Add(new PeriodicJob {
                         Id = x.Id,
                         Cron = x.Cron,
                         CreatedAt = x.CreatedAt.HasValue ? x.CreatedAt.Value.ChangeTimeZone(x.TimeZoneId) : new DateTime(),
@@ -60,6 +50,7 @@ namespace Hangfire.RecurringJobAdmin.Pages.Dispatchers
                     });
                 });
             }
+
             //Add job was stopped:
             periodicJob.AddRange(JobAgent.GetAllJobStopped());
 

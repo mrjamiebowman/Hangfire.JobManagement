@@ -1,11 +1,9 @@
 ﻿using Hangfire.Dashboard;
 using System;
-using System.Collections.Generic;
 using System.Reflection;
-using System.Text;
 using System.Threading.Tasks;
 
-namespace Hangfire.RecurringJobAdmin.Pages.Dispatchers
+namespace Hangfire.JobManagement.Pages.Dispatchers
 {
     internal class ContentDispatcher : IDashboardDispatcher
     {
@@ -14,30 +12,23 @@ namespace Hangfire.RecurringJobAdmin.Pages.Dispatchers
         private readonly string _resourceName;
         private readonly TimeSpan _expiresIn;
 
-        public ContentDispatcher(string contentType, string resourceName, TimeSpan expiresIn)
-        {
+        public ContentDispatcher(string contentType, string resourceName, TimeSpan expiresIn) {
             _contentType = contentType;
             _resourceName = resourceName;
             _expiresIn = expiresIn;
         }
 
-        public async Task Dispatch(DashboardContext context)
-        {
+        public async Task Dispatch(DashboardContext context) {
             context.Response.ContentType = _contentType;
             context.Response.SetExpire(DateTimeOffset.UtcNow + _expiresIn);
             await WriteResourceAsync(context);
         }
 
-        private async Task WriteResourceAsync(DashboardContext context)
-        {
-            using (var stream = ThisAssembly.GetManifestResourceStream(_resourceName))
-            {
-                if (stream == null)
-                {
+        private async Task WriteResourceAsync(DashboardContext context) {
+            using (var stream = ThisAssembly.GetManifestResourceStream(_resourceName)) {
+                if (stream == null) {
                     context.Response.StatusCode = 404;
-                }
-                else
-                {
+                } else {
                     await stream.CopyToAsync(context.Response.Body);
                 }
             }

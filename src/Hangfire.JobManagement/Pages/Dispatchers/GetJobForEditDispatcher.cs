@@ -1,34 +1,27 @@
 ﻿using Hangfire.Annotations;
-using Hangfire.Common;
 using Hangfire.Dashboard;
-using Hangfire.RecurringJobAdmin.Core;
-using Hangfire.RecurringJobAdmin.Models;
+using Hangfire.JobManagement.Models;
 using Hangfire.Storage;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
-
 using System.Threading.Tasks;
 
-namespace Hangfire.RecurringJobAdmin.Pages.Dispatchers
+namespace Hangfire.JobManagement.Pages.Dispatchers
 {
     internal sealed class GetJobForEdit : IDashboardDispatcher
     {
         private readonly IStorageConnection _connection;
 
-        public GetJobForEdit()
-        {
+        public GetJobForEdit() {
             _connection = JobStorage.Current.GetConnection();
         }
-        public async Task Dispatch([NotNull] DashboardContext conterecurringJobt)
-        {
 
+        public async Task Dispatch([NotNull] DashboardContext conterecurringJobt) 
+        {
             var response = new Response() { Status = true };
 
-            if (!"GET".Equals(conterecurringJobt.Request.Method, StringComparison.InvariantCultureIgnoreCase))
-            {
+            if (!"GET".Equals(conterecurringJobt.Request.Method, StringComparison.InvariantCultureIgnoreCase)) {
                 conterecurringJobt.Response.StatusCode = 405;
 
                 return;
@@ -40,8 +33,7 @@ namespace Hangfire.RecurringJobAdmin.Pages.Dispatchers
 
             var recurringJob = _connection.GetRecurringJobs().FirstOrDefault(x => x.Id == jobId);
 
-            if (recurringJob == null)
-            {
+            if (recurringJob == null) {
                 response.Status = false;
                 response.Message = "Job not found";
 
@@ -50,8 +42,7 @@ namespace Hangfire.RecurringJobAdmin.Pages.Dispatchers
                 return;
             }
 
-            var periodicJob = new PeriodicJob
-            {
+            var periodicJob = new PeriodicJob {
                 Id = recurringJob.Id,
                 Cron = recurringJob.Cron,
                 CreatedAt = recurringJob.CreatedAt,
@@ -68,8 +59,6 @@ namespace Hangfire.RecurringJobAdmin.Pages.Dispatchers
             };
 
             response.Object = periodicJob;
-
-
 
             await conterecurringJobt.Response.WriteAsync(JsonConvert.SerializeObject(response));
         }

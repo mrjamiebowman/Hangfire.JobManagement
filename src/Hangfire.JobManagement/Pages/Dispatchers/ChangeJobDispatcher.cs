@@ -1,35 +1,30 @@
 ﻿using Hangfire.Annotations;
 using Hangfire.Dashboard;
-using Hangfire.RecurringJobAdmin.Core;
-using Hangfire.RecurringJobAdmin.Models;
+using Hangfire.JobManagement.Core;
+using Hangfire.JobManagement.Models;
 using Hangfire.States;
 using Hangfire.Storage;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Net;
-using System.Text;
 using System.Threading.Tasks;
 
-namespace Hangfire.RecurringJobAdmin.Pages.Dispatchers
+namespace Hangfire.JobManagement.Pages.Dispatchers
 {
     internal sealed class ChangeJobDispatcher : IDashboardDispatcher
     {
         private readonly IStorageConnection _connection;
         private readonly RecurringJobRegistry _recurringJobRegistry;
 
-        public ChangeJobDispatcher()
-        {
+        public ChangeJobDispatcher() {
 
             _connection = JobStorage.Current.GetConnection();
             _recurringJobRegistry = new RecurringJobRegistry();
         }
 
 
-        public async Task Dispatch([NotNull] DashboardContext context)
-        {
+        public async Task Dispatch([NotNull] DashboardContext context) {
             var response = new Response() { Status = true };
 
             var job = new PeriodicJob();
@@ -42,8 +37,7 @@ namespace Hangfire.RecurringJobAdmin.Pages.Dispatchers
 
             var timeZone = TimeZoneInfo.Utc;
 
-            if (!Utility.IsValidSchedule(job.Cron))
-            {
+            if (!Utility.IsValidSchedule(job.Cron)) {
                 response.Status = false;
                 response.Message = "Invalid CRON";
 
@@ -52,15 +46,11 @@ namespace Hangfire.RecurringJobAdmin.Pages.Dispatchers
                 return;
             }
 
-            try
-            {
-                if (!string.IsNullOrEmpty(job.TimeZoneId))
-                {
+            try {
+                if (!string.IsNullOrEmpty(job.TimeZoneId)) {
                     timeZone = TimeZoneInfo.FindSystemTimeZoneById(job.TimeZoneId);
                 }
-            }
-            catch (Exception ex)
-            {
+            } catch (Exception ex) {
                 response.Status = false;
                 response.Message = ex.Message;
 
@@ -70,8 +60,7 @@ namespace Hangfire.RecurringJobAdmin.Pages.Dispatchers
             }
 
 
-            if (!StorageAssemblySingleton.GetInstance().IsValidType(job.Class))
-            {
+            if (!StorageAssemblySingleton.GetInstance().IsValidType(job.Class)) {
                 response.Status = false;
                 response.Message = "The Class not found";
 
@@ -80,8 +69,7 @@ namespace Hangfire.RecurringJobAdmin.Pages.Dispatchers
                 return;
             }
 
-            if (!StorageAssemblySingleton.GetInstance().IsValidMethod(job.Class, job.Method))
-            {
+            if (!StorageAssemblySingleton.GetInstance().IsValidMethod(job.Class, job.Method)) {
                 response.Status = false;
                 response.Message = "The Method not found";
 
