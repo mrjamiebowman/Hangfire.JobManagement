@@ -7,8 +7,7 @@
 
 This is a fork that's going a different direction. Just getting started... Below will be updated. - 05/27/2024 @mrjamiebowman
 
-
-![dashboard](Content/dashboard.png)
+![dashboard](https://github.com/mrjamiebowman/Hangfire.JobManagement/assets/1640591/a3abb93a-5710-4403-88f4-86fdccde5c21)
 
 A simple dashboard to extend Hangfire's dashboard.
 
