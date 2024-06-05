@@ -3,15 +3,15 @@ using Hangfire.JobManagement.Core;
 
 namespace Hangfire.JobManagement.Pages
 {
-    internal sealed class JobExtensionPage : PageBase
+    internal sealed class JobManagement : PageBase
     {
-        public const string Title = "Job Configuration";
-        public const string PageRoute = "/JobConfiguration";
+        public const string Title = "Job Management";
+        public const string PageRoute = "/management/configuration";
 
         private static readonly string PageHtml;
 
-        static JobExtensionPage() {
-            PageHtml = Utility.ReadStringResource("Hangfire.JobManagement.Dashboard.JobExtension.html");
+        static JobManagement() {
+            PageHtml = Utility.ReadStringResource("Hangfire.JobManagement.Dashboard.JobManagement.html");
         }
 
         public override void Execute() {

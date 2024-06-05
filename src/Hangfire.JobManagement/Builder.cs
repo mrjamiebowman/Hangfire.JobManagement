@@ -67,8 +67,10 @@ namespace Hangfire.JobManagement
 
         private static void CreateManagementJob() {
             // pages
-            DashboardRoutes.Routes.AddRazorPage(JobExtensionPage.PageRoute, x => new JobExtensionPage());
+            DashboardRoutes.Routes.AddRazorPage(Pages.JobManagement.PageRoute, x => new Pages.JobManagement());
             DashboardRoutes.Routes.AddRazorPage(JobsStoppedPage.PageRoute, x => new JobsStoppedPage());
+            DashboardRoutes.Routes.AddRazorPage(SettingsPage.PageRoute, x => new SettingsPage());
+            DashboardRoutes.Routes.AddRazorPage(NotificationsPage.PageRoute, x => new NotificationsPage());
 
             // routes
             DashboardRoutes.Routes.Add("/jobs/GetJobsStopped", new GetJobsStoppedDispatcher());
@@ -87,9 +89,21 @@ namespace Hangfire.JobManagement
                 Metric = TagDashboardMetrics.JobsStoppedCount,
             });
 
-            NavigationMenu.Items.Add(page => new MenuItem(JobExtensionPage.Title, page.Url.To("/JobConfiguration")) {
-                Active = page.RequestPath.StartsWith(JobExtensionPage.PageRoute),
+            // navbar
+            NavigationMenu.Items.Add(page => new MenuItem(Pages.JobManagement.Title, page.Url.To(Pages.JobManagement.PageRoute))
+            {
+                Active = page.RequestPath.StartsWith(Pages.JobManagement.PageRoute),
                 Metric = DashboardMetrics.RecurringJobCount
+            });
+
+            NavigationMenu.Items.Add(page => new MenuItem(NotificationsPage.Title, page.Url.To(NotificationsPage.PageRoute))
+            {
+                Active = page.RequestPath.StartsWith(NotificationsPage.PageRoute)
+            });
+
+            NavigationMenu.Items.Add(page => new MenuItem(SettingsPage.Title, page.Url.To(SettingsPage.PageRoute))
+            {
+                Active = page.RequestPath.StartsWith(SettingsPage.PageRoute)
             });
 
             // resources

@@ -42,7 +42,10 @@
     <None Remove="Dashboard\Content\js\vue.js" />
     <None Remove="Dashboard\Content\js\vuejs-paginate.js" />
     <None Remove="Dashboard\JobExtension.html" />
+    <None Remove="Dashboard\JobManagement.html" />
     <None Remove="Dashboard\JobsStopped.html" />
+    <None Remove="Dashboard\Notifications.html" />
+    <None Remove="Dashboard\Settings.html" />
   </ItemGroup>
 
   <ItemGroup>
@@ -79,8 +82,10 @@
     <EmbeddedResource Include="Dashboard\Content\js\vue.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
+    <EmbeddedResource Include="Dashboard\JobManagement.html" />
     <EmbeddedResource Include="Dashboard\JobsStopped.html" />
-    <EmbeddedResource Include="Dashboard\JobExtension.html" />
+    <EmbeddedResource Include="Dashboard\Notifications.html" />
+    <EmbeddedResource Include="Dashboard\Settings.html" />
   </ItemGroup>
 
   <ItemGroup>
