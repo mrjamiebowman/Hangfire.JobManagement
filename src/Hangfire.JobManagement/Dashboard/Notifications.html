@@ -3,46 +3,48 @@
 <script src="../JobConfiguration/js/vuejsPaginate"></script>
 
 <div id="app">
-    <div class="col-md-12">
-        <h1 class="page-header">Notifications</h1>
+    <div class="row">
+        <div class="col-md-12">
+            <h1 class="page-header">Notifications</h1>
 
-        <div v-if="getItems.length == 0" class="alert alert-info">
-            No notifications found
-        </div>
+            <div v-if="getItems.length == 0" class="alert alert-info">
+                No notifications found
+            </div>
 
-        <div v-else class="js-jobs-list">
-            <div class="table-responsive">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>Id</th>
-                            <th>Notification</th>
-                            <th>Job</th>
-                            <th>Notification Types</th>
-                            <th>TimeZone</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-for="notification in getItems">
-                            <td>{{notification.Id}}</td>
-                            <td>{{notification.Notification}}</td>
-                            <td>{{notification.Job}}</td>
-                            <td>{{notification.NotificationType}}</td>
-                            <td>{{notification.TimeZoneId}}</td>
-                        </tr>
-                    </tbody>
-                </table>
+            <div v-else class="js-jobs-list">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Id</th>
+                                <th>Notification</th>
+                                <th>Job</th>
+                                <th>Notification Types</th>
+                                <th>TimeZone</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="notification in getItems">
+                                <td>{{notification.Id}}</td>
+                                <td>{{notification.Notification}}</td>
+                                <td>{{notification.Job}}</td>
+                                <td>{{notification.NotificationType}}</td>
+                                <td>{{notification.TimeZoneId}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
 
-                <div style="float: right;">
-                    <paginate :page-count="getPageCount"
-                              :page-range="3"
-                              :margin-pages="2"
-                              :click-handler="clickCallbackPagination"
-                              :prev-text="'＜'"
-                              :next-text="'＞'"
-                              :container-class="'pagination'"
-                              :page-class="'page-item'">
-                    </paginate>
+                    <div style="float: right;">
+                        <paginate :page-count="getPageCount"
+                                  :page-range="3"
+                                  :margin-pages="2"
+                                  :click-handler="clickCallbackPagination"
+                                  :prev-text="'＜'"
+                                  :next-text="'＞'"
+                                  :container-class="'pagination'"
+                                  :page-class="'page-item'">
+                        </paginate>
+                    </div>
                 </div>
             </div>
         </div>
