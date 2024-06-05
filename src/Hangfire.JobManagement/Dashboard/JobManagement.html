@@ -217,12 +217,12 @@
                 this.UpdateJob(this.job);
             },
             GetJobs() {
-                axios.get('../JobConfiguration/GetJobs')
+                axios.get('data/GetJobs')
                     .then(res => (this.jobs = res.data))
             },
             GetJob(_Id) {
                 this.title = 'Edit Job';
-                axios.get('JobConfiguration/GetJob?Id=' + _Id).then(response => {
+                axios.get('data/GetJob?Id=' + _Id).then(response => {
                     if (response.data != null) {
                         this.showModal = true;
                         this.job.Id = response.data.Object.Id;
@@ -237,7 +237,7 @@
                 });
             },
             StartJob(_jobId) {
-                axios.get('JobConfiguration/JobAgent?Id=' + _jobId + "&Action=Start").then(response => {
+                axios.get('data/JobAgent?Id=' + _jobId + "&Action=Start").then(response => {
                     if (!response.data.Status) {
                         this.showModal = false;
 
@@ -258,7 +258,7 @@
                 });
             },
             StopJob(_jobId) {
-                axios.get('JobConfiguration/JobAgent?Id=' + _jobId + "&Action=Stop").then(response => {
+                axios.get('data/JobAgent?Id=' + _jobId + "&Action=Stop").then(response => {
                     if (!response.data.Status) {
                         this.showModal = false;
 
@@ -290,7 +290,7 @@
 
                     var params = arr.join('&');
 
-                    axios.get('JobConfiguration/UpdateJobs?' + params).then(response => {
+                    axios.get('data/UpdateJobs?' + params).then(response => {
                         if (!response.data.Status) {
                             this.showModal = false;
 
@@ -314,7 +314,7 @@
                 }
             },
             getTimeZones() {
-                axios.get('../management/data/timezones').then(response => {
+                axios.get('data/timezones').then(response => {
                     this.timeZones = response.data;
                 }).catch(e => {
                     console.log(e);

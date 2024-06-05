@@ -73,11 +73,11 @@ namespace Hangfire.JobManagement
             DashboardRoutes.Routes.AddRazorPage(NotificationsPage.PageRoute, x => new NotificationsPage());
 
             // routes
-            DashboardRoutes.Routes.Add("/jobs/GetJobsStopped", new GetJobsStoppedDispatcher());
-            DashboardRoutes.Routes.Add("/JobConfiguration/GetJobs", new GetJobDispatcher());
-            DashboardRoutes.Routes.Add("/JobConfiguration/UpdateJobs", new ChangeJobDispatcher());
-            DashboardRoutes.Routes.Add("/JobConfiguration/GetJob", new GetJobForEdit());
-            DashboardRoutes.Routes.Add("/JobConfiguration/JobAgent", new JobAgentDispatcher());
+            DashboardRoutes.Routes.Add("/management/data//GetJobsStopped", new GetJobsStoppedDispatcher());
+            DashboardRoutes.Routes.Add("/management/data/GetJobs", new GetJobDispatcher());
+            DashboardRoutes.Routes.Add("/management/data/UpdateJobs", new ChangeJobDispatcher());
+            DashboardRoutes.Routes.Add("/management/data/GetJob", new GetJobForEdit());
+            DashboardRoutes.Routes.Add("/management/data/JobAgent", new JobAgentDispatcher());
             DashboardRoutes.Routes.Add("/management/data/timezones", new GetTimeZonesDispatcher());
 
             // jobs stopped
