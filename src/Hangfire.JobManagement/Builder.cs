@@ -107,19 +107,19 @@ namespace Hangfire.JobManagement
             });
 
             // resources
-            AddDashboardRouteToEmbeddedResource("/JobConfiguration/css/jobExtension", "text/css", "Hangfire.JobManagement.Dashboard.Content.css.JobExtension.css");
-            AddDashboardRouteToEmbeddedResource("/JobConfiguration/css/cron-expression-input", "text/css", "Hangfire.JobManagement.Dashboard.Content.css.cron-expression-input.css");
-            AddDashboardRouteToEmbeddedResource("/JobConfiguration/js/page", "application/javascript", "Hangfire.JobManagement.Dashboard.Content.js.jobextension.js");
+            AddDashboardRouteToEmbeddedResource("/resources/css/jobExtension", "text/css", "Hangfire.JobManagement.Dashboard.Content.css.JobExtension.css");
+            AddDashboardRouteToEmbeddedResource("/resources/css/cron-expression-input", "text/css", "Hangfire.JobManagement.Dashboard.Content.css.cron-expression-input.css");
+            AddDashboardRouteToEmbeddedResource("/resources/js/page", "application/javascript", "Hangfire.JobManagement.Dashboard.Content.js.jobextension.js");
 
-            AddDashboardRouteToEmbeddedResource("/JobConfiguration/js/vue", "application/javascript", "Hangfire.JobManagement.Dashboard.Content.js.vue.js");
-            AddDashboardRouteToEmbeddedResource("/JobConfiguration/js/vue3", "application/javascript", "Hangfire.JobManagement.Dashboard.Content.js.vue.3.4.27.js");
+            AddDashboardRouteToEmbeddedResource("/resources/js/vue", "application/javascript", "Hangfire.JobManagement.Dashboard.Content.js.vue.js");
+            AddDashboardRouteToEmbeddedResource("/resources/js/vue3", "application/javascript", "Hangfire.JobManagement.Dashboard.Content.js.vue.3.4.27.js");
 
-            AddDashboardRouteToEmbeddedResource("/JobConfiguration/js/axio", "application/javascript", "Hangfire.JobManagement.Dashboard.Content.js.axios.min.js");
-            AddDashboardRouteToEmbeddedResource("/JobConfiguration/js/daysjs", "application/javascript", "Hangfire.JobManagement.Dashboard.Content.js.daysjs.min.js");
-            AddDashboardRouteToEmbeddedResource("/JobConfiguration/js/relativeTime", "application/javascript", "Hangfire.JobManagement.Dashboard.Content.js.relativeTime.min.js");
-            AddDashboardRouteToEmbeddedResource("/JobConfiguration/js/vuejsPaginate", "application/javascript", "Hangfire.JobManagement.Dashboard.Content.js.vuejs-paginate.js");
-            AddDashboardRouteToEmbeddedResource("/JobConfiguration/js/sweetalert", "application/javascript", "Hangfire.JobManagement.Dashboard.Content.js.sweetalert.js");
-            AddDashboardRouteToEmbeddedResource("/JobConfiguration/js/cron-expression-input", "application/javascript", "Hangfire.JobManagement.Dashboard.Content.js.cron-expression-input.js");
+            AddDashboardRouteToEmbeddedResource("/resources/js/axio", "application/javascript", "Hangfire.JobManagement.Dashboard.Content.js.axios.min.js");
+            AddDashboardRouteToEmbeddedResource("/resources/js/daysjs", "application/javascript", "Hangfire.JobManagement.Dashboard.Content.js.daysjs.min.js");
+            AddDashboardRouteToEmbeddedResource("/resources/js/relativeTime", "application/javascript", "Hangfire.JobManagement.Dashboard.Content.js.relativeTime.min.js");
+            AddDashboardRouteToEmbeddedResource("/resources/js/vuejsPaginate", "application/javascript", "Hangfire.JobManagement.Dashboard.Content.js.vuejs-paginate.js");
+            AddDashboardRouteToEmbeddedResource("/resources/js/sweetalert", "application/javascript", "Hangfire.JobManagement.Dashboard.Content.js.sweetalert.js");
+            AddDashboardRouteToEmbeddedResource("/resources/js/cron-expression-input", "application/javascript", "Hangfire.JobManagement.Dashboard.Content.js.cron-expression-input.js");
         }
 
         private static void AddDashboardRouteToEmbeddedResource(string route, string contentType, string resourceName)
