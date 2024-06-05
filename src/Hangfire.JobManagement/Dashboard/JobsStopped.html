@@ -1,6 +1,7 @@
-﻿<script src="../JobConfiguration/js/vue3"></script>
-<script src="../JobConfiguration/js/axio"></script>
-<script src="../JobConfiguration/js/vuejsPaginate"></script>
+﻿<script src="JobConfiguration/js/vue3"></script>
+<script src="JobConfiguration/js/axio"></script>
+<script src="JobConfiguration/js/sweetalert"></script>
+<script src="JobConfiguration/js/vuejsPaginate"></script>
 
 <div id="app">
     <div class="col-md-3"></div>
@@ -47,13 +48,15 @@
             </div>
         </div>
     </div>
- </div>
+</div>
 
-<script>
-    var appJob = new Vue({
-        el: '#app',
-        components: {
-            'paginate': VuejsPaginate
+<script setup lang="ts">
+
+    const { createApp, ref } = Vue
+
+    const app = createApp({
+        setup() {
+
         },
         data() {
             return {
@@ -74,10 +77,12 @@
             }
         },
         created() {
+            debugger;
             this.GetJobs();
         },
         computed: {
             getItems: function () {
+                debugger;
                 let current = this.pagination.currentPage * this.pagination.parPage;
                 let start = current - this.pagination.parPage;
                 if (this.jobs != null) return this.jobs.slice(start, current);

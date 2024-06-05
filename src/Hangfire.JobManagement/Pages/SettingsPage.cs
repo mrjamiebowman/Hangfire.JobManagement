@@ -3,7 +3,6 @@ using Hangfire.JobManagement.Core;
 
 namespace Hangfire.JobManagement.Pages
 {
-
     internal class SettingsPage : PageBase
     {
         public const string Title = "Settings";
@@ -20,7 +19,6 @@ namespace Hangfire.JobManagement.Pages
         {
             WriteEmptyLine();
             Layout = new LayoutPage(Title);
-            Write(Html.JobsSidebar());
             WriteLiteralLine(PageHtml);
             WriteEmptyLine();
         }

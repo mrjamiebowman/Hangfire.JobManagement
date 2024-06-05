@@ -10,11 +10,13 @@ namespace Hangfire.JobManagement.Pages
 
         private static readonly string PageHtml;
 
-        static JobsStoppedPage() {
+        static JobsStoppedPage() 
+        {
             PageHtml = Utility.ReadStringResource("Hangfire.JobManagement.Dashboard.JobsStopped.html");
         }
 
-        public override void Execute() {
+        public override void Execute()
+        {
             WriteEmptyLine();
             Layout = new LayoutPage(Title);
             Write(Html.JobsSidebar());

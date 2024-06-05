@@ -78,7 +78,7 @@ namespace Hangfire.JobManagement
             DashboardRoutes.Routes.Add("/JobConfiguration/UpdateJobs", new ChangeJobDispatcher());
             DashboardRoutes.Routes.Add("/JobConfiguration/GetJob", new GetJobForEdit());
             DashboardRoutes.Routes.Add("/JobConfiguration/JobAgent", new JobAgentDispatcher());
-            DashboardRoutes.Routes.Add("/DataConfiguration/GetTimeZones", new GetTimeZonesDispatcher());
+            DashboardRoutes.Routes.Add("/management/data/timezones", new GetTimeZonesDispatcher());
 
             // jobs stopped
             DashboardMetrics.AddMetric(TagDashboardMetrics.JobsStoppedCount);

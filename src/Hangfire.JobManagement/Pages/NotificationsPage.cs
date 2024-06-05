@@ -19,7 +19,6 @@ namespace Hangfire.JobManagement.Pages
         {
             WriteEmptyLine();
             Layout = new LayoutPage(Title);
-            Write(Html.JobsSidebar());
             WriteLiteralLine(PageHtml);
             WriteEmptyLine();
         }

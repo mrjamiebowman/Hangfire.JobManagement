@@ -3,49 +3,8 @@
 <script src="../JobConfiguration/js/vuejsPaginate"></script>
 
 <div id="app">
-    <div class="col-md-3"></div>
-    <div class="col-md-9">
+    <div class="col-md-12">
         <h1 class="page-header">Settings</h1>
-
-        <div v-if="getItems.length == 0" class="alert alert-info">
-            No stopped jobs found
-        </div>
-        <div v-else class="js-jobs-list">
-            <div class="table-responsive">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>Id</th>
-                            <th>Queue</th>
-                            <th>Class</th>
-                            <th>Method</th>
-                            <th>TimeZone</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-for="job in getItems">
-                            <td>{{job.Id}}</td>
-                            <td>{{job.Queue}}</td>
-                            <td>{{job.Class}}</td>
-                            <td>{{job.Method}}</td>
-                            <td>{{job.TimeZoneId}}</td>
-                        </tr>
-                    </tbody>
-                </table>
-
-                <div style="float: right;">
-                    <paginate :page-count="getPageCount"
-                              :page-range="3"
-                              :margin-pages="2"
-                              :click-handler="clickCallbackPagination"
-                              :prev-text="'＜'"
-                              :next-text="'＞'"
-                              :container-class="'pagination'"
-                              :page-class="'page-item'">
-                    </paginate>
-                </div>
-            </div>
-        </div>
     </div>
 </div>
 

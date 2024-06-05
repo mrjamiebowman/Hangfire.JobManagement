@@ -314,7 +314,7 @@
                 }
             },
             getTimeZones() {
-                axios.get('DataConfiguration/GetTimeZones').then(response => {
+                axios.get('management/data/timezones').then(response => {
                     this.timeZones = response.data;
                 }).catch(e => {
                     console.log(e);
