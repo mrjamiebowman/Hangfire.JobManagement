@@ -7,7 +7,7 @@
         <div class="col-md-12">
             <h1 class="page-header">Notifications</h1>
 
-            <div v-if="getItems.length == 0" class="alert alert-info">
+         <!--    <div v-if="getItems.length == 0" class="alert alert-info">
                 No notifications found
             </div>
 
@@ -46,7 +46,7 @@
                         </paginate>
                     </div>
                 </div>
-            </div>
+            </div> -->
         </div>
     </div>
 </div>
@@ -67,7 +67,7 @@
         },
         methods: {
             GetJobs() {
-            debugger;
+                debugger;
                 axios.get('GetJobsStopped')
                      .then(res => (this.notifications = res.data))
             },

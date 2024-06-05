@@ -102,7 +102,7 @@
 
     <div class="row">
         <div class="col-md-12">
-            <h1 class="page-header">Recurring Job Management <span class="badge badge-warning">{{getItems.length}}</span></h1>
+            <h1 class="page-header">Recurring Job Management <span class="badge badge-warning">{{jobsCount}}</span></h1>
             <button type="button" class="btn btn-primary" style="margin-bottom: 20px;" @click="OpenModal">Add new Job</button>
             <div class="table-responsive">
                 <table class="table">
@@ -121,7 +121,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr v-for="job in getItems">
+                    <tr v-for="job in jobs">
                         <td>{{job.Id}}</td>
                         <td>{{job.Cron}}</td>
                         <td>{{job.Queue}}</td>
@@ -393,8 +393,11 @@
                     if (this.jobs != null) return this.jobs.slice(start, current);
                     else return null;
                 },
+                jobsCount: function () {
+                    return this.jobs != null ? this.jobs.length : 0;
+                },
                 getPageCount: function () {
-                    return Math.ceil(this.jobs.length / this.pagination.parPage);
+                    return Math.ceil(this.jobs?.length / this.pagination.parPage);
                 }
             }
         })
