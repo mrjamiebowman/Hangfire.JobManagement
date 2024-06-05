@@ -8,12 +8,11 @@
     </div>
 </div>
 
-<script>
-    var appJob = new Vue({
-        el: '#app',
-        components: {
-            'paginate': VuejsPaginate
-        },
+<script setup lang="ts">
+
+    const { createApp, ref } = Vue
+
+    const app = createApp({
         data() {
             return {
                 jobs: null,
@@ -26,7 +25,7 @@
         methods: {
             GetJobs() {
                 axios.get('GetJobsStopped')
-                    .then(res => (this.jobs = res.data))
+                     .then(res => (this.jobs = res.data))
             },
             clickCallbackPagination(pageNum) {
                 this.pagination.currentPage = Number(pageNum);
@@ -47,4 +46,5 @@
             }
         }
     });
+
 </script>

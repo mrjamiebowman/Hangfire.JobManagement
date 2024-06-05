@@ -1,15 +1,15 @@
-﻿<link rel="stylesheet" type="text/css" href="JobConfiguration/css/jobExtension" />
-<link rel="stylesheet" type="text/css" href="JobConfiguration/css/cron-expression-input" />
+﻿<link rel="stylesheet" type="text/css" href="../JobConfiguration/css/jobExtension" />
+<link rel="stylesheet" type="text/css" href="../JobConfiguration/css/cron-expression-input" />
 
-<script src="JobConfiguration/js/vue3"></script>
-<script src="JobConfiguration/js/axio"></script>
-<script src="JobConfiguration/js/sweetalert"></script>
-<script defer src="JobConfiguration/js/page"></script>
-<script src="JobConfiguration/js/daysjs"></script>
-<script src="JobConfiguration/js/relativeTime"></script>
+<script src="../JobConfiguration/js/vue3"></script>
+<script src="../JobConfiguration/js/axio"></script>
+<script src="../JobConfiguration/js/sweetalert"></script>
+<script defer src="../JobConfiguration/js/page"></script>
+<script src="../JobConfiguration/js/daysjs"></script>
+<script src="../JobConfiguration/js/relativeTime"></script>
 <script>dayjs.extend(dayjs_plugin_relativeTime);</script>
-<script src="JobConfiguration/js/vuejsPaginate"></script>
-<script src="JobConfiguration/js/cron-expression-input"></script>
+<script src="../JobConfiguration/js/vuejsPaginate"></script>
+<script src="../JobConfiguration/js/cron-expression-input"></script>
 
 <template id="modal-template">
     <transition name="modal">
@@ -217,7 +217,7 @@
                 this.UpdateJob(this.job);
             },
             GetJobs() {
-                axios.get('JobConfiguration/GetJobs')
+                axios.get('../JobConfiguration/GetJobs')
                     .then(res => (this.jobs = res.data))
             },
             GetJob(_Id) {
@@ -314,7 +314,7 @@
                 }
             },
             getTimeZones() {
-                axios.get('management/data/timezones').then(response => {
+                axios.get('../management/data/timezones').then(response => {
                     this.timeZones = response.data;
                 }).catch(e => {
                     console.log(e);
