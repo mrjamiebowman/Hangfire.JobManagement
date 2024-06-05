@@ -65,6 +65,7 @@
         },
         methods: {
             GetJobs() {
+            debugger;
                 axios.get('GetJobsStopped')
                      .then(res => (this.notifications = res.data))
             },
@@ -77,6 +78,7 @@
         },
         computed: {
             getItems: function () {
+                debugger;
                 let current = this.pagination.currentPage * this.pagination.parPage;
                 let start = current - this.pagination.parPage;
 
