@@ -66,9 +66,11 @@ namespace Hangfire.JobManagement
         }
 
         private static void CreateManagementJob() {
+            // pages
             DashboardRoutes.Routes.AddRazorPage(JobExtensionPage.PageRoute, x => new JobExtensionPage());
             DashboardRoutes.Routes.AddRazorPage(JobsStoppedPage.PageRoute, x => new JobsStoppedPage());
 
+            // routes
             DashboardRoutes.Routes.Add("/jobs/GetJobsStopped", new GetJobsStoppedDispatcher());
             DashboardRoutes.Routes.Add("/JobConfiguration/GetJobs", new GetJobDispatcher());
             DashboardRoutes.Routes.Add("/JobConfiguration/UpdateJobs", new ChangeJobDispatcher());
@@ -79,6 +81,7 @@ namespace Hangfire.JobManagement
             // jobs stopped
             DashboardMetrics.AddMetric(TagDashboardMetrics.JobsStoppedCount);
 
+            // sidebar
             JobsSidebarMenu.Items.Add(page => new MenuItem("Jobs Stopped", page.Url.To("/jobs/stopped")) {
                 Active = page.RequestPath.StartsWith("/jobs/stopped"),
                 Metric = TagDashboardMetrics.JobsStoppedCount,
@@ -89,6 +92,7 @@ namespace Hangfire.JobManagement
                 Metric = DashboardMetrics.RecurringJobCount
             });
 
+            // resources
             AddDashboardRouteToEmbeddedResource("/JobConfiguration/css/jobExtension", "text/css", "Hangfire.JobManagement.Dashboard.Content.css.JobExtension.css");
             AddDashboardRouteToEmbeddedResource("/JobConfiguration/css/cron-expression-input", "text/css", "Hangfire.JobManagement.Dashboard.Content.css.cron-expression-input.css");
             AddDashboardRouteToEmbeddedResource("/JobConfiguration/js/page", "application/javascript", "Hangfire.JobManagement.Dashboard.Content.js.jobextension.js");
