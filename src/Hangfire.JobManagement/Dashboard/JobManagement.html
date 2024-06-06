@@ -102,8 +102,8 @@
                         <th>Class</th>
                         <th>Method</th>
                         <th>TimeZone</th>
-                        <th>Last Execution</th>
-                        <th>Next Execution</th>
+                        <th class="align-right">Last Execution</th>
+                        <th class="align-right">Next Execution</th>
                         <th class="align-right">Options</th>
                     </tr>
                     </thead>
@@ -119,19 +119,19 @@
                         <td>{{job.Class}}</td>
                         <td>{{job.Method}}</td>
                         <td>{{job.TimeZoneId}}</td>
-                        <td>
+                        <td class="min-width align-right">
                             <button type="button" class="btn btn-primary">
                                 {{getTime(job.LastExecution)}}&nbsp;&nbsp;
                                 <span class="badge" style="width: 124px;">{{getLastExecution(job.LastExecution)}}</span>
                             </button>
                         </td>
-                        <td>
+                        <td class="min-width align-right">
                             <button type="button" class="btn btn-primary">
                                 {{getTime(job.NextExecution)}}&nbsp;&nbsp;
                                 <span class="badge" style="width: 124px;">{{getNextExecution(job.NextExecution)}}</span>
                             </button>
                         </td>
-                        <td align="right">
+                        <td class="min-width align-right">
                             <button type="button" class="btn btn-warning" style="padding-top: 10px; margin-right: 5px;">
                                 <svg width="18px" height="18px" viewBox="0 0 16 16" class="bi bi-pencil-square" fill="currentColor" @click="GetJob(job.Id)">
                                     <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456l-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
