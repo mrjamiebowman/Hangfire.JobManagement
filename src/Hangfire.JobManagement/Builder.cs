@@ -72,8 +72,10 @@ namespace Hangfire.JobManagement
             DashboardRoutes.Routes.AddRazorPage(SettingsPage.PageRoute, x => new SettingsPage());
             DashboardRoutes.Routes.AddRazorPage(NotificationsPage.PageRoute, x => new NotificationsPage());
 
+            // routes sidebar
+            DashboardRoutes.Routes.Add("/jobs/GetJobsStopped", new GetJobsStoppedDispatcher());
+
             // routes
-            DashboardRoutes.Routes.Add("/management/data/GetJobsStopped", new GetJobsStoppedDispatcher());
             DashboardRoutes.Routes.Add("/management/data/GetJobs", new GetJobDispatcher());
             DashboardRoutes.Routes.Add("/management/data/UpdateJobs", new ChangeJobDispatcher());
             DashboardRoutes.Routes.Add("/management/data/GetJob", new GetJobForEdit());
