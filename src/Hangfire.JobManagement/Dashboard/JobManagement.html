@@ -89,7 +89,7 @@
 
     <div class="row">
         <div class="col-md-12">
-            <h1 class="page-header">Recurring Job Management <span class="badge badge-warning">{{jobsCount}}</span></h1>
+            <h1 class="page-header">Job Management <span class="badge badge-warning">{{jobsCount}}</span></h1>
             <button type="button" class="btn btn-primary" style="margin-bottom: 20px;" @click="OpenModal">Add new Job</button>
             <div class="table-responsive">
                 <table class="table">
@@ -104,7 +104,7 @@
                         <th>TimeZone</th>
                         <th>Last Execution</th>
                         <th>Next Execution</th>
-                        <th>Options</th>
+                        <th class="align-right">Options</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -131,7 +131,7 @@
                                 <span class="badge" style="width: 124px;">{{getNextExecution(job.NextExecution)}}</span>
                             </button>
                         </td>
-                        <td>
+                        <td align="right">
                             <button type="button" class="btn btn-warning" style="padding-top: 10px; margin-right: 5px;">
                                 <svg width="18px" height="18px" viewBox="0 0 16 16" class="bi bi-pencil-square" fill="currentColor" @click="GetJob(job.Id)">
                                     <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456l-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
