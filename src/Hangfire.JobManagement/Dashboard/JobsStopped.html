@@ -1,53 +1,52 @@
-﻿
-        </div>
-        <div class="col-md-9">
-            <h1 class="page-header">Stopped Jobs</h1>
-
-            <div v-if="jobs.length == 0" class="alert alert-info">
-                No stopped jobs found
+﻿                <!-- job stopped -->
             </div>
+            <div class="col-md-9">
+                <h1 id="page-title" class="page-header">Stopped Jobs</h1>
+                
+                <div v-if="jobs.length == 0" class="alert alert-info">
+                    No jobs found in stopped state.
+                </div>
 
-            <div v-else class="js-jobs-list">
-                <div class="table-responsive">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Id</th>
-                                <th>Queue</th>
-                                <th>Class</th>
-                                <th>Method</th>
-                                <th>TimeZone</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr v-for="job in jobs">
-                                <td>{{job.Id}}</td>
-                                <td>{{job.Queue}}</td>
-                                <td>{{job.Class}}</td>
-                                <td>{{job.Method}}</td>
-                                <td>{{job.TimeZoneId}}</td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <div v-else class="js-jobs-list">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Id</th>
+                                    <th>Queue</th>
+                                    <th>Class</th>
+                                    <th>Method</th>
+                                    <th>TimeZone</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="job in jobs">
+                                    <td>{{job.Id}}</td>
+                                    <td>{{job.Queue}}</td>
+                                    <td>{{job.Class}}</td>
+                                    <td>{{job.Method}}</td>
+                                    <td>{{job.TimeZoneId}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
 
-                    <div style="float: right;">
-                        <paginate :page-count="getPageCount"
-                                  :page-range="3"
-                                  :margin-pages="2"
-                                  :click-handler="clickCallbackPagination"
-                                  :prev-text="'＜'"
-                                  :next-text="'＞'"
-                                  :container-class="'pagination'"
-                                  :page-class="'page-item'">
-                        </paginate>
+                        <div style="float: right;">
+                            <paginate :page-count="getPageCount"
+                                      :page-range="3"
+                                      :margin-pages="2"
+                                      :click-handler="clickCallbackPagination"
+                                      :prev-text="'＜'"
+                                      :next-text="'＞'"
+                                      :container-class="'pagination'"
+                                      :page-class="'page-item'">
+                            </paginate>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+<!-- app -->
 
-    <div class="clear-fix"></div>
-</div>
 
 <script setup lang="ts">
 
@@ -56,7 +55,7 @@
     const app = createApp({
         data() {
             return {
-                jobs: [],
+                jobs: null,
                 pagination: {
                     parPage: 10,
                     currentPage: 1

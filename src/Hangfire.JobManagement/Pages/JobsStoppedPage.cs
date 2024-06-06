@@ -17,9 +17,9 @@ namespace Hangfire.JobManagement.Pages
 
         public override void Execute()
         {
+            WriteResources();
             WriteEmptyLine();
             Layout = new LayoutPage(Title);
-            WriteResources();
             WriteSidebarHeader();
             Write(Html.JobsSidebar());
             WriteLiteralLine(PageHtml);
