@@ -23,10 +23,11 @@
       <RepositoryUrl>https://github.com/mrjamiebowman/Hangfire.JobManagement.git</RepositoryUrl>
       <Version>2.0.1</Version>
       <PackOnBuild>true</PackOnBuild>
-      <Description>A dashboard to manage Hangfire's recurring jobs.</Description>
-      <Title>Hangfire.JobManagement</Title>
+      <Description>A Job Management extension to Hangfire</Description>
+      <Title>mrjamiebowman.Hangfire.JobManagement</Title>
       <PackageReadmeFile>README.md</PackageReadmeFile>
       <IncludeSymbols>True</IncludeSymbols>
+      <PackageLicenseFile>LICENSE</PackageLicenseFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -93,6 +94,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="..\..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
     <None Include="..\..\README.md">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
