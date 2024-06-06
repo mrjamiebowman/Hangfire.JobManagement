@@ -6,7 +6,7 @@ namespace Hangfire.JobManagement.Pages
     internal sealed class JobsStoppedPage : PageBase
     {
         public const string Title = "Stopped Jobs";
-        public const string PageRoute = "/management/jobs/stopped";
+        public const string PageRoute = "/jobs/stopped";
 
         private static readonly string PageHtml;
 
@@ -19,6 +19,8 @@ namespace Hangfire.JobManagement.Pages
         {
             WriteEmptyLine();
             Layout = new LayoutPage(Title);
+            WriteResources();
+            WriteSidebarHeader();
             Write(Html.JobsSidebar());
             WriteLiteralLine(PageHtml);
             WriteEmptyLine();

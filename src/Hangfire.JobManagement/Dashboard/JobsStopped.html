@@ -1,14 +1,9 @@
-﻿<script src="../resources/js/vue3"></script>
-<script src="../resources/js/axio"></script>
-<script src="../resources/js/vuejsPaginate"></script>
-<script src="../resources/js/sweetalert"></script>
-
-    <div id="app">
-        <div class="col-md-3"></div>
+﻿
+        </div>
         <div class="col-md-9">
             <h1 class="page-header">Stopped Jobs</h1>
 
-            <div v-if="getItems.length == 0" class="alert alert-info">
+            <div v-if="jobs.length == 0" class="alert alert-info">
                 No stopped jobs found
             </div>
 
@@ -25,7 +20,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="job in getItems">
+                            <tr v-for="job in jobs">
                                 <td>{{job.Id}}</td>
                                 <td>{{job.Queue}}</td>
                                 <td>{{job.Class}}</td>
@@ -51,45 +46,46 @@
         </div>
     </div>
 
-    <script setup lang="ts">
+    <div class="clear-fix"></div>
+</div>
 
-        const { createApp, ref } = Vue
+<script setup lang="ts">
 
-        const app = createApp({
-            data() {
-                return {
-                    jobs: null,
-                    pagination: {
-                        parPage: 10,
-                        currentPage: 1
-                    }
-                }
-            },
-            methods: {
-                GetJobs() {
-                    axios.get('GetJobsStopped')
-                        .then(res => (this.jobs = res.data))
-                },
-                clickCallbackPagination(pageNum) {
-                    this.pagination.currentPage = Number(pageNum);
-                }
-            },
-            created() {
-                debugger;
-                this.GetJobs();
-            },
-            computed: {
-                getItems: function () {
-                    debugger;
-                    let current = this.pagination.currentPage * this.pagination.parPage;
-                    let start = current - this.pagination.parPage;
-                    if (this.jobs != null) return this.jobs.slice(start, current);
-                    else return null;
-                },
-                getPageCount: function () {
-                    return Math.ceil(this.jobs.length / this.pagination.parPage);
+    const { createApp, ref } = Vue
+
+    const app = createApp({
+        data() {
+            return {
+                jobs: [],
+                pagination: {
+                    parPage: 10,
+                    currentPage: 1
                 }
             }
-        });
+        },
+        methods: {
+            GetJobs() {
+                axios.get('GetJobsStopped')
+                     .then(res => (this.jobs = res.data))
+            },
+            clickCallbackPagination(pageNum) {
+                this.pagination.currentPage = Number(pageNum);
+            }
+        },
+        created() {
+            this.GetJobs();
+        },
+        computed: {
+            getItems: function () {
+                let current = this.pagination.currentPage * this.pagination.parPage;
+                let start = current - this.pagination.parPage;
+                if (this.jobs != null) return this.jobs.slice(start, current);
+                else return null;
+            },
+            getPageCount: function () {
+                return Math.ceil(this.jobs.length / this.pagination.parPage);
+            }
+        }
+    });
 
-    </script>
+</script>

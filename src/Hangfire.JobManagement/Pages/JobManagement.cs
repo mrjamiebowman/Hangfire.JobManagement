@@ -19,6 +19,7 @@ namespace Hangfire.JobManagement.Pages
         {
             WriteEmptyLine();
             Layout = new LayoutPage(Title);
+            WriteResources();
             WriteLiteralLine(PageHtml);
             WriteEmptyLine();
         }

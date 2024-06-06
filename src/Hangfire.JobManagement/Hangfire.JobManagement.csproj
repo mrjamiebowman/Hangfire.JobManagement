@@ -45,7 +45,9 @@
     <None Remove="Dashboard\JobManagement.html" />
     <None Remove="Dashboard\JobsStopped.html" />
     <None Remove="Dashboard\Notifications.html" />
+    <None Remove="Dashboard\Resources.html" />
     <None Remove="Dashboard\Settings.html" />
+    <None Remove="Dashboard\SidebarHeader.html" />
   </ItemGroup>
 
   <ItemGroup>
@@ -85,7 +87,9 @@
     <EmbeddedResource Include="Dashboard\JobManagement.html" />
     <EmbeddedResource Include="Dashboard\JobsStopped.html" />
     <EmbeddedResource Include="Dashboard\Notifications.html" />
+    <EmbeddedResource Include="Dashboard\Resources.html" />
     <EmbeddedResource Include="Dashboard\Settings.html" />
+    <EmbeddedResource Include="Dashboard\SidebarHeader.html" />
   </ItemGroup>
 
   <ItemGroup>

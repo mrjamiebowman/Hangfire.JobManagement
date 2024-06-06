@@ -73,7 +73,7 @@ namespace Hangfire.JobManagement
             DashboardRoutes.Routes.AddRazorPage(NotificationsPage.PageRoute, x => new NotificationsPage());
 
             // routes
-            DashboardRoutes.Routes.Add("/management/data//GetJobsStopped", new GetJobsStoppedDispatcher());
+            DashboardRoutes.Routes.Add("/management/data/GetJobsStopped", new GetJobsStoppedDispatcher());
             DashboardRoutes.Routes.Add("/management/data/GetJobs", new GetJobDispatcher());
             DashboardRoutes.Routes.Add("/management/data/UpdateJobs", new ChangeJobDispatcher());
             DashboardRoutes.Routes.Add("/management/data/GetJob", new GetJobForEdit());
@@ -84,8 +84,8 @@ namespace Hangfire.JobManagement
             DashboardMetrics.AddMetric(TagDashboardMetrics.JobsStoppedCount);
 
             // sidebar
-            JobsSidebarMenu.Items.Add(page => new MenuItem("Jobs Stopped", page.Url.To("/jobs/stopped")) {
-                Active = page.RequestPath.StartsWith("/jobs/stopped"),
+            JobsSidebarMenu.Items.Add(page => new MenuItem("Jobs Stopped", page.Url.To(JobsStoppedPage.PageRoute)) {
+                Active = page.RequestPath.StartsWith(JobsStoppedPage.PageRoute),
                 Metric = TagDashboardMetrics.JobsStoppedCount,
             });
 
@@ -96,15 +96,17 @@ namespace Hangfire.JobManagement
                 Metric = DashboardMetrics.RecurringJobCount
             });
 
-            NavigationMenu.Items.Add(page => new MenuItem(NotificationsPage.Title, page.Url.To(NotificationsPage.PageRoute))
-            {
-                Active = page.RequestPath.StartsWith(NotificationsPage.PageRoute)
-            });
+            // coming soon!
+            //NavigationMenu.Items.Add(page => new MenuItem(NotificationsPage.Title, page.Url.To(NotificationsPage.PageRoute))
+            //{
+            //    Active = page.RequestPath.StartsWith(NotificationsPage.PageRoute)
+            //});
 
-            NavigationMenu.Items.Add(page => new MenuItem(SettingsPage.Title, page.Url.To(SettingsPage.PageRoute))
-            {
-                Active = page.RequestPath.StartsWith(SettingsPage.PageRoute)
-            });
+            // coming soon!
+            //NavigationMenu.Items.Add(page => new MenuItem(SettingsPage.Title, page.Url.To(SettingsPage.PageRoute))
+            //{
+            //    Active = page.RequestPath.StartsWith(SettingsPage.PageRoute)
+            //});
 
             // resources
             AddDashboardRouteToEmbeddedResource("/resources/css/jobExtension", "text/css", "Hangfire.JobManagement.Dashboard.Content.css.JobExtension.css");
