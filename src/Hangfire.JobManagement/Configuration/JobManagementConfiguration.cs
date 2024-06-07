@@ -4,6 +4,6 @@
     {
         public const string Position = "JobManagement";
 
-        public string? ConnectionString { get; set; }
+        public string ConnectionString { get; set; }
     }
 }
