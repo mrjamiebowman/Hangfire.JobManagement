@@ -5,6 +5,42 @@
             <h1 class="page-header">Settings</h1>
         </div>
     </div>
+    <div class="row mb-3">
+        <form>
+            <!-- Column 1 -->
+            <div class="col-md-4">
+                <fieldset>
+                    <legend>Hangfire Settings</legend>
+
+                </fieldset>
+            </div>
+
+            <div class="col-md-4">
+
+            </div>
+
+            <!-- Column 2 -->
+            <div class="col-md-4">
+                <fieldset>
+                    <legend>Job Settings</legend>
+
+                    <div class="mb-3">
+                        <label for="defaultTimeZone" class="form-label">Default Time Zone</label>
+                        <select id="timezoneid" class="form-control" v-model="settings.TimeZoneId" name="cron" placeholder="Select the Time Zone">
+                            <option v-for="(item, index) in timeZones" :key="index" :value="item.Item1">{{item.Item2}}</option>
+                        </select>
+                    </div>
+                </fieldset>
+            </div>
+        </form>
+    </div>
+
+    <!-- Submit Button -->
+    <div class="row mb-3">
+        <div class="col-12">
+            <button type="submit" class="btn btn-primary pull-right">Save Settings</button>
+        </div>
+    </div>
 </div>
 
 <script setup lang="ts">
@@ -14,7 +50,10 @@
     const app = createApp({
         data() {
             return {
-                jobs: null,
+                settings: {
+                    TimeZoneId: ''
+                },
+                timeZones: [],
                 pagination: {
                     parPage: 10,
                     currentPage: 1
@@ -22,16 +61,22 @@
             }
         },
         methods: {
-            GetJobs() {
-                axios.get('GetJobsStopped')
-                     .then(res => (this.jobs = res.data))
+            GetSettings() {
+                axios.get('GetSettings')
+                     .then(res => (this.settings = res.data))
             },
-            clickCallbackPagination(pageNum) {
-                this.pagination.currentPage = Number(pageNum);
+            GetTimeZones() {
+                axios.get('data/timezones').then(response => {
+                    this.timeZones = response.data;
+                    debugger;
+                }).catch(e => {
+                    debugger;
+                    console.log(e);
+                });
             }
         },
         created() {
-            this.GetJobs();
+            this.GetTimeZones();
         },
         computed: {
             getItems: function () {
@@ -44,6 +89,7 @@
                 return Math.ceil(this.jobs.length / this.pagination.parPage);
             }
         }
-    });
+    })
+    .mount('#app');
 
 </script>

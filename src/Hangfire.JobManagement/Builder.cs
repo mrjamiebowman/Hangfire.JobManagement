@@ -105,10 +105,10 @@ namespace Hangfire.JobManagement
             //});
 
             // coming soon!
-            //NavigationMenu.Items.Add(page => new MenuItem(SettingsPage.Title, page.Url.To(SettingsPage.PageRoute))
-            //{
-            //    Active = page.RequestPath.StartsWith(SettingsPage.PageRoute)
-            //});
+            NavigationMenu.Items.Add(page => new MenuItem(SettingsPage.Title, page.Url.To(SettingsPage.PageRoute))
+            {
+                Active = page.RequestPath.StartsWith(SettingsPage.PageRoute)
+            });
 
             // resources
             AddDashboardRouteToEmbeddedResource("/resources/css/jobExtension", "text/css", "Hangfire.JobManagement.Dashboard.Content.css.JobExtension.css");
