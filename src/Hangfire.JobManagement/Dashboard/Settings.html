@@ -10,8 +10,21 @@
             <!-- Column 1 -->
             <div class="col-md-4">
                 <fieldset>
-                    <legend>Hangfire Settings</legend>
+                    <legend>Queue List</legend>
 
+                    <div class="form-group">
+                        <label for="listBox">List of Defined Queues</label>
+                        <select multiple class="form-control" id="listBox" size="10"></select>
+                    </div>
+
+                    <!-- Input Field -->
+                    <div class="form-group">
+                        <label for="stringInput">Enter Queue</label>
+                        <input type="text" class="form-control" id="stringInput" placeholder="Enter queue name">
+                    </div>
+
+                    <!-- Add Button -->
+                    <button id="addButton" class="btn btn-primary pull-right" @click="AddQueue">Add</button>
                 </fieldset>
             </div>
 
@@ -22,11 +35,18 @@
             <!-- Column 2 -->
             <div class="col-md-4">
                 <fieldset>
-                    <legend>Job Settings</legend>
+                    <legend>Default Job Settings</legend>
 
                     <div class="mb-3">
-                        <label for="defaultTimeZone" class="form-label">Default Time Zone</label>
-                        <select id="timezoneid" class="form-control" v-model="settings.TimeZoneId" name="cron" placeholder="Select the Time Zone">
+                        <label for="defaultTimeZone" class="form-label">Time Zone</label>
+                        <select id="timezoneid" class="form-control" v-model="settings.DefaultTimeZoneId" name="cron" placeholder="Select the Time Zone">
+                            <option v-for="(item, index) in timeZones" :key="index" :value="item.Item1">{{item.Item2}}</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="defaultTimeZone" class="form-label">Queue</label>
+                        <select id="timezoneid" class="form-control" v-model="settings.DefaultQueue" name="cron" placeholder="Select the Default Queue">
                             <option v-for="(item, index) in timeZones" :key="index" :value="item.Item1">{{item.Item2}}</option>
                         </select>
                     </div>
@@ -38,7 +58,7 @@
     <!-- Submit Button -->
     <div class="row mb-3">
         <div class="col-12">
-            <button type="submit" class="btn btn-primary pull-right">Save Settings</button>
+            <button type="submit" class="btn btn-primary pull-right" @click="SaveSettings">Save Settings</button>
         </div>
     </div>
 </div>
@@ -51,7 +71,8 @@
         data() {
             return {
                 settings: {
-                    TimeZoneId: ''
+                    DefaultTimeZoneId: '',
+                    DefaultQueue: '',
                 },
                 timeZones: [],
                 pagination: {
@@ -61,6 +82,9 @@
             }
         },
         methods: {
+            AddQueue() {
+                debugger;
+            },
             GetSettings() {
                 axios.get('GetSettings')
                      .then(res => (this.settings = res.data))
@@ -68,11 +92,12 @@
             GetTimeZones() {
                 axios.get('data/timezones').then(response => {
                     this.timeZones = response.data;
-                    debugger;
                 }).catch(e => {
-                    debugger;
                     console.log(e);
                 });
+            },
+            SaveSettings() {
+                debugger;
             }
         },
         created() {
