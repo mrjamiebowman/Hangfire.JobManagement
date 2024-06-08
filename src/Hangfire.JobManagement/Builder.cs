@@ -104,7 +104,7 @@ namespace Hangfire.JobManagement
             jobManagementOptions.Invoke(Options);
 
             PeriodicJobBuilder.GetAllJobs();
-            CreateManagementJob();
+            CreateJobManagement();
             return config;
         }
 
@@ -127,7 +127,7 @@ namespace Hangfire.JobManagement
 
         //    StorageAssemblySingleton.GetInstance().SetCurrentAssembly(includeReferences, assemblies);
 
-        private static void CreateManagementJob() {
+        private static void CreateJobManagement() {
             // pages
             DashboardRoutes.Routes.AddRazorPage(Pages.JobManagement.PageRoute, x => new Pages.JobManagement());
             DashboardRoutes.Routes.AddRazorPage(JobsStoppedPage.PageRoute, x => new JobsStoppedPage());
