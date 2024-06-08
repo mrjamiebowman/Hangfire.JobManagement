@@ -1,6 +1,12 @@
-﻿namespace Hangfire.JobManagement.Data.Entities
+﻿using Hangfire.JobManagement.Data.Entities.Interfaces;
+using System;
+
+namespace Hangfire.JobManagement.Data.Entities
 {
-    internal class BatchOperation
+    internal class BatchOperation : IModelTimeStamps
     {
+        public DateTime? CreatedOn { get; set; }
+
+        public DateTime? ModifiedOn { get; set; }
     }
 }
