@@ -99,6 +99,17 @@
             },
             SaveSettings() {
                 debugger;
+                const formData = new FormData();
+                formData.append('setting.DefaultTimeZoneId', this.settings.DefaultTimeZoneId);
+                formData.append('setting.DefaultQueue', this.settings.DefaultQueue);
+
+                axios.post('settings/save', formData).then(Response => {
+                    this.closeModal();
+                    this.GetFtpJobs();
+                }).catch(e => {
+                    debugger;
+                    console.log(e);
+                });
             }
         },
         created() {
