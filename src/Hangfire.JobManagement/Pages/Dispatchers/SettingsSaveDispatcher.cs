@@ -4,6 +4,7 @@ using Hangfire.JobManagement.Data.Repositories.Interfaces;
 using Hangfire.Storage;
 using System;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace Hangfire.JobManagement.Pages.Dispatchers
@@ -32,14 +33,13 @@ namespace Hangfire.JobManagement.Pages.Dispatchers
             globalSettings.DefaultTimeZoneId = (await context.Request.GetFormValuesAsync("settings.DefaultTimeZoneId").ConfigureAwait(false)).FirstOrDefault();
             //globalSettings.DefaultQueue = (await context.Request.GetFormValuesAsync("settings.DefaultQueue").ConfigureAwait(false)).FirstOrDefault();
 
-            await Task.Delay(10);
+            // save
+            var data = await _settingsRepository.SaveAsync(globalSettings);
 
-            throw new NotImplementedException();
+            // json
+            var json = JsonSerializer.Serialize(data);
 
-            //var periodicJob = new List<PeriodicJob>();
-            //periodicJob.AddRange(JobAgent.GetAllJobStopped());
-
-            //await context.Response.WriteAsync(JsonConvert.SerializeObject(periodicJob));
+            await context.Response.WriteAsync(json);
         }
     }
 }

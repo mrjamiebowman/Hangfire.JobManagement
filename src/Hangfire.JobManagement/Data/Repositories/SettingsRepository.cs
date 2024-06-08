@@ -16,7 +16,7 @@ namespace Hangfire.JobManagement.Data.Repositories
 
         }
 
-        public async Task<IEnumerable<Setting>> GetAsync(CancellationToken cancellationToken)
+        public async Task<IEnumerable<Setting>> GetAsync(CancellationToken cancellationToken = default)
         {
             using (var db = new JobManagementDbContext(_jobManagementConfiguration.ConnectionString))
             {
@@ -27,7 +27,7 @@ namespace Hangfire.JobManagement.Data.Repositories
             }
         } 
 
-        public async Task<Setting> GetByIdAsync(long id, CancellationToken cancellationToken)
+        public async Task<Setting> GetByIdAsync(long id, CancellationToken cancellationToken = default)
         {
             using (var db = new JobManagementDbContext(_jobManagementConfiguration.ConnectionString))
             {
@@ -38,7 +38,7 @@ namespace Hangfire.JobManagement.Data.Repositories
             }
         }
 
-        public async Task DeleteByIdAsync(long id, CancellationToken cancellationToken)
+        public async Task DeleteByIdAsync(long id, CancellationToken cancellationToken = default)
         {
             using (var db = new JobManagementDbContext(_jobManagementConfiguration.ConnectionString))
             {
@@ -49,7 +49,7 @@ namespace Hangfire.JobManagement.Data.Repositories
                 }
             }
         }
-        public async Task SaveAsync(Setting model, CancellationToken cancellationToken) {
+        public async Task<Setting> SaveAsync(Setting model, CancellationToken cancellationToken = default) {
             using (var db = new JobManagementDbContext(_jobManagementConfiguration.ConnectionString))
             {
                 using (var trn = db.Database.BeginTransaction())
@@ -60,7 +60,7 @@ namespace Hangfire.JobManagement.Data.Repositories
             }
         }
 
-        public async Task<GlobalSettings> GetCompositeAsync(CancellationToken cancellationToken) {
+        public async Task<GlobalSettings> GetCompositeAsync(CancellationToken cancellationToken = default) {
             using (var db = new JobManagementDbContext(_jobManagementConfiguration.ConnectionString))
             {
                 using (var trn = db.Database.BeginTransaction())
@@ -71,5 +71,15 @@ namespace Hangfire.JobManagement.Data.Repositories
             }
         }
 
+        public Task<GlobalSettings> SaveAsync(GlobalSettings model, CancellationToken cancellationToken = default) {
+            using (var db = new JobManagementDbContext(_jobManagementConfiguration.ConnectionString))
+            {
+                using (var trn = db.Database.BeginTransaction())
+                {
+                    //return await db.Settings.SingleOrDefaultAsync(x => x.SettingId == id);
+                    throw new NotImplementedException();
+                }
+            }
+        }
     }
 }

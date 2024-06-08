@@ -7,14 +7,16 @@ namespace Hangfire.JobManagement.Data.Repositories.Interfaces
 {
     internal interface ISettingsRepository
     {
-        Task<IEnumerable<Setting>> GetAsync(CancellationToken cancellationToken);
+        Task<IEnumerable<Setting>> GetAsync(CancellationToken cancellationToken = default);
 
-        Task<Setting> GetByIdAsync(long id, CancellationToken cancellationToken);
+        Task<Setting> GetByIdAsync(long id, CancellationToken cancellationToken = default);
 
-        Task DeleteByIdAsync(long id, CancellationToken cancellationToken);
+        Task DeleteByIdAsync(long id, CancellationToken cancellationToken = default);
 
-        Task SaveAsync(Setting model, CancellationToken cancellationToken);
+        Task<Setting> SaveAsync(Setting model, CancellationToken cancellationToken = default);
 
-        Task<GlobalSettings> GetCompositeAsync(CancellationToken cancellationToken);
+        Task<GlobalSettings> SaveAsync(GlobalSettings model, CancellationToken cancellationToken = default);
+
+        Task<GlobalSettings> GetCompositeAsync(CancellationToken cancellationToken = default);
     }
 }
