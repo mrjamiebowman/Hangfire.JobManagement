@@ -33,17 +33,50 @@ Install-Package Hangfire.JobManagement
 
 Then add this in your code:
 
-## For .NET  :
+## For .NET
 for service side:
+
 ```csharp
-services.AddHangfire(config => config.UseSqlServerStorage(Configuration.GetConnectionString("HangfireConnection"))
-                                                 .UseJobManagement(typeof(Startup).Assembly))
+services.AddHangfire(h => h.UseSqlServerStorage(Configuration.GetConnectionString("HangfireConnection"))
+    /* job management */
+    .UseJobManagement(jobManagementConfig, b => {
+        // assemblies
+        b.ConfigureAssemblies(new Assembly[] {
+            typeof(Program).Assembly
+        });
+
+        // database
+        b.ConfigureDatabase();
+
+        // features
+        b.ConfigureFeatures(f => {
+            f.Notifications = true;
+            f.Settings = true;
+        });
+    })
 ```
 
-## For .NET Framework  :
+## For .NET Framework
 for startup side:
+
 ```csharp
-GlobalConfiguration.Configuration.UseSqlServerStorage("HangfireConnection").UseJobManagement(typeof(Startup).Assembly)
+GlobalConfiguration.Configuration.UseSqlServerStorage("HangfireConnection")
+    /* job management */
+    .UseJobManagement(jobManagementConfig, b => {
+        // assemblies
+        b.ConfigureAssemblies(new Assembly[] {
+            typeof(Program).Assembly
+        });
+
+        // database
+        b.ConfigureDatabase();
+
+        // features
+        b.ConfigureFeatures(f => {
+            f.Notifications = true;
+            f.Settings = true;
+        });
+    })
 ```
 
 ## Credits
