@@ -130,10 +130,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Data\Migrations\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\..\..\JobManagement.Abstractions\Hangfire.JobManagement.Abstractions\Hangfire.JobManagement.Abstractions.csproj" />
   </ItemGroup>
 

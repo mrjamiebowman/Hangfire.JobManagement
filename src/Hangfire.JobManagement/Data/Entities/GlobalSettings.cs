@@ -1,9 +1,14 @@
-﻿namespace Hangfire.JobManagement.Data.Entities
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Hangfire.JobManagement.Data.Entities
 {
     internal class GlobalSettings
     {
-        public string DefaultTimeZoneId { get; set; }
-        public string DefaultQueue { get; set; }
+        [Key]
+        public long GlobalSettingId { get; set; }
 
+        public string DefaultTimeZoneId { get; set; }
+
+        public string DefaultQueue { get; set; }
     }
 }

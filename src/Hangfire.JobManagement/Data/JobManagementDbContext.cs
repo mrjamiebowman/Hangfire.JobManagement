@@ -5,6 +5,11 @@ namespace Hangfire.JobManagement.Data
 {
     internal class JobManagementDbContext : DbContext
     {
+        public JobManagementDbContext()
+        {
+
+        }
+
         public JobManagementDbContext(string connectionString) : base(connectionString)
         {
 

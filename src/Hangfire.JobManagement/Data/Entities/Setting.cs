@@ -1,10 +1,12 @@
 ﻿using Hangfire.JobManagement.Data.Entities.Interfaces;
 using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace Hangfire.JobManagement.Data.Entities;
 
 internal class Setting : IModelTimeStamps
 {
+    [Key]
     public long SettingId { get; set; }
 
     public string Name { get; set; }
