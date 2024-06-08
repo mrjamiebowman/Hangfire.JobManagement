@@ -87,11 +87,6 @@ namespace Hangfire.JobManagement
     {
         private static JobManagementBuilder Options { get; set; }
 
-        private static void Setup()
-        {
-
-        }
-
         public static void Configure(this JobManagementBuilder jobManagementOptions, Action<IServiceCollection> services)
         {
             services.Invoke(Options.Services);
