@@ -70,6 +70,11 @@ namespace Hangfire.JobManagement
         {
             builder.ValidateConfiguration();
 
+            // configuration
+            JobManagementConfiguration jobManagementConfiguration = new JobManagementConfiguration();
+            builder.Configuration.GetSection(JobManagementConfiguration.Position).Bind(jobManagementConfiguration);
+            builder.Services.AddSingleton<JobManagementConfiguration>(jobManagementConfiguration);
+
             // inject: repositories
             builder.Services.AddTransient<ISettingsRepository, SettingsRepository>();
 
@@ -128,6 +133,11 @@ namespace Hangfire.JobManagement
         //    StorageAssemblySingleton.GetInstance().SetCurrentAssembly(includeReferences, assemblies);
 
         private static void CreateJobManagement() {
+            // di
+            var serviceProvider = Builder.Options.Services.BuildServiceProvider();
+
+            ISettingsRepository settingsRepository = serviceProvider.GetService<ISettingsRepository>();
+
             // pages
             DashboardRoutes.Routes.AddRazorPage(Pages.JobManagement.PageRoute, x => new Pages.JobManagement());
             DashboardRoutes.Routes.AddRazorPage(JobsStoppedPage.PageRoute, x => new JobsStoppedPage());
@@ -148,7 +158,7 @@ namespace Hangfire.JobManagement
             DashboardRoutes.Routes.Add("/management/settings/all", new SettingsGetDispatcher());
             DashboardRoutes.Routes.Add("/management/settings/queue/delete", new SettingsQueueDeleteDispatcher());
             DashboardRoutes.Routes.Add("/management/settings/queue/save", new SettingsQueueSaveDispatcher());
-            DashboardRoutes.Routes.Add("/management/settings/save", new SettingsSaveDispatcher());
+            DashboardRoutes.Routes.Add("/management/settings/save", new SettingsSaveDispatcher(settingsRepository));
 
             // jobs stopped
             DashboardMetrics.AddMetric(TagDashboardMetrics.JobsStoppedCount);

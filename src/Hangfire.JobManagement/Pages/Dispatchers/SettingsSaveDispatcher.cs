@@ -1,7 +1,7 @@
 ﻿using Hangfire.Dashboard;
+using Hangfire.JobManagement.Data.Repositories.Interfaces;
 using Hangfire.Storage;
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 
 namespace Hangfire.JobManagement.Pages.Dispatchers
@@ -10,9 +10,12 @@ namespace Hangfire.JobManagement.Pages.Dispatchers
     {
         private readonly IStorageConnection _connection;
 
-        public SettingsSaveDispatcher()
+        private readonly ISettingsRepository _settingsRepository;
+
+        public SettingsSaveDispatcher(ISettingsRepository settingsRepository)
         {
             _connection = JobStorage.Current.GetConnection();
+            _settingsRepository = settingsRepository;
         }
 
         public async Task Dispatch(DashboardContext context)
