@@ -1,6 +1,6 @@
 ﻿namespace Hangfire.JobManagement.Configuration
 {
-    internal class JobManagementConfiguration
+    public class JobManagementConfiguration
     {
         public const string Position = "JobManagement";
 
