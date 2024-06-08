@@ -113,46 +113,16 @@ namespace Hangfire.JobManagement
             return config;
         }
 
-            // entity framework
+        // entity framework
 
-            // open telemetry
+        // open telemetry
 
-
-            ///// <param name="includeReferences">If is true it will load all dlls references of the current project to find all jobs.</param>
-            ///// <param name="assemblies"></param>
-            //[PublicAPI]
-            //public static IGlobalConfiguration UseJobManagement(this IGlobalConfiguration config, [NotNull] params string[] assemblies) {
-            //    if (assemblies == null) throw new ArgumentNullException(nameof(assemblies));
-
-            //    StorageAssemblySingleton.GetInstance().SetCurrentAssembly(assemblies: assemblies.Select(x => Type.GetType(x).Assembly).ToArray());
-            //    PeriodicJobBuilder.GetAllJobs();
-            //    CreateManagementJob();
-            //    return config;
-            //}
-
-            ///// <param name="includeReferences">If is true it will load all dlls references of the current project to find all jobs.</param>
-            ///// <param name="assemblies"></param>
-            //[PublicAPI]
-            //public static IGlobalConfiguration UseJobManagement(this IGlobalConfiguration config, bool includeReferences = false, [NotNull] params string[] assemblies) {
-            //    if (assemblies == null) throw new ArgumentNullException(nameof(assemblies));
-
-            //    StorageAssemblySingleton.GetInstance().SetCurrentAssembly(includeReferences, assemblies.Select(x => Type.GetType(x).Assembly).ToArray());
-            //    PeriodicJobBuilder.GetAllJobs();
-            //    CreateManagementJob();
-            //    return config;
-            //}
-
-        //    /// <param name="includeReferences">If is true it will load all dlls references of the current project to find all jobs.</param>
-        //    /// <param name="assemblies"></param>
-        //    [PublicAPI]
-        //public static IGlobalConfiguration UseJobManagement(this IGlobalConfiguration config, [NotNull] params Assembly[] assemblies) {
+        //public static IGlobalConfiguration UseJobManagement(this IGlobalConfiguration config, [NotNull] params string[] assemblies) {
         //    if (assemblies == null) throw new ArgumentNullException(nameof(assemblies));
 
-        //    StorageAssemblySingleton.GetInstance().SetCurrentAssembly(assemblies: assemblies);
-        //    PeriodicJobBuilder.GetAllJobs();
-        //    CreateManagementJob();
-        //    return config;
-        //}
+        //    StorageAssemblySingleton.GetInstance().SetCurrentAssembly(assemblies: assemblies.Select(x => Type.GetType(x).Assembly).ToArray());
+
+        //public static IGlobalConfiguration UseJobManagement(this IGlobalConfiguration config, bool includeReferences = false, [NotNull] params string[] assemblies) {
 
         ///// <param name="includeReferences">If is true it will load all dlls references of the current project to find all jobs.</param>
         ///// <param name="assembliess"></param>
@@ -161,16 +131,6 @@ namespace Hangfire.JobManagement
         //    if (assemblies == null) throw new ArgumentNullException(nameof(assemblies));
 
         //    StorageAssemblySingleton.GetInstance().SetCurrentAssembly(includeReferences, assemblies);
-        //    PeriodicJobBuilder.GetAllJobs();
-        //    CreateManagementJob();
-        //    return config;
-        //}
-
-        //[PublicAPI]
-        //public static IGlobalConfiguration UseJobManagement(this IGlobalConfiguration config) {
-        //    CreateManagementJob();
-        //    return config;
-        //}
 
         private static void CreateManagementJob() {
             // pages
