@@ -46,8 +46,8 @@
 
                     <div class="mb-3">
                         <label for="defaultTimeZone" class="form-label">Queue</label>
-                        <select id="timezoneid" class="form-control" v-model="settings.DefaultQueue" name="cron" placeholder="Select the Default Queue">
-                            <option v-for="(item, index) in timeZones" :key="index" :value="item.Item1">{{item.Item2}}</option>
+                        <select id="defaultQueue" class="form-control" v-model="settings.DefaultQueue" name="cron" placeholder="Select the Default Queue">
+                            <option v-for="(item, index) in queues" :key="index" :value="item.Item1">{{item.Item2}}</option>
                         </select>
                     </div>
                 </fieldset>
@@ -75,6 +75,7 @@
                     DefaultQueue: '',
                 },
                 timeZones: [],
+                queues: [],
                 pagination: {
                     parPage: 10,
                     currentPage: 1
