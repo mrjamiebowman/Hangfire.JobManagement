@@ -1,7 +1,9 @@
 ﻿using Hangfire.Dashboard;
+using Hangfire.JobManagement.Data.Entities;
 using Hangfire.JobManagement.Data.Repositories.Interfaces;
 using Hangfire.Storage;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Hangfire.JobManagement.Pages.Dispatchers
@@ -24,6 +26,11 @@ namespace Hangfire.JobManagement.Pages.Dispatchers
                 context.Response.StatusCode = 405;
                 return;
             }
+
+            // vars
+            var globalSettings = new GlobalSettings();
+            globalSettings.DefaultTimeZoneId = (await context.Request.GetFormValuesAsync("settings.DefaultTimeZoneId").ConfigureAwait(false)).FirstOrDefault();
+            //globalSettings.DefaultQueue = (await context.Request.GetFormValuesAsync("settings.DefaultQueue").ConfigureAwait(false)).FirstOrDefault();
 
             await Task.Delay(10);
 

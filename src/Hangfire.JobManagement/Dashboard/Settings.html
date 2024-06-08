@@ -98,10 +98,9 @@
                 });
             },
             SaveSettings() {
-                debugger;
                 const formData = new FormData();
-                formData.append('setting.DefaultTimeZoneId', this.settings.DefaultTimeZoneId);
-                formData.append('setting.DefaultQueue', this.settings.DefaultQueue);
+                formData.append('settings.DefaultTimeZoneId', this.settings.DefaultTimeZoneId);
+                formData.append('settings.DefaultQueue', this.settings.DefaultQueue);
 
                 axios.post('settings/save', formData).then(Response => {
                     this.closeModal();

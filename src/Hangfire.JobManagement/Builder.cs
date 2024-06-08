@@ -97,8 +97,6 @@ namespace Hangfire.JobManagement
             services.Invoke(Options.Services);
         }
 
-        /// <param name="includeReferences">If is true it will load all dlls references of the current project to find all jobs.</param>
-        /// <param name="assemblies"></param>
         [PublicAPI]
         public static IGlobalConfiguration UseJobManagement(this IGlobalConfiguration config, IConfiguration configuration, Action<JobManagementBuilder> jobManagementOptions)
         {
