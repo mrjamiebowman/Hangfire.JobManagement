@@ -5,6 +5,8 @@ namespace Hangfire.JobManagement.Data.Entities;
 
 internal class Setting : IModelTimeStamps
 {
+    public long SettingId { get; set; }
+
     public string Name { get; set; }
 
     public string Type { get; set; }
