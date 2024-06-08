@@ -28,7 +28,7 @@
       <PackageReadmeFile>README.md</PackageReadmeFile>
       <IncludeSymbols>True</IncludeSymbols>
       <PackageLicenseFile>LICENSE</PackageLicenseFile>
-      <TargetFrameworks>net462;netstandard2.0</TargetFrameworks>
+      <TargetFrameworks>net462;netstandard2.1</TargetFrameworks>
       <OutputType>Library</OutputType>
       <LangVersion>latest</LangVersion>
   </PropertyGroup>
@@ -120,6 +120,7 @@
     <PackageReference Include="Cronos" Version="0.8.4" />
     <PackageReference Include="EntityFramework" Version="6.4.4" />
     <PackageReference Include="HangFire.Core" Version="1.8.12" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="System.Text.Json" Version="8.0.3" />
   </ItemGroup>
@@ -127,6 +128,10 @@
   <ItemGroup>
     <Folder Include="Data\Migrations\" />
     <Folder Include="Data\Repositories\Interfaces\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\JobManagement.Abstractions\Hangfire.JobManagement.Abstractions\Hangfire.JobManagement.Abstractions.csproj" />
   </ItemGroup>
 
 </Project>

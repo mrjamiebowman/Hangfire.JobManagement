@@ -7,13 +7,24 @@ namespace Hangfire.JobManagement.Data.Repositories
         // configuration
         protected readonly JobManagementConfiguration _jobManagementConfiguration;
 
-        // db context factory
-        protected readonly JobManagementDbContextFactory _dbContextFactory;
-
-        internal BaseEfRepository(JobManagementConfiguration jobManagementConfiguration, JobManagementDbContextFactory dbContextFactory)
+        internal BaseEfRepository(JobManagementConfiguration jobManagementConfiguration)
         {
             _jobManagementConfiguration = jobManagementConfiguration;
-            _dbContextFactory = dbContextFactory;
         }
     }
 }
+
+//string connectionString = "Server=myServerAddress;Database=myDataBase;User Id=myUsername;Password=myPassword;";
+
+//using (var context = new MyDbContext(connectionString))
+//{
+//    var entity = new MyEntity { Name = "Test" };
+//    context.MyEntities.Add(entity);
+//    context.SaveChanges();
+
+//    var entities = context.MyEntities.ToList();
+//    foreach (var e in entities)
+//    {
+//        Console.WriteLine($"ID: {e.Id}, Name: {e.Name}");
+//    }
+//}
