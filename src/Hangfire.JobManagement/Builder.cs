@@ -11,6 +11,12 @@ namespace Hangfire.JobManagement
 {
     public static class Builder
     {
+        // configure: dependency injection service provider
+
+        // open telemetry
+
+        // entity framework
+
         /// <param name="includeReferences">If is true it will load all dlls references of the current project to find all jobs.</param>
         /// <param name="assemblies"></param>
         [PublicAPI]
