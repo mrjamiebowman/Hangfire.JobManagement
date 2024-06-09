@@ -2,14 +2,18 @@
 using Hangfire.Dashboard;
 using Hangfire.JobManagement.Configuration;
 using Hangfire.JobManagement.Core;
+using Hangfire.JobManagement.Data;
 using Hangfire.JobManagement.Data.Repositories;
 using Hangfire.JobManagement.Data.Repositories.Interfaces;
+using Hangfire.JobManagement.Migrations;
 using Hangfire.JobManagement.Pages;
 using Hangfire.JobManagement.Pages.Dispatchers;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Data.Entity;
 using System.Reflection;
+using System.Threading.Tasks;
 
 namespace Hangfire.JobManagement
 {
@@ -109,6 +113,17 @@ namespace Hangfire.JobManagement
             PeriodicJobBuilder.GetAllJobs();
             CreateJobManagement();
             return config;
+        }
+
+        public static Task RunMigrations()
+        {
+            try {
+                Database.SetInitializer(new MigrateDatabaseToLatestVersion<JobManagementDbContext, MigrationsConfiguration>());
+            } catch (Exception ex) {
+                throw ex;
+            }
+
+            return Task.CompletedTask;
         }
 
         // entity framework
