@@ -9,7 +9,7 @@
     {
         public MigrationsConfiguration()
         {
-            AutomaticMigrationsEnabled = false;
+            AutomaticMigrationsEnabled = true;
         }
 
         protected override void Seed(Hangfire.JobManagement.Data.JobManagementDbContext context)
