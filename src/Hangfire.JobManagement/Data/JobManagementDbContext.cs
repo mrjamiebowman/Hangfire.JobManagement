@@ -1,4 +1,5 @@
 ﻿using Hangfire.JobManagement.Data.Entities;
+using Hangfire.JobManagement.Migrations;
 using System.Data.Entity;
 
 namespace Hangfire.JobManagement.Data
@@ -12,7 +13,7 @@ namespace Hangfire.JobManagement.Data
 
         public JobManagementDbContext(string connectionString) : base(connectionString)
         {
-
+            Database.SetInitializer(new MigrateDatabaseToLatestVersion<JobManagementDbContext, MigrationsConfiguration>());
         }
 
         public DbSet<Batch> Batches { get; set; }

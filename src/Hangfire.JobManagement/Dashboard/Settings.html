@@ -102,7 +102,14 @@
                 formData.append('settings.DefaultTimeZoneId', this.settings.DefaultTimeZoneId);
                 formData.append('settings.DefaultQueue', this.settings.DefaultQueue);
 
-                axios.post('settings/save', formData).then(Response => {
+                // hangfire: csrf token 
+                var csrfHeader = $('meta[name="csrf-header"]').attr('content');
+                var csrfToken = $('meta[name="csrf-token"]').attr('content');
+
+                var headers = {};
+                headers[csrfHeader] = csrfToken;
+
+                axios.post('settings/save', formData, { headers }).then(Response => {
                     this.closeModal();
                     this.GetFtpJobs();
                 }).catch(e => {

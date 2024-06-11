@@ -265,6 +265,37 @@
                     console.log(e);
                 });
             },
+            SaveJob(job) {
+                if (!this.checkForm()) {
+                    return;
+                }
+
+                // hangfire: csrf token 
+                var csrfHeader = $('meta[name="csrf-header"]').attr('content');
+                var csrfToken  = $('meta[name="csrf-token"]').attr('content');
+
+                var headers = {};
+                headers[csrfHeader] = csrfToken;
+
+                axios.post('data/SaveJob?', FormData, { headers }).then(response => {
+                    if (!response.data.Status) {
+                        this.showModal = false;
+                        Swal.fire({
+                            title: 'Error!',
+                            text: response.data.Message,
+                            type: 'error',
+                            confirmButtonText: 'Okay'
+                        }).then((result) => {
+                            this.CloseModal();
+                        });
+                    } else {
+                        this.CloseModal();
+                        this.GetJobs();
+                    }
+                }).catch(e => {
+                    console.log(e);
+                });
+            },
             UpdateJob(job) {
                 if (this.checkForm()) {
                     var arr = [];
@@ -290,11 +321,9 @@
                                 this.CloseModal();
                             });
                         } else {
-
                             this.CloseModal();
                             this.GetJobs();
                         }
-
                     }).catch(e => {
                         console.log(e);
                     });
