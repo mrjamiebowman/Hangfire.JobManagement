@@ -15,7 +15,7 @@ namespace Hangfire.JobManagement.Data.Repositories
         // logging
         private readonly ILogger<SettingsRepository> _logger;
 
-        internal SettingsRepository(ILogger<SettingsRepository> logger, JobManagementDbFactory dbContextFactory, JobManagementConfiguration jobManagementConfiguration) : base(jobManagementConfiguration)
+        internal SettingsRepository(ILogger<SettingsRepository> logger, JobManagementDbFactory dbContextFactory, JobManagementConfiguration jobManagementConfiguration) : base(dbContextFactory, jobManagementConfiguration)
         {
 
         }
