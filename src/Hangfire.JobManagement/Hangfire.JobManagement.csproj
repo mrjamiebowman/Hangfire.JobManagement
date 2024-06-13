@@ -28,7 +28,7 @@
       <PackageReadmeFile>README.md</PackageReadmeFile>
       <IncludeSymbols>True</IncludeSymbols>
       <PackageLicenseFile>LICENSE</PackageLicenseFile>
-      <TargetFrameworks>netstandard2.1;net8</TargetFrameworks>
+      <TargetFrameworks>net8</TargetFrameworks>
       <OutputType>Library</OutputType>
       <LangVersion>latest</LangVersion>
   </PropertyGroup>
@@ -122,6 +122,7 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Analyzers" Version="8.0.6" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="8.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.1" />

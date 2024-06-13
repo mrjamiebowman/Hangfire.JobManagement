@@ -1,74 +1,82 @@
 ﻿using Hangfire.JobManagement.Configuration;
 using Hangfire.JobManagement.Data.Entities;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Hangfire.JobManagement.Data
 {
-    //internal class JobManagementDbContext : DbContext
-    //{
-    //    public JobManagementDbContext()
-    //    {
+    internal class JobManagementDbContext : DbContext
+    {
 
-    //    }
+        // configuration
+        private readonly JobManagementConfiguration _jobManagementConfiguration;
 
-    //    public JobManagementDbContext(DbContextOptions<JobManagementDbContext> options, JobManagementConfiguration jobManagementConfiguration) : base(options)
-    //    {
-    //    }
+        public JobManagementDbContext()
+        {
 
-    //    public DbSet<Batch> Batches { get; set; }
+        }
 
-    //    public DbSet<JobHistory> JobHistory { get; set; }
+        public JobManagementDbContext(DbContextOptions<JobManagementDbContext> options, JobManagementConfiguration jobManagementConfiguration) : base(options)
+        {
+            _jobManagementConfiguration = jobManagementConfiguration;
+        }
 
-    //    public DbSet<NotificationGroup> NotificationGroups { get; set; }
+        public DbSet<Batch> Batches { get; set; }
 
-    //    public DbSet<Notification> Notifications { get; set; }
+        public DbSet<JobHistory> JobHistory { get; set; }
 
-    //    public DbSet<Setting> Settings { get; set; }
+        public DbSet<NotificationGroup> NotificationGroups { get; set; }
 
-    //    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    //    {
-    //        optionsBuilder.UseSqlServer(_hangfireExtensionConfiguration.ConnectionString);
-    //        optionsBuilder.EnableSensitiveDataLogging();
-    //        optionsBuilder.EnableDetailedErrors();
-    //        optionsBuilder.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
-    //    }
+        public DbSet<Notification> Notifications { get; set; }
 
-    //    protected override void OnModelCreating(ModelBuilder modelBuilder)
-    //    {
-    //        base.OnModelCreating(modelBuilder);
+        public DbSet<Setting> Settings { get; set; }
 
-    //        //modelBuilder.Entity<Entity>(b => {
-    //        //    b.HasKey(e => e.EntityId);
-    //        //    b.Property(e => e.EntityId).ValueGeneratedOnAdd();
-    //        //});
-    //    }
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.UseSqlServer(_jobManagementConfiguration.ConnectionString);
+            optionsBuilder.EnableSensitiveDataLogging();
+            optionsBuilder.EnableDetailedErrors();
+            optionsBuilder.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+        }
 
-    //    protected virtual void SeedDatabase()
-    //    {
-    //        // ensure db is created
-    //        this.Database.EnsureCreated();
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
 
-    //        // verify test data
-    //    }
+            //modelBuilder.Entity<Entity>(b => {
+            //    b.HasKey(e => e.EntityId);
+            //    b.Property(e => e.EntityId).ValueGeneratedOnAdd();
+            //});
+        }
 
-    //    public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken)
-    //    {
-    //        var changedEntities = ChangeTracker
-    //            .Entries()
-    //            .Where(_ => _.State == EntityState.Added ||
-    //                        _.State == EntityState.Modified);
+        protected virtual void SeedDatabase()
+        {
+            // ensure db is created
+            this.Database.EnsureCreated();
 
-    //        var errors = new List<ValidationResult>(); // all errors are here
+            // verify test data
+        }
 
-    //        foreach (var e in changedEntities)
-    //        {
-    //            var vc = new ValidationContext(e.Entity, null, null);
-    //            Validator.TryValidateObject(e.Entity, vc, errors, validateAllProperties: true);
-    //        }
+        public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken)
+        {
+            var changedEntities = ChangeTracker
+                .Entries()
+                .Where(_ => _.State == EntityState.Added ||
+                            _.State == EntityState.Modified);
 
-    //        return await base.SaveChangesAsync(cancellationToken);
-    //    }
-    //}
+            var errors = new List<ValidationResult>(); // all errors are here
+
+            foreach (var e in changedEntities)
+            {
+                var vc = new ValidationContext(e.Entity, null, null);
+                Validator.TryValidateObject(e.Entity, vc, errors, validateAllProperties: true);
+            }
+
+            return await base.SaveChangesAsync(cancellationToken);
+        }
+    }
 }

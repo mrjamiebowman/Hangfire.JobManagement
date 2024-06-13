@@ -2,6 +2,7 @@
 using Hangfire.Dashboard;
 using Hangfire.JobManagement.Configuration;
 using Hangfire.JobManagement.Core;
+using Hangfire.JobManagement.Data.Repositories;
 using Hangfire.JobManagement.Data.Repositories.Interfaces;
 using Hangfire.JobManagement.Pages;
 using Hangfire.JobManagement.Pages.Dispatchers;
@@ -75,8 +76,11 @@ namespace Hangfire.JobManagement
             builder.Configuration.GetSection(JobManagementConfiguration.Position).Bind(jobManagementConfiguration);
             builder.Services.AddSingleton<JobManagementConfiguration>(jobManagementConfiguration);
 
+            // inject: dbcontext factory
+            builder.Services.AddTransient<JobManagementDbFactory, JobManagementDbFactory>();
+            
             // inject: repositories
-            //builder.Services.AddTransient<ISettingsRepository, SettingsRepository>();
+            builder.Services.AddTransient<ISettingsRepository, SettingsRepository>();
 
             return builder;
         }
