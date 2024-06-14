@@ -8,6 +8,7 @@ using Hangfire.JobManagement.Pages;
 using Hangfire.JobManagement.Pages.Dispatchers;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -167,7 +168,7 @@ namespace Hangfire.JobManagement
             DashboardRoutes.Routes.Add("/management/settings/all", new SettingsGetDispatcher());
             DashboardRoutes.Routes.Add("/management/settings/queue/delete", new SettingsQueueDeleteDispatcher());
             DashboardRoutes.Routes.Add("/management/settings/queue/save", new SettingsQueueSaveDispatcher());
-            DashboardRoutes.Routes.Add("/management/settings/save", new SettingsSaveDispatcher(settingsRepository));
+            DashboardRoutes.Routes.Add("/management/settings/save", new SettingsSaveDispatcher(settingsRepository)); //serviceProvider.GetService<ILogger<SettingsSaveDispatcher>>()
 
             // jobs stopped
             DashboardMetrics.AddMetric(TagDashboardMetrics.JobsStoppedCount);
