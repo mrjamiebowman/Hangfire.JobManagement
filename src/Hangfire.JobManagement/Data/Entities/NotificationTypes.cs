@@ -1,5 +1,5 @@
 ﻿namespace Hangfire.JobManagement.Data.Entities;
 
-internal class NotificationTypes
+public class NotificationTypes
 {
 }

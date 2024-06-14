@@ -3,7 +3,7 @@ using System;
 
 namespace Hangfire.JobManagement.Data.Entities
 {
-    internal class JobHistory : IModelTimeStamps
+    public class JobHistory : IModelTimeStamps
     {
         public long JobHistoryId { get; set; }
 

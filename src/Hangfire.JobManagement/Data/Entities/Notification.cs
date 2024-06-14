@@ -3,7 +3,7 @@ using System;
 
 namespace Hangfire.JobManagement.Data.Entities;
 
-internal class Notification : IModelTimeStamps
+public class Notification : IModelTimeStamps
 {
     public long NotificationId { get; set; }
 

@@ -3,7 +3,7 @@ using System;
 
 namespace Hangfire.JobManagement.Data.Entities
 {
-    internal class BatchOperation : IModelTimeStamps
+    public class BatchOperation : IModelTimeStamps
     {
         public long BatchOperationId { get; set; }
 

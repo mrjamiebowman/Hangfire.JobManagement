@@ -5,18 +5,18 @@ using System.Threading.Tasks;
 
 namespace Hangfire.JobManagement.Data.Repositories.Interfaces
 {
-    internal interface ISettingsRepository
+    public interface ISettingsRepository
     {
-        Task<IEnumerable<Setting>> GetAsync(CancellationToken cancellationToken = default);
+        public Task<IEnumerable<Setting>> GetAsync(CancellationToken cancellationToken = default);
 
-        Task<Setting> GetByIdAsync(long id, CancellationToken cancellationToken = default);
+        public Task<Setting> GetByIdAsync(long id, CancellationToken cancellationToken = default);
 
-        Task DeleteByIdAsync(long id, CancellationToken cancellationToken = default);
+        public Task DeleteByIdAsync(long id, CancellationToken cancellationToken = default);
 
-        Task<Setting> SaveAsync(Setting model, CancellationToken cancellationToken = default);
+        public Task<Setting> SaveAsync(Setting model, CancellationToken cancellationToken = default);
 
-        Task<GlobalSettings> SaveAsync(GlobalSettings model, CancellationToken cancellationToken = default);
+        public Task<GlobalSettings> SaveAsync(GlobalSettings model, CancellationToken cancellationToken = default);
 
-        Task<GlobalSettings> GetCompositeAsync(CancellationToken cancellationToken = default);
+        public Task<GlobalSettings> GetCompositeAsync(CancellationToken cancellationToken = default);
     }
 }

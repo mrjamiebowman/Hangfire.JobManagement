@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Hangfire.JobManagement.Data.Entities
 {
-    internal class Batch : IModelTimeStamps
+    public class Batch : IModelTimeStamps
     {
         public long BatchId { get; set; }
 

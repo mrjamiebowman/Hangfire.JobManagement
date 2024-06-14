@@ -10,12 +10,13 @@ using System.Threading.Tasks;
 
 namespace Hangfire.JobManagement.Data.Repositories
 {
-    internal class SettingsRepository : BaseEfRepository, ISettingsRepository
+    public class SettingsRepository : BaseEfRepository, ISettingsRepository
     {
         // logging
         private readonly ILogger<SettingsRepository> _logger;
 
-        internal SettingsRepository(ILogger<SettingsRepository> logger, JobManagementDbFactory dbContextFactory, JobManagementConfiguration jobManagementConfiguration) : base(dbContextFactory, jobManagementConfiguration)
+        //ILogger<SettingsRepository> logger,
+        public SettingsRepository(JobManagementDbFactory dbContextFactory, JobManagementConfiguration jobManagementConfiguration) : base(dbContextFactory, jobManagementConfiguration)
         {
 
         }

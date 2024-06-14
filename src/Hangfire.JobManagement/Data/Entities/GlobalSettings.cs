@@ -1,7 +1,7 @@
 ﻿
 namespace Hangfire.JobManagement.Data.Entities
 {
-    internal class GlobalSettings
+    public class GlobalSettings
     {
         public long GlobalSettingId { get; set; }
 

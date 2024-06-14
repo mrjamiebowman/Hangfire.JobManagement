@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Hangfire.JobManagement.Data
 {
-    internal class JobManagementDbContext : DbContext
+    public class JobManagementDbContext : DbContext
     {
 
         // configuration

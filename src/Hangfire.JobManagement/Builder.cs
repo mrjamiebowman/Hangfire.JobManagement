@@ -25,22 +25,12 @@ namespace Hangfire.JobManagement
     {
         public Assembly[] Assemblies { get; set;  }
 
-        public IServiceCollection Services { get; set; }
-
-        public IConfiguration Configuration { get; set; }
-
         public JobManagementConfiguration Settings { get; set; } = new JobManagementConfiguration();
 
         public JobManagementFeatures Features { get; set; } = new JobManagementFeatures();
 
         public JobManagementBuilder(IConfiguration configuration)
         {
-            // configuration
-            Configuration = configuration;
-
-            // services
-            Services = new ServiceCollection();
-
             // configure default services
             this.ConfigureDefaultServices();
         }
@@ -71,23 +61,14 @@ namespace Hangfire.JobManagement
         {
             builder.ValidateConfiguration();
 
-            // configuration
-            JobManagementConfiguration jobManagementConfiguration = new JobManagementConfiguration();
-            builder.Configuration.GetSection(JobManagementConfiguration.Position).Bind(jobManagementConfiguration);
-            builder.Services.AddSingleton<JobManagementConfiguration>(jobManagementConfiguration);
 
-            // inject: dbcontext factory
-            builder.Services.AddTransient<JobManagementDbFactory, JobManagementDbFactory>();
-            
-            // inject: repositories
-            builder.Services.AddTransient<ISettingsRepository, SettingsRepository>();
 
             return builder;
         }
 
         internal static JobManagementBuilder ValidateConfiguration(this JobManagementBuilder builder)
         {
-            if (builder.Configuration is null) throw new ArgumentNullException($"Please call SetConfiguration() first. Argument Null: {nameof(builder.Configuration)}");
+            if (Builder.Configuration is null) throw new ArgumentNullException($"Please call SetConfiguration() first. Argument Null: {nameof(Builder.Configuration)}");
             return builder;
         }
     }
@@ -96,34 +77,49 @@ namespace Hangfire.JobManagement
     {
         private static JobManagementBuilder Options { get; set; }
 
-        public static void Configure(this JobManagementBuilder jobManagementOptions, Action<IServiceCollection> services)
+        internal static IServiceCollection Services;
+
+        internal static IConfiguration Configuration;
+
+        internal static IServiceProvider GetServiceProvider()
         {
-            services.Invoke(Options.Services);
+            return Services?.BuildServiceProvider();
         }
 
         [PublicAPI]
-        public static IGlobalConfiguration UseJobManagement(this IGlobalConfiguration config, IConfiguration configuration, Action<JobManagementBuilder> jobManagementOptions)
+        public static IGlobalConfiguration UseJobManagement(this IGlobalConfiguration config, IServiceCollection services, IConfiguration configuration, Action<JobManagementBuilder> jobManagementOptions)
         {
-            // instantiate buidler
+            // injected
+            Services = services;
+            Configuration = configuration;
+
+            // instantiate builder 
             Options = new JobManagementBuilder(configuration);
 
             // customization
             jobManagementOptions.Invoke(Options);
 
             PeriodicJobBuilder.GetAllJobs();
+
             CreateJobManagement();
+
             return config;
         }
 
-        public static Task RunMigrations()
+        public static IServiceCollection ConfigureJobManagement(this IServiceCollection services, IConfiguration configuration)
         {
-            try {
-                //Database.SetInitializer(new MigrateDatabaseToLatestVersion<JobManagementDbContext, MigrationsConfiguration>());
-            } catch (Exception ex) {
-                throw ex;
-            }
+            // configuration
+            JobManagementConfiguration jobManagementConfiguration = new JobManagementConfiguration();
+            configuration.GetSection(JobManagementConfiguration.Position).Bind(jobManagementConfiguration);
+            services.AddSingleton<JobManagementConfiguration>(jobManagementConfiguration);
 
-            return Task.CompletedTask;
+            // inject: dbcontext factory
+            services.AddTransient<JobManagementDbFactory, JobManagementDbFactory>();
+
+            // inject: repositories
+            services.AddTransient<ISettingsRepository, SettingsRepository>();
+
+            return services;
         }
 
         // entity framework
@@ -147,7 +143,7 @@ namespace Hangfire.JobManagement
 
         private static void CreateJobManagement() {
             // di
-            var serviceProvider = Builder.Options.Services.BuildServiceProvider();
+            var serviceProvider = Builder.Services.BuildServiceProvider();
 
             ISettingsRepository settingsRepository = serviceProvider.GetService<ISettingsRepository>();
 

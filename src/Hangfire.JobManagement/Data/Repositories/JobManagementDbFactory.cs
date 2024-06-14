@@ -6,7 +6,7 @@ using System.IO;
 
 namespace Hangfire.JobManagement.Data.Repositories;
 
-internal class JobManagementDbFactory : IDesignTimeDbContextFactory<JobManagementDbContext>
+public class JobManagementDbFactory : IDesignTimeDbContextFactory<JobManagementDbContext>
 {
     private readonly JobManagementConfiguration _jobManagementConfiguration;
 

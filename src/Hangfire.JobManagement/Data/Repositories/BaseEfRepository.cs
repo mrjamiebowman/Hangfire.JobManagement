@@ -2,7 +2,7 @@
 
 namespace Hangfire.JobManagement.Data.Repositories
 {
-    internal abstract class BaseEfRepository
+    public abstract class BaseEfRepository
     {
         // dbcontext
         protected readonly JobManagementDbFactory _dbContextFactory;
@@ -10,7 +10,7 @@ namespace Hangfire.JobManagement.Data.Repositories
         // configuration
         protected readonly JobManagementConfiguration _jobManagementConfiguration;
 
-        internal BaseEfRepository(JobManagementDbFactory dbContextFactory, JobManagementConfiguration jobManagementConfiguration)
+        public BaseEfRepository(JobManagementDbFactory dbContextFactory, JobManagementConfiguration jobManagementConfiguration)
         {
             _dbContextFactory = dbContextFactory;
             _jobManagementConfiguration = jobManagementConfiguration;

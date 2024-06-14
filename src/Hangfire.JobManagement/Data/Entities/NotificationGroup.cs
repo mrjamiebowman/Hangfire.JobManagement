@@ -1,6 +1,6 @@
 ﻿namespace Hangfire.JobManagement.Data.Entities;
 
-internal class NotificationGroup
+public class NotificationGroup
 {
     public long NotificationGroupId { get; set; }
 
