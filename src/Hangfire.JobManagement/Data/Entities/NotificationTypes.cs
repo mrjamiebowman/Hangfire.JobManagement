@@ -2,4 +2,5 @@
 
 public class NotificationTypes
 {
+    public long? NotificationTypesId { get; set; }
 }

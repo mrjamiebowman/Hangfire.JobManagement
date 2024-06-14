@@ -47,10 +47,61 @@ namespace Hangfire.JobManagement.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            //modelBuilder.Entity<Entity>(b => {
-            //    b.HasKey(e => e.EntityId);
-            //    b.Property(e => e.EntityId).ValueGeneratedOnAdd();
-            //});
+            // batch
+            modelBuilder.Entity<Batch>(b =>
+            {
+                b.HasKey(e => e.BatchId);
+                b.Property(e => e.BatchId).ValueGeneratedOnAdd();
+            });
+
+            // batch operations
+            modelBuilder.Entity<BatchOperation>(b =>
+            {
+                b.HasKey(e => e.BatchOperationId);
+                b.Property(e => e.BatchOperationId).ValueGeneratedOnAdd();
+            });
+
+            // global settings
+            modelBuilder.Entity<GlobalSettings>(b =>
+            {
+                b.HasKey(e => e.GlobalSettingId);
+                b.Property(e => e.GlobalSettingId).ValueGeneratedOnAdd();
+            });
+
+            // jog history
+            modelBuilder.Entity<JobHistory>(b =>
+            {
+                b.HasKey(e => e.JobHistoryId);
+                b.Property(e => e.JobHistoryId).ValueGeneratedOnAdd();
+            });
+
+            // notifications
+            modelBuilder.Entity<Notification>(b =>
+            {
+                b.HasKey(e => e.NotificationId);
+                b.Property(e => e.NotificationId).ValueGeneratedOnAdd();
+            });
+
+            // notifications group
+            modelBuilder.Entity<NotificationGroup>(b =>
+            {
+                b.HasKey(e => e.NotificationGroupId);
+                b.Property(e => e.NotificationGroupId).ValueGeneratedOnAdd();
+            });
+
+            // notifications types
+            modelBuilder.Entity<NotificationTypes>(b =>
+            {
+                b.HasKey(e => e.NotificationTypesId);
+                b.Property(e => e.NotificationTypesId).ValueGeneratedOnAdd();
+            });
+
+            // settings
+            modelBuilder.Entity<Setting>(b =>
+            {
+                b.HasKey(e => e.SettingId);
+                b.Property(e => e.SettingId).ValueGeneratedOnAdd();
+            });
         }
 
         protected virtual void SeedDatabase()
