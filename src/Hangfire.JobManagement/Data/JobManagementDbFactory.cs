@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
 using System.IO;
 
-namespace Hangfire.JobManagement.Data.Repositories;
+namespace Hangfire.JobManagement.Data;
 
 public class JobManagementDbFactory : IDesignTimeDbContextFactory<JobManagementDbContext>
 {
@@ -40,7 +40,7 @@ public class JobManagementDbFactory : IDesignTimeDbContextFactory<JobManagementD
         //System.Diagnostics.Debugger.Launch();
 
         // paths
-        var parent = System.IO.Directory.GetParent(Directory.GetCurrentDirectory()).FullName;
+        var parent = Directory.GetParent(Directory.GetCurrentDirectory()).FullName;
         var appSettingsPath = Path.Combine(parent, "Enterprise.App.Hangfire");
 
         var config = new ConfigurationBuilder()

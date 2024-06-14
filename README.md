@@ -63,7 +63,13 @@ services.AddHangfire(h => h.UseSqlServerStorage(Configuration.GetConnectionStrin
 
 ## EntityFramework Core
 
-``dotnet ef migrations add -p .\exts\Hangfire.JobManagement\ -v -s .\src\Hangfire.JobManagement\ -o .\src\Hangfire.JobManagement\Data\Migrations initial``
+```bash
+# install tool
+dotnet tool install --global dotnet-ef
+
+# migrations
+dotnet ef migrations add -p .\src\Hangfire.JobManagement\ -v -s .\src\Hangfire.JobManagement\ -o .\src\Hangfire.JobManagement\Data\Migrations\ initial
+```
 
 ## Credits
 This project was inspired by other Hangfire projects and forked from Brayan Mota's RecurringJobAdmin.

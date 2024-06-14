@@ -46,7 +46,7 @@ namespace Hangfire.JobManagement.Pages.Dispatchers
                 // vars
                 var globalSettings = new GlobalSettings();
                 globalSettings.DefaultTimeZoneId = (await context.Request.GetFormValuesAsync("settings.DefaultTimeZoneId").ConfigureAwait(false)).FirstOrDefault();
-                //globalSettings.DefaultQueue = (await context.Request.GetFormValuesAsync("settings.DefaultQueue").ConfigureAwait(false)).FirstOrDefault();
+                globalSettings.DefaultQueue = (await context.Request.GetFormValuesAsync("settings.DefaultQueue").ConfigureAwait(false)).FirstOrDefault();
 
                 // save
                 var data = await _settingsRepository.SaveAsync(globalSettings);

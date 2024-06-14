@@ -2,6 +2,7 @@
 using Hangfire.Dashboard;
 using Hangfire.JobManagement.Configuration;
 using Hangfire.JobManagement.Core;
+using Hangfire.JobManagement.Data;
 using Hangfire.JobManagement.Data.Repositories;
 using Hangfire.JobManagement.Data.Repositories.Interfaces;
 using Hangfire.JobManagement.Pages;
