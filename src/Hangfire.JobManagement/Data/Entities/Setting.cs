@@ -1,6 +1,5 @@
 ﻿using Hangfire.JobManagement.Data.Entities.Interfaces;
 using System;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Hangfire.JobManagement.Data.Entities;
 
@@ -12,10 +11,19 @@ public class Setting : IModelTimeStamps
 
     public string Type { get; set; }
 
-    [NotMapped]
-    public dynamic? Value { get; set; }
+    public string Value { get; set; }
 
     public DateTime? CreatedOn { get; set; }
 
     public DateTime? ModifiedOn { get; set; }
+
+    public Setting()
+    {
+
+    }
+
+    public Setting(string name)
+    {
+        Name = name;
+    }
 }

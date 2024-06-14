@@ -22,6 +22,17 @@
   </PropertyGroup>
      
   <ItemGroup>
+    <None Remove="Dashboard\Content\css\cron-expression-input.css" />
+    <None Remove="Dashboard\Content\css\JobExtension.css" />
+    <None Remove="Dashboard\Content\js\axios.min.js" />
+    <None Remove="Dashboard\Content\js\cron-expression-input.js" />
+    <None Remove="Dashboard\Content\js\daysjs.min.js" />
+    <None Remove="Dashboard\Content\js\jobextension.js" />
+    <None Remove="Dashboard\Content\js\relativeTime.min.js" />
+    <None Remove="Dashboard\Content\js\sweetalert.js" />
+    <None Remove="Dashboard\Content\js\vue.3.4.27.js" />
+    <None Remove="Dashboard\Content\js\vue.js" />
+    <None Remove="Dashboard\Content\js\vuejs-paginate.js" />
     <None Remove="Dashboard\JobManagement.html" />
     <None Remove="Dashboard\JobsStopped.html" />
     <None Remove="Dashboard\Notifications.html" />
@@ -31,6 +42,17 @@
   </ItemGroup>
      
   <ItemGroup>
+    <EmbeddedResource Include="Dashboard\Content\css\cron-expression-input.css" />
+    <EmbeddedResource Include="Dashboard\Content\css\JobExtension.css" />
+    <EmbeddedResource Include="Dashboard\Content\js\axios.min.js" />
+    <EmbeddedResource Include="Dashboard\Content\js\cron-expression-input.js" />
+    <EmbeddedResource Include="Dashboard\Content\js\daysjs.min.js" />
+    <EmbeddedResource Include="Dashboard\Content\js\jobextension.js" />
+    <EmbeddedResource Include="Dashboard\Content\js\relativeTime.min.js" />
+    <EmbeddedResource Include="Dashboard\Content\js\sweetalert.js" />
+    <EmbeddedResource Include="Dashboard\Content\js\vue.3.4.27.js" />
+    <EmbeddedResource Include="Dashboard\Content\js\vue.js" />
+    <EmbeddedResource Include="Dashboard\Content\js\vuejs-paginate.js" />
     <EmbeddedResource Include="Dashboard\JobManagement.html" />
     <EmbeddedResource Include="Dashboard\JobsStopped.html" />
     <EmbeddedResource Include="Dashboard\Notifications.html" />

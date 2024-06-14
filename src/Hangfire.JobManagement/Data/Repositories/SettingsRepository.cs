@@ -79,12 +79,13 @@ namespace Hangfire.JobManagement.Data.Repositories
 
                 // save (DefaultTimeZoneId)
                 var defaultTimeZoneId = model.DefaultTimeZoneId;
-                var settingDefaultTimeZoneId = await db.Settings.SingleOrDefaultAsync(x => x.Name == nameof(GlobalSettings.DefaultTimeZoneId));
+                var settingDefaultTimeZoneId = await db.Settings.SingleOrDefaultAsync(x => x.Name == nameof(GlobalSettings.DefaultTimeZoneId)) ?? new Setting(nameof(GlobalSettings.DefaultTimeZoneId));
                 settingDefaultTimeZoneId.Value = defaultTimeZoneId;
+                db.Settings.Update(settingDefaultTimeZoneId);
 
                 // save (DefaultQueue)
                 var defaultQueue = model.DefaultTimeZoneId;
-                var settingDefaultQueue = await db.Settings.SingleOrDefaultAsync(x => x.Name == nameof(GlobalSettings.DefaultQueue));
+                var settingDefaultQueue = await db.Settings.SingleOrDefaultAsync(x => x.Name == nameof(GlobalSettings.DefaultQueue)) ?? new Setting(nameof(GlobalSettings.DefaultQueue));
                 settingDefaultQueue.Value = defaultQueue;
 
                 // save changes
