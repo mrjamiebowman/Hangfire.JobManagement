@@ -12,11 +12,13 @@ public class JobManagementDbFactory : IDesignTimeDbContextFactory<JobManagementD
 
     public JobManagementDbFactory()
     {
-
+        System.Diagnostics.Debugger.Break();
     }
 
     public JobManagementDbFactory(JobManagementConfiguration jobManagementConfiguration)
     {
+        System.Diagnostics.Debugger.Break();
+
         _jobManagementConfiguration = jobManagementConfiguration;
     }
 

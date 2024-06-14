@@ -122,8 +122,6 @@ namespace Hangfire.JobManagement
             return services;
         }
 
-        // entity framework
-
         // open telemetry
 
         //public static IGlobalConfiguration UseJobManagement(this IGlobalConfiguration config, [NotNull] params string[] assemblies) {
