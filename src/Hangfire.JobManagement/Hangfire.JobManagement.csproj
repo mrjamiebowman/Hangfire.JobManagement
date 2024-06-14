@@ -1,5 +1,4 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-    
     <PropertyGroup Condition=" '$(OS)' != 'Windows_NT' ">
         <TargetFramework>netstandard2.0</TargetFramework>
     </PropertyGroup>
@@ -21,7 +20,7 @@
       <NeutralLanguage>en</NeutralLanguage>
       <PackageProjectUrl>https://github.com/mrjamiebowman/Hangfire.JobManagement.git</PackageProjectUrl>
       <RepositoryUrl>https://github.com/mrjamiebowman/Hangfire.JobManagement.git</RepositoryUrl>
-      <Version>2.0.1</Version>
+      <Version>2.1.0</Version>
       <PackOnBuild>true</PackOnBuild>
       <Description>A Job Management extension to Hangfire</Description>
       <Title>mrjamiebowman.Hangfire.JobManagement</Title>
