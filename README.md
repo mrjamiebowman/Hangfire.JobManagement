@@ -38,6 +38,10 @@ Then add this in your code:
 for service side:
 
 ```csharp
+// job management
+builder.Services.ConfigureJobManagement(builder.Configuration);
+
+// hangfire
 services.AddHangfire(h => h.UseSqlServerStorage(Configuration.GetConnectionString("HangfireConnection"))
     /* job management */
     .UseJobManagement(jobManagementConfig, b => {
@@ -57,28 +61,9 @@ services.AddHangfire(h => h.UseSqlServerStorage(Configuration.GetConnectionStrin
     })
 ```
 
-## For .NET Framework
-for startup side:
+## EntityFramework Core
 
-```csharp
-GlobalConfiguration.Configuration.UseSqlServerStorage("HangfireConnection")
-    /* job management */
-    .UseJobManagement(jobManagementConfig, b => {
-        // assemblies
-        b.ConfigureAssemblies(new Assembly[] {
-            typeof(Program).Assembly
-        });
-
-        // database
-        b.ConfigureDatabase();
-
-        // features
-        b.ConfigureFeatures(f => {
-            f.Notifications = true;
-            f.Settings = true;
-        });
-    })
-```
+``dotnet ef migrations add -p .\exts\Hangfire.JobManagement\ -v -s .\src\Hangfire.JobManagement\ -o .\src\Hangfire.JobManagement\Data\Migrations initial``
 
 ## Credits
 This project was inspired by other hangfire projects and forked from Brayan Mota's RecurringJobAdmin.
