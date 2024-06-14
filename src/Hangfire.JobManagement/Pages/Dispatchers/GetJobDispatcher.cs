@@ -21,7 +21,6 @@ namespace Hangfire.JobManagement.Pages.Dispatchers
         public async Task Dispatch([NotNull] Dashboard.DashboardContext context) {
             if (!"GET".Equals(context.Request.Method, StringComparison.InvariantCultureIgnoreCase)) {
                 context.Response.StatusCode = 405;
-
                 return;
             }
 

@@ -17,7 +17,7 @@ public class JobManagementDbFactory : IDesignTimeDbContextFactory<JobManagementD
 
     public JobManagementDbFactory(JobManagementConfiguration jobManagementConfiguration)
     {
-        System.Diagnostics.Debugger.Break();
+        //System.Diagnostics.Debugger.Break();
 
         _jobManagementConfiguration = jobManagementConfiguration;
     }
