@@ -1,7 +1,9 @@
 ﻿using Hangfire.Dashboard;
 using Hangfire.JobManagement.Data.Repositories.Interfaces;
 using Hangfire.Storage;
+using Newtonsoft.Json;
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Hangfire.JobManagement.Pages.Dispatchers
@@ -31,8 +33,10 @@ namespace Hangfire.JobManagement.Pages.Dispatchers
                 return;
             }
 
-    
-            //await context.Response.WriteAsync(JsonConvert.SerializeObject(periodicJob));
+            // data
+            var data = await _settingsRepository.GetAsync();
+
+            await context.Response.WriteAsync(JsonConvert.SerializeObject(data));
         }
     }
 }
