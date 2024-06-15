@@ -1,4 +1,5 @@
 ﻿using Hangfire.Dashboard;
+using Hangfire.JobManagement.Data.Repositories.Interfaces;
 using Hangfire.Storage;
 using System;
 using System.Threading.Tasks;
@@ -7,11 +8,19 @@ namespace Hangfire.JobManagement.Pages.Dispatchers
 {
     internal class SettingsGetDispatcher : IDashboardDispatcher
     {
+        // logger
+
+        // hangfire
         private readonly IStorageConnection _connection;
 
-        public SettingsGetDispatcher()
+        // repos
+        private readonly ISettingsRepository _settingsRepository;
+
+        public SettingsGetDispatcher(ISettingsRepository settingsRepository)
         {
+            //ISettingsRepository
             _connection = JobStorage.Current.GetConnection();
+            _settingsRepository = settingsRepository;
         }
 
         public async Task Dispatch(DashboardContext context)
@@ -22,13 +31,7 @@ namespace Hangfire.JobManagement.Pages.Dispatchers
                 return;
             }
 
-            await Task.Delay(10);
-
-            throw new NotImplementedException();
-
-            //var periodicJob = new List<PeriodicJob>();
-            //periodicJob.AddRange(JobAgent.GetAllJobStopped());
-
+    
             //await context.Response.WriteAsync(JsonConvert.SerializeObject(periodicJob));
         }
     }

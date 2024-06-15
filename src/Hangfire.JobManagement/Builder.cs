@@ -162,9 +162,9 @@ namespace Hangfire.JobManagement
             DashboardRoutes.Routes.Add("/management/data/timezones", new GetTimeZonesDispatcher());
 
             // dispatcher: settings
-            DashboardRoutes.Routes.Add("/management/settings/all", new SettingsGetDispatcher());
-            DashboardRoutes.Routes.Add("/management/settings/queue/delete", new SettingsQueueDeleteDispatcher());
-            DashboardRoutes.Routes.Add("/management/settings/queue/save", new SettingsQueueSaveDispatcher());
+            DashboardRoutes.Routes.Add("/management/settings/all", new SettingsGetDispatcher(settingsRepository));
+            DashboardRoutes.Routes.Add("/management/settings/queue/delete", new SettingsQueueDeleteDispatcher(settingsRepository));
+            DashboardRoutes.Routes.Add("/management/settings/queue/save", new SettingsQueueSaveDispatcher(settingsRepository));
             DashboardRoutes.Routes.Add("/management/settings/save", new SettingsSaveDispatcher(settingsRepository)); //serviceProvider.GetService<ILogger<SettingsSaveDispatcher>>()
 
             // jobs stopped
