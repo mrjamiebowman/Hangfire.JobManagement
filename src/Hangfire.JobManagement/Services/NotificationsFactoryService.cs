@@ -1,8 +1,13 @@
-﻿using Hangfire.JobManagement.Abstractions;
-
-namespace Hangfire.JobManagement.Services;
+﻿namespace Hangfire.JobManagement.Services;
 
 public class NotificationsFactoryService 
 {
+    public NotificationsFactoryService()
+    {
 
+    }
+
+    // TODO: get notification services
+
+    // TODO: process notifications
 }
