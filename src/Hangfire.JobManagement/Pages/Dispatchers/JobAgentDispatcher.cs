@@ -11,6 +11,8 @@ namespace Hangfire.JobManagement.Pages.Dispatchers
     internal sealed class JobAgentDispatcher : IDashboardDispatcher
     {
         public async Task Dispatch([NotNull] DashboardContext context) {
+            using var activity = OTel.Application.StartActivity("JobAgentDispatcher.Dispatch");
+
             var response = new Response() { Status = true };
 
             var jobId = context.Request.GetQuery("Id");

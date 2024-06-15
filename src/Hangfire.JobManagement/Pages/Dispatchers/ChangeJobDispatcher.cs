@@ -24,6 +24,8 @@ namespace Hangfire.JobManagement.Pages.Dispatchers
         }
 
         public async Task Dispatch([NotNull] DashboardContext context) {
+            using var activity = OTel.Application.StartActivity("ChangeJobDispatcher.Dispatch");
+
             var response = new Response() { Status = true };
 
             var job = new PeriodicJob();

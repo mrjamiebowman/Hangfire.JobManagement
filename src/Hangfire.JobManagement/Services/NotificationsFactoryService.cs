@@ -25,6 +25,8 @@ public class NotificationsFactoryService : INotificationsFactoryService
 
     public Task<List<INotificationService>> GetNotificationServicesAsync(CancellationToken cancellation = default)
     {
+        using var activity = OTel.Application.StartActivity("NotificationsFactoryService.GetNotificationServicesAsync");
+
         // get notification services
         var serviceProvider = Builder.Services.BuildServiceProvider();
         _notificationServices = serviceProvider.GetServices<INotificationService>().ToList();
@@ -34,6 +36,8 @@ public class NotificationsFactoryService : INotificationsFactoryService
 
     public async Task ProcessEventAsync<T>(NotificationEvent<T> @event, CancellationToken cancellation = default) where T : BaseEvent
     {
+        using var activity = OTel.Application.StartActivity("NotificationsFactoryService.ProcessEventAsync");
+
         // lookup notifications by the job or global
         var notificationServices = await GetNotificationServicesAsync();
 

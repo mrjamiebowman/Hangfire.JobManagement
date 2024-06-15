@@ -18,6 +18,8 @@ namespace Hangfire.JobManagement.Pages.Dispatchers
         }
 
         public async Task Dispatch([NotNull] Dashboard.DashboardContext context) {
+            using var activity = OTel.Application.StartActivity("GetJobsStoppedDispatcher.Dispatch");
+
             if (!"GET".Equals(context.Request.Method, StringComparison.InvariantCultureIgnoreCase)) {
                 context.Response.StatusCode = 405;
 

@@ -21,6 +21,8 @@ namespace Hangfire.JobManagement.Pages.Dispatchers
 
         public async Task Dispatch(DashboardContext context)
         {
+            using var activity = OTel.Application.StartActivity("SettingsQueueDeleteDispatcher.Dispatch");
+
             if (!"POST".Equals(context.Request.Method, StringComparison.InvariantCultureIgnoreCase))
             {
                 context.Response.StatusCode = 405;

@@ -19,6 +19,8 @@ namespace Hangfire.JobManagement.Pages.Dispatchers
 
         public async Task Dispatch([NotNull] DashboardContext conterecurringJobt) 
         {
+            using var activity = OTel.Application.StartActivity("GetJobForEdit.Dispatch");
+
             var response = new Response() { Status = true };
 
             if (!"GET".Equals(conterecurringJobt.Request.Method, StringComparison.InvariantCultureIgnoreCase)) {

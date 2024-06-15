@@ -28,6 +28,8 @@ namespace Hangfire.JobManagement.Pages.Dispatchers
 
         public async Task Dispatch(DashboardContext context)
         {
+            using var activity = OTel.Application.StartActivity("SettingsGetDispatcher.Dispatch");
+
             if (!"GET".Equals(context.Request.Method, StringComparison.InvariantCultureIgnoreCase))
             {
                 context.Response.StatusCode = 405;

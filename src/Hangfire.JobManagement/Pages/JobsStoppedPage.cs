@@ -17,6 +17,8 @@ namespace Hangfire.JobManagement.Pages
 
         public override void Execute()
         {
+            using var activity = OTel.Application.StartActivity("JobsStoppedPage.Execute");
+
             WriteResources();
             WriteEmptyLine();
             Layout = new LayoutPage(Title);
