@@ -68,7 +68,7 @@ services.AddHangfire(h => h.UseSqlServerStorage(Configuration.GetConnectionStrin
 dotnet tool install --global dotnet-ef
 
 # migrations
-dotnet ef migrations add -p .\src\Hangfire.JobManagement\ -v -s .\src\Hangfire.JobManagement\ -o .\src\Hangfire.JobManagement\Data\Migrations\ initial
+dotnet ef migrations add -v -p ./src/Hangfire.JobManagement/Hangfire.JobManagement.csproj -c JobManagementDbContext -s ../../src/MrJB.Hangfire/ -o ./src/Hangfire.JobManagement/Data/Migrations initial
 ```
 
 ## Credits

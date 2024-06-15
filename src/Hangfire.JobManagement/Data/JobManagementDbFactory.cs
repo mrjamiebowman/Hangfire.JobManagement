@@ -12,13 +12,11 @@ public class JobManagementDbFactory : IDesignTimeDbContextFactory<JobManagementD
 
     public JobManagementDbFactory()
     {
-        System.Diagnostics.Debugger.Break();
+
     }
 
     public JobManagementDbFactory(JobManagementConfiguration jobManagementConfiguration)
     {
-        //System.Diagnostics.Debugger.Break();
-
         _jobManagementConfiguration = jobManagementConfiguration;
     }
 
@@ -38,17 +36,16 @@ public class JobManagementDbFactory : IDesignTimeDbContextFactory<JobManagementD
     /// <returns></returns>
     public JobManagementDbContext CreateDbContext(string[] args)
     {
-        // used for debugging... (typically commented out unless needed.)
-        //System.Diagnostics.Debugger.Launch();
+        System.Diagnostics.Debugger.Launch();
 
         // paths
         var parent = Directory.GetParent(Directory.GetCurrentDirectory()).FullName;
-        var appSettingsPath = Path.Combine(parent, "Enterprise.App.Hangfire");
+        var appPath = Path.Combine(parent, "Hangfire.JobManagement");
 
         var config = new ConfigurationBuilder()
-            .SetBasePath(appSettingsPath)
+            .SetBasePath(appPath)
             .AddEnvironmentVariables()
-            .AddJsonFile("appsettings.json", false)
+            .AddJsonFile("appsettings.json", true)
             //.AddAzureAppConfiguration(options =>
             //{
             //    var credentials = new DefaultAzureCredential();

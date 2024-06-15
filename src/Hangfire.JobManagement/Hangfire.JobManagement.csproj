@@ -22,6 +22,7 @@
   </PropertyGroup>
      
   <ItemGroup>
+    <None Remove="appsettings.json" />
     <None Remove="Dashboard\Content\css\cron-expression-input.css" />
     <None Remove="Dashboard\Content\css\JobExtension.css" />
     <None Remove="Dashboard\Content\js\axios.min.js" />
@@ -39,6 +40,14 @@
     <None Remove="Dashboard\Resources.html" />
     <None Remove="Dashboard\Settings.html" />
     <None Remove="Dashboard\SidebarHeader.html" />
+  </ItemGroup>
+     
+  <ItemGroup>
+    <Content Include="appsettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
   </ItemGroup>
      
   <ItemGroup>
@@ -76,10 +85,12 @@
     <PackageReference Include="Cronos" Version="0.8.4" />
     <PackageReference Include="Hangfire.Core" Version="1.8.14" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.6" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Abstractions" Version="8.0.6" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.6">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="8.0.6" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.6" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.6">
       <PrivateAssets>all</PrivateAssets>
@@ -96,6 +107,10 @@
      
   <ItemGroup>
     <ProjectReference Include="..\..\..\JobManagement.Abstractions\Hangfire.JobManagement.Abstractions\Hangfire.JobManagement.Abstractions.csproj" />
+  </ItemGroup>
+     
+  <ItemGroup>
+    <Folder Include="Data\Migrations\" />
   </ItemGroup>
 
 </Project>
