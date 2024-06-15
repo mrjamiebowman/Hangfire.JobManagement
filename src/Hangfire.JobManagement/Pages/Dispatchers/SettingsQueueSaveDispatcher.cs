@@ -1,9 +1,12 @@
 ﻿using Hangfire.Dashboard;
+using Hangfire.JobManagement.Data.Entities;
 using Hangfire.JobManagement.Data.Repositories.Interfaces;
+using Hangfire.JobManagement.Models;
 using Hangfire.Storage;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Diagnostics;
+using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -42,8 +45,17 @@ namespace Hangfire.JobManagement.Pages.Dispatchers
                     return;
                 }
 
+                // vars
+                var model = new SettingQueue();
+                model.QueueName = (await context.Request.GetFormValuesAsync("queue.QueueName").ConfigureAwait(false)).FirstOrDefault(); 
+
                 // data
                 var data = await _settingsQueueRepository.GetAsync();
+
+                // is already in list?
+
+                // save
+                //await _settingsQueueRepository.Save(Models);
 
                 // response
                 var json = JsonSerializer.Serialize(data);

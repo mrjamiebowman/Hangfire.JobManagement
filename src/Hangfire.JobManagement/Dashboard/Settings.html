@@ -20,7 +20,7 @@
                     <!-- Input Field -->
                     <div class="form-group">
                         <label for="stringInput">Enter Queue</label>
-                        <input type="text" class="form-control" id="stringInput" placeholder="Enter queue name">
+                        <input type="text" class="form-control" v-model="queue.QueueName" id="stringInput" placeholder="Enter queue name">
                     </div>
 
                     <!-- Add Button -->
@@ -75,6 +75,9 @@
                     DefaultQueue: '',
                 },
                 timeZones: [],
+                queue: {
+                    QueueName : '',
+                },
                 queues: [],
                 pagination: {
                     parPage: 10,
@@ -87,8 +90,7 @@
                 debugger;
 
                 const formData = new FormData();
-                formData.append('settings.DefaultTimeZoneId', this.settings.DefaultTimeZoneId);
-                formData.append('settings.DefaultQueue', this.settings.DefaultQueue);
+                formData.append('form.QueueName', this.queue.QueueName);
 
                 // hangfire: csrf token 
                 var csrfHeader = $('meta[name="csrf-header"]').attr('content');

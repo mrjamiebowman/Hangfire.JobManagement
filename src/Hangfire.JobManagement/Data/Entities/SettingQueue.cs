@@ -7,6 +7,8 @@ public class SettingQueue : IModelTimeStamps
 {
     public int? SettingQueueId { get; set; }
 
+    public string QueueName { get; set; }
+
     public DateTime? CreatedOn { get; set; }
 
     public DateTime? ModifiedOn { get; set; }
