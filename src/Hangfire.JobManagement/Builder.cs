@@ -7,6 +7,9 @@ using Hangfire.JobManagement.Data.Repositories;
 using Hangfire.JobManagement.Data.Repositories.Interfaces;
 using Hangfire.JobManagement.Pages;
 using Hangfire.JobManagement.Pages.Dispatchers;
+using Hangfire.JobManagement.Services;
+using Hangfire.JobManagement.Services.Interfaces;
+using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -115,6 +118,14 @@ namespace Hangfire.JobManagement
 
             // inject: dbcontext factory
             services.AddTransient<JobManagementDbFactory, JobManagementDbFactory>();
+
+            // inject: factories
+            services.AddTransient<IDesignTimeDbContextFactory<JobManagementDbContext>, JobManagementDbFactory>();
+            services.AddTransient<INotificationsFactoryService, NotificationsFactoryService>();
+
+            // services
+            services.AddTransient<IBatchService, BatchService>();
+            services.AddTransient<IJobHistoryService, JobHistoryService>();
 
             // inject: repositories
             services.AddTransient<ISettingsRepository, SettingsRepository>();

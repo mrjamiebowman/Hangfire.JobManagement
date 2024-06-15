@@ -1,6 +1,8 @@
-﻿namespace Hangfire.JobManagement.Services;
+﻿using Hangfire.JobManagement.Services.Interfaces;
 
-public class NotificationsFactoryService 
+namespace Hangfire.JobManagement.Services;
+
+public class NotificationsFactoryService : INotificationsFactoryService
 {
     public NotificationsFactoryService()
     {
