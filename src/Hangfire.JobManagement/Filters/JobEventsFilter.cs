@@ -37,6 +37,7 @@ public class JobEventsFilter : JobFilterAttribute, IClientFilter, IServerFilter,
         jobStatusEvent.JobName = context.Job.Method.Name;
         jobStatusEvent.JobId = context.BackgroundJob?.Id;
 
+        // notification event
         NotificationEvent<JobStatusEvent> @event = new NotificationEvent<JobStatusEvent>(jobStatusEvent);
 
         // process notifications
@@ -56,6 +57,7 @@ public class JobEventsFilter : JobFilterAttribute, IClientFilter, IServerFilter,
     public void OnStateElection(ElectStateContext context)
     {
         var failedState = context.CandidateState as FailedState;
+
         if (failedState != null)
         {
             Logger.WarnFormat(

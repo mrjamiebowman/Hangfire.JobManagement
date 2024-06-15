@@ -1,8 +1,10 @@
 ﻿using Hangfire.JobManagement.Abstractions;
 using Hangfire.JobManagement.Abstractions.Events;
+using Hangfire.JobManagement.Abstractions.Notifications;
 using Hangfire.JobManagement.Events;
 using Hangfire.JobManagement.Services.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -36,10 +38,20 @@ public class NotificationsFactoryService : INotificationsFactoryService
         // lookup notifications by the job or global
         var notificationServices = await GetNotificationServicesAsync();
 
+        // get job notification settings (global or individual jobs)
+        var notificationOptions = new NotificationOptions();
+
+        // tasks
+        var tasks = new List<Task>();
+
         // process notifications
         foreach (var notificationService in notificationServices)
         {
             // process event
+            tasks.Add(notificationService.ProcessEventAsync<T>(@event, notificationOptions, cancellation));
         }
+
+        // await all
+        await Task.WhenAll(tasks);
     } 
 }

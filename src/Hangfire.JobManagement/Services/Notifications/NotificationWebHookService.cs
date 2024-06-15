@@ -1,13 +1,19 @@
 ﻿using Hangfire.JobManagement.Abstractions;
 using Hangfire.JobManagement.Abstractions.Events;
+using Hangfire.JobManagement.Abstractions.Notifications;
 using Hangfire.JobManagement.Events;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Hangfire.JobManagement.Services.Notifications
 {
-    public class NotificationWebHookService : INotificationService
+    public class NotificationWebHookService : BaseNotificationService, INotificationService
     {
-        public Task ProcessEventAsync(NotificationEvent<BaseEvent> @event, CancellationToken cancellation = default) => throw new System.NotImplementedException();
+        public override string Name { get; set; } = "DefaultWebHooks";
+
+        public Task ProcessEventAsync<T>(NotificationEvent<T> @event, NotificationOptions notificationOptions, CancellationToken cancellation = default) where T : BaseEvent
+        {
+            return Task.CompletedTask;
+        }
     }
 }
