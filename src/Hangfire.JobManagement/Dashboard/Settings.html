@@ -87,8 +87,11 @@
                 debugger;
             },
             GetSettings() {
-                axios.get('GetSettings')
-                     .then(res => (this.settings = res.data))
+                axios.get('settings/all')
+                    .then(res => {
+                        debugger;
+                        this.settings = res.data;
+                    });
             },
             GetTimeZones() {
                 axios.get('data/timezones').then(response => {
@@ -120,6 +123,7 @@
         },
         created() {
             this.GetTimeZones();
+            this.GetSettings();
         },
         computed: {
             getItems: function () {
