@@ -1,5 +1,6 @@
 ﻿using Hangfire.Annotations;
 using Hangfire.Dashboard;
+using Hangfire.JobManagement.Abstractions;
 using Hangfire.JobManagement.Configuration;
 using Hangfire.JobManagement.Core;
 using Hangfire.JobManagement.Data;
@@ -10,6 +11,7 @@ using Hangfire.JobManagement.Pages;
 using Hangfire.JobManagement.Pages.Dispatchers;
 using Hangfire.JobManagement.Services;
 using Hangfire.JobManagement.Services.Interfaces;
+using Hangfire.JobManagement.Services.Notifications;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -136,6 +138,9 @@ namespace Hangfire.JobManagement
             // services
             services.AddTransient<IBatchService, BatchService>();
             services.AddTransient<IJobHistoryService, JobHistoryService>();
+
+            services.AddTransient<INotificationService, NotificationEmailService>();
+            services.AddTransient<INotificationService, NotificationWebHookService>();
 
             // inject: repositories
             services.AddTransient<ISettingsRepository, SettingsRepository>();
