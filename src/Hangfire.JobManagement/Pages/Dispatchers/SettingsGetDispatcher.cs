@@ -1,8 +1,10 @@
 ﻿using Hangfire.Dashboard;
 using Hangfire.JobManagement.Data.Repositories.Interfaces;
+using Hangfire.JobManagement.Models;
 using Hangfire.Storage;
 using Newtonsoft.Json;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Hangfire.JobManagement.Pages.Dispatchers
@@ -33,9 +35,12 @@ namespace Hangfire.JobManagement.Pages.Dispatchers
             }
 
             // data
-            var data = await _settingsRepository.GetAsync();
+            var data = (await _settingsRepository.GetAsync()).ToList();
 
-            await context.Response.WriteAsync(JsonConvert.SerializeObject(data));
+            // global settings
+            var globalSettings = new GlobalSetting(data);
+
+            await context.Response.WriteAsync(JsonConvert.SerializeObject(globalSettings));
         }
     }
 }
