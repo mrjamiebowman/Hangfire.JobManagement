@@ -104,7 +104,7 @@ namespace Hangfire.JobManagement
             jobManagementOptions.Invoke(Options);
 
             // filters
-            GlobalJobFilters.Filters.Add(new JobEventsFilter());
+            GlobalJobFilters.Filters.Add(new JobEventsFilter(services));
 
             // get all jobs
             PeriodicJobBuilder.GetAllJobs();

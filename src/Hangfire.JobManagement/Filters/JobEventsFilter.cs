@@ -4,6 +4,7 @@ using Hangfire.Logging;
 using Hangfire.Server;
 using Hangfire.States;
 using Hangfire.Storage;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Hangfire.JobManagement.Filters;
 
@@ -11,6 +12,11 @@ public class JobEventsFilter : JobFilterAttribute, IClientFilter, IServerFilter,
 {
     // logger
     private static readonly ILog Logger = LogProvider.GetCurrentClassLogger();
+
+    public JobEventsFilter(IServiceCollection services)
+    {
+        
+    }
 
     public void OnCreating(CreatingContext context)
     {
