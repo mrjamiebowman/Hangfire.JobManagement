@@ -1,6 +1,7 @@
 ﻿using Hangfire.JobManagement.Configuration;
 using Hangfire.JobManagement.Data.Entities;
 using Hangfire.JobManagement.Data.Repositories.Interfaces;
+using Hangfire.JobManagement.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
@@ -61,18 +62,27 @@ namespace Hangfire.JobManagement.Data.Repositories
             }
         }
 
-        public async Task<GlobalSettings> GetCompositeAsync(CancellationToken cancellationToken = default)
+        public async Task<GlobalSetting> GetCompositeAsync(CancellationToken cancellationToken = default)
         {
-            using var db = _dbContextFactory.Create();
-
-            using (var trn = db.Database.BeginTransaction())
+            try
             {
-                //return await db.Settings.SingleOrDefaultAsync(x => x.SettingId == id);
-                throw new NotImplementedException();
+                using var db = _dbContextFactory.Create();
+
+                //using (var trn = db.Database.BeginTransaction())
+                //{
+                //    //return await db.Settings.SingleOrDefaultAsync(x => x.SettingId == id);
+                //    throw new NotImplementedException();
+                //}
+
+                await Task.Delay(10);
+
+                return new GlobalSetting();
+            } catch (Exception ex) {
+                throw;
             }
         }
 
-        public async Task<GlobalSettings> SaveAsync(GlobalSettings model, CancellationToken cancellationToken = default)
+        public async Task<GlobalSetting> SaveAsync(GlobalSetting model, CancellationToken cancellationToken = default)
         {
             try
             {
@@ -80,13 +90,13 @@ namespace Hangfire.JobManagement.Data.Repositories
 
                 // save (DefaultTimeZoneId)
                 var defaultTimeZoneId = model.DefaultTimeZoneId;
-                var settingDefaultTimeZoneId = await db.Settings.SingleOrDefaultAsync(x => x.Name == nameof(GlobalSettings.DefaultTimeZoneId)) ?? new Setting(nameof(GlobalSettings.DefaultTimeZoneId));
+                var settingDefaultTimeZoneId = await db.Settings.SingleOrDefaultAsync(x => x.Name == nameof(GlobalSetting.DefaultTimeZoneId)) ?? new Setting(nameof(GlobalSetting.DefaultTimeZoneId));
                 settingDefaultTimeZoneId.Value = defaultTimeZoneId;
                 db.Settings.Update(settingDefaultTimeZoneId);
 
                 // save (DefaultQueue)
                 var defaultQueue = model.DefaultTimeZoneId;
-                var settingDefaultQueue = await db.Settings.SingleOrDefaultAsync(x => x.Name == nameof(GlobalSettings.DefaultQueue)) ?? new Setting(nameof(GlobalSettings.DefaultQueue));
+                var settingDefaultQueue = await db.Settings.SingleOrDefaultAsync(x => x.Name == nameof(GlobalSetting.DefaultQueue)) ?? new Setting(nameof(GlobalSetting.DefaultQueue));
                 settingDefaultQueue.Value = defaultQueue;
 
                 // save changes

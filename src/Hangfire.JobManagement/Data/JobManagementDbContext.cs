@@ -1,5 +1,6 @@
 ﻿using Hangfire.JobManagement.Configuration;
 using Hangfire.JobManagement.Data.Entities;
+using Hangfire.JobManagement.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -59,13 +60,6 @@ namespace Hangfire.JobManagement.Data
             {
                 b.HasKey(e => e.BatchOperationId);
                 b.Property(e => e.BatchOperationId).ValueGeneratedOnAdd();
-            });
-
-            // global settings
-            modelBuilder.Entity<GlobalSettings>(b =>
-            {
-                b.HasKey(e => e.GlobalSettingId);
-                b.Property(e => e.GlobalSettingId).ValueGeneratedOnAdd();
             });
 
             // jog history

@@ -1,6 +1,7 @@
 ﻿using Hangfire.Dashboard;
 using Hangfire.JobManagement.Data.Entities;
 using Hangfire.JobManagement.Data.Repositories.Interfaces;
+using Hangfire.JobManagement.Models;
 using Hangfire.Storage;
 using Microsoft.Extensions.Logging;
 using OpenTelemetry.Trace;
@@ -44,7 +45,7 @@ namespace Hangfire.JobManagement.Pages.Dispatchers
             try
             {
                 // vars
-                var globalSettings = new GlobalSettings();
+                var globalSettings = new GlobalSetting();
                 globalSettings.DefaultTimeZoneId = (await context.Request.GetFormValuesAsync("settings.DefaultTimeZoneId").ConfigureAwait(false)).FirstOrDefault();
                 globalSettings.DefaultQueue = (await context.Request.GetFormValuesAsync("settings.DefaultQueue").ConfigureAwait(false)).FirstOrDefault();
 
