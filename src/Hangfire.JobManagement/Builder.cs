@@ -5,6 +5,7 @@ using Hangfire.JobManagement.Core;
 using Hangfire.JobManagement.Data;
 using Hangfire.JobManagement.Data.Repositories;
 using Hangfire.JobManagement.Data.Repositories.Interfaces;
+using Hangfire.JobManagement.Filters;
 using Hangfire.JobManagement.Pages;
 using Hangfire.JobManagement.Pages.Dispatchers;
 using Hangfire.JobManagement.Services;
@@ -102,8 +103,13 @@ namespace Hangfire.JobManagement
             // customization
             jobManagementOptions.Invoke(Options);
 
+            // filters
+            GlobalJobFilters.Filters.Add(new JobEventsFilter());
+
+            // get all jobs
             PeriodicJobBuilder.GetAllJobs();
 
+            // set up
             CreateJobManagement();
 
             return config;
