@@ -36,8 +36,6 @@ public class JobManagementDbFactory : IDesignTimeDbContextFactory<JobManagementD
     /// <returns></returns>
     public JobManagementDbContext CreateDbContext(string[] args)
     {
-        System.Diagnostics.Debugger.Launch();
-
         // paths
         var parent = Directory.GetParent(Directory.GetCurrentDirectory()).FullName;
         var appPath = Path.Combine(parent, "Hangfire.JobManagement");
@@ -51,6 +49,11 @@ public class JobManagementDbFactory : IDesignTimeDbContextFactory<JobManagementD
         // hangfire configuration
         JobManagementConfiguration jobManagementConfiguration = new JobManagementConfiguration();
         config.GetSection(JobManagementConfiguration.Position).Bind(jobManagementConfiguration);
+
+        // launch debugger (appSettings.json)
+        if (jobManagementConfiguration.Debug.Migrations == true) {
+            System.Diagnostics.Debugger.Launch();
+        }
 
         var builder = new DbContextOptionsBuilder<JobManagementDbContext>();
 

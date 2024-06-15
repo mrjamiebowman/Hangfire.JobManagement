@@ -26,20 +26,6 @@ namespace Hangfire.JobManagement.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "GlobalSettings",
-                columns: table => new
-                {
-                    GlobalSettingId = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    DefaultTimeZoneId = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    DefaultQueue = table.Column<string>(type: "nvarchar(max)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_GlobalSettings", x => x.GlobalSettingId);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "JobHistory",
                 columns: table => new
                 {
@@ -109,6 +95,20 @@ namespace Hangfire.JobManagement.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "SettingsQueues",
+                columns: table => new
+                {
+                    SettingQueueId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    ModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SettingsQueues", x => x.SettingQueueId);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "BatchOperation",
                 columns: table => new
                 {
@@ -141,9 +141,6 @@ namespace Hangfire.JobManagement.Data.Migrations
                 name: "BatchOperation");
 
             migrationBuilder.DropTable(
-                name: "GlobalSettings");
-
-            migrationBuilder.DropTable(
                 name: "JobHistory");
 
             migrationBuilder.DropTable(
@@ -157,6 +154,9 @@ namespace Hangfire.JobManagement.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "Settings");
+
+            migrationBuilder.DropTable(
+                name: "SettingsQueues");
 
             migrationBuilder.DropTable(
                 name: "Batches");

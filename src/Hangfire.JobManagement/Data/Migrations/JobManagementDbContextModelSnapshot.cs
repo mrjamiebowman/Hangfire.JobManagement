@@ -65,25 +65,6 @@ namespace Hangfire.JobManagement.Data.Migrations
                     b.ToTable("BatchOperation");
                 });
 
-            modelBuilder.Entity("Hangfire.JobManagement.Data.Entities.GlobalSettings", b =>
-                {
-                    b.Property<long>("GlobalSettingId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("GlobalSettingId"));
-
-                    b.Property<string>("DefaultQueue")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("DefaultTimeZoneId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("GlobalSettingId");
-
-                    b.ToTable("GlobalSettings");
-                });
-
             modelBuilder.Entity("Hangfire.JobManagement.Data.Entities.JobHistory", b =>
                 {
                     b.Property<long>("JobHistoryId")
@@ -174,6 +155,25 @@ namespace Hangfire.JobManagement.Data.Migrations
                     b.HasKey("SettingId");
 
                     b.ToTable("Settings");
+                });
+
+            modelBuilder.Entity("Hangfire.JobManagement.Data.Entities.SettingQueue", b =>
+                {
+                    b.Property<int?>("SettingQueueId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int?>("SettingQueueId"));
+
+                    b.Property<DateTime?>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("ModifiedOn")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("SettingQueueId");
+
+                    b.ToTable("SettingsQueues");
                 });
 
             modelBuilder.Entity("Hangfire.JobManagement.Data.Entities.BatchOperation", b =>
