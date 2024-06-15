@@ -12,11 +12,13 @@ namespace Hangfire.JobManagement.Pages.Dispatchers
 
         // repos
         private readonly ISettingsRepository _settingsRepository;
+        private readonly ISettingsQueueRepository _settingsQueueRepository;
 
-        public SettingsQueueDeleteDispatcher(ISettingsRepository settingsRepository)
+        public SettingsQueueDeleteDispatcher(ISettingsRepository settingsRepository, ISettingsQueueRepository settingsQueueRepository)
         {
             _connection = JobStorage.Current.GetConnection();
             _settingsRepository = settingsRepository;
+            _settingsQueueRepository = settingsQueueRepository;
         }
 
         public async Task Dispatch(DashboardContext context)
@@ -28,13 +30,6 @@ namespace Hangfire.JobManagement.Pages.Dispatchers
                 context.Response.StatusCode = 405;
                 return;
             }
-
-            await Task.Delay(10);
-
-            throw new NotImplementedException();
-
-            //var periodicJob = new List<PeriodicJob>();
-            //periodicJob.AddRange(JobAgent.GetAllJobStopped());
 
             //await context.Response.WriteAsync(JsonConvert.SerializeObject(periodicJob));
         }

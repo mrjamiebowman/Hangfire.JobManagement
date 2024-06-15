@@ -36,6 +36,8 @@ namespace Hangfire.JobManagement.Data
 
         public DbSet<Setting> Settings { get; set; }
 
+        public DbSet<SettingQueue> SettingsQueues { get; set; }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer(_jobManagementConfiguration.ConnectionString);
@@ -95,6 +97,13 @@ namespace Hangfire.JobManagement.Data
             {
                 b.HasKey(e => e.SettingId);
                 b.Property(e => e.SettingId).ValueGeneratedOnAdd();
+            });
+
+            // settings: queues
+            modelBuilder.Entity<SettingQueue>(b =>
+            {
+                b.HasKey(e => e.SettingQueueId);
+                b.Property(e => e.SettingQueueId).ValueGeneratedOnAdd();
             });
         }
 

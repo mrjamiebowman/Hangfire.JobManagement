@@ -85,6 +85,24 @@
         methods: {
             AddQueue() {
                 debugger;
+
+                const formData = new FormData();
+                formData.append('settings.DefaultTimeZoneId', this.settings.DefaultTimeZoneId);
+                formData.append('settings.DefaultQueue', this.settings.DefaultQueue);
+
+                // hangfire: csrf token 
+                var csrfHeader = $('meta[name="csrf-header"]').attr('content');
+                var csrfToken = $('meta[name="csrf-token"]').attr('content');
+
+                var headers = {};
+                headers[csrfHeader] = csrfToken;
+
+                axios.post('settings/queue/save', formData, { headers }).then(Response => {
+                    this.closeModal();
+                    this.GetSettings();
+                }).catch(e => {
+                    console.log(e);
+                });
             },
             GetSettings() {
                 axios.get('settings/all')
@@ -113,7 +131,7 @@
 
                 axios.post('settings/save', formData, { headers }).then(Response => {
                     this.closeModal();
-                    this.GetFtpJobs();
+                    this.GetSettings();
                 }).catch(e => {
                     console.log(e);
                 });

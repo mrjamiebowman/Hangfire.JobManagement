@@ -21,8 +21,8 @@ namespace Hangfire.JobManagement.Pages.Dispatchers
 
         public SettingsGetDispatcher(ISettingsRepository settingsRepository)
         {
-            //ISettingsRepository
             _connection = JobStorage.Current.GetConnection();
+
             _settingsRepository = settingsRepository;
         }
 

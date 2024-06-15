@@ -144,6 +144,7 @@ namespace Hangfire.JobManagement
 
             // inject: repositories
             services.AddTransient<ISettingsRepository, SettingsRepository>();
+            services.AddTransient<ISettingsQueueRepository, SettingsQueuesRepository>();
 
             return services;
         }
@@ -170,6 +171,7 @@ namespace Hangfire.JobManagement
             var serviceProvider = Builder.Services.BuildServiceProvider();
 
             ISettingsRepository settingsRepository = serviceProvider.GetService<ISettingsRepository>();
+            ISettingsQueueRepository settingsQueueRepository = serviceProvider.GetService<ISettingsQueueRepository>();
 
             // pages
             DashboardRoutes.Routes.AddRazorPage(Pages.JobManagement.PageRoute, x => new Pages.JobManagement());
@@ -189,8 +191,9 @@ namespace Hangfire.JobManagement
 
             // dispatcher: settings
             DashboardRoutes.Routes.Add("/management/settings/all", new SettingsGetDispatcher(settingsRepository));
-            DashboardRoutes.Routes.Add("/management/settings/queue/delete", new SettingsQueueDeleteDispatcher(settingsRepository));
-            DashboardRoutes.Routes.Add("/management/settings/queue/save", new SettingsQueueSaveDispatcher(settingsRepository));
+            DashboardRoutes.Routes.Add("/management/settings/all", new SettingsQueueGetDispatcher(settingsRepository, settingsQueueRepository));
+            DashboardRoutes.Routes.Add("/management/settings/queue/delete", new SettingsQueueDeleteDispatcher(settingsRepository, settingsQueueRepository));
+            DashboardRoutes.Routes.Add("/management/settings/queue/save", new SettingsQueueSaveDispatcher(settingsRepository, settingsQueueRepository));
             DashboardRoutes.Routes.Add("/management/settings/save", new SettingsSaveDispatcher(settingsRepository)); //serviceProvider.GetService<ILogger<SettingsSaveDispatcher>>()
 
             // jobs stopped
