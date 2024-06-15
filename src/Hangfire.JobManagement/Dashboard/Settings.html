@@ -89,7 +89,6 @@
             GetSettings() {
                 axios.get('settings/all')
                     .then(res => {
-                        debugger;
                         this.settings = res.data;
                     });
             },
@@ -116,7 +115,6 @@
                     this.closeModal();
                     this.GetFtpJobs();
                 }).catch(e => {
-                    debugger;
                     console.log(e);
                 });
             }
