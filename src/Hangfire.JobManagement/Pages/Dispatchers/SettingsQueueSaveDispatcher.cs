@@ -1,7 +1,6 @@
 ﻿using Hangfire.Dashboard;
 using Hangfire.JobManagement.Data.Entities;
 using Hangfire.JobManagement.Data.Repositories.Interfaces;
-using Hangfire.JobManagement.Models;
 using Hangfire.Storage;
 using Microsoft.Extensions.Logging;
 using System;
@@ -53,9 +52,14 @@ namespace Hangfire.JobManagement.Pages.Dispatchers
                 var data = await _settingsQueueRepository.GetAsync();
 
                 // is already in list?
+                if (data.Any(x => x.QueueName == model.QueueName))
+                {
+                    // already there...
+                    return;
+                }
 
                 // save
-                //await _settingsQueueRepository.Save(Models);
+                await _settingsQueueRepository.SaveAsync(model);
 
                 // response
                 var json = JsonSerializer.Serialize(data);

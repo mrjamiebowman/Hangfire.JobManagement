@@ -8,4 +8,6 @@ namespace Hangfire.JobManagement.Data.Repositories.Interfaces;
 public interface ISettingsQueueRepository
 {
     Task<IEnumerable<SettingQueue>> GetAsync(CancellationToken cancellationToken = default);
+
+    Task<SettingQueue> SaveAsync(SettingQueue model, CancellationToken cancellation = default);
 }
