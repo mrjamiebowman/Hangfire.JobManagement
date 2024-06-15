@@ -46,16 +46,6 @@ public class JobManagementDbFactory : IDesignTimeDbContextFactory<JobManagementD
             .SetBasePath(appPath)
             .AddEnvironmentVariables()
             .AddJsonFile("appsettings.json", true)
-            //.AddAzureAppConfiguration(options =>
-            //{
-            //    var credentials = new DefaultAzureCredential();
-
-            //    // labels
-            //    options.Select(KeyFilter.Any, "Hangfire-DEV");
-
-            //    options.Connect(Environment.GetEnvironmentVariable("VAR"))
-            //        .ConfigureKeyVault(kv => kv.SetCredential(credentials));
-            //})
             .Build();
 
         // hangfire configuration

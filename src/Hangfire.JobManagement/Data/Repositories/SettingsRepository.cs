@@ -49,6 +49,7 @@ namespace Hangfire.JobManagement.Data.Repositories
                 throw new NotImplementedException();
             }
         }
+
         public async Task<Setting> SaveAsync(Setting model, CancellationToken cancellationToken = default)
         {
             using var db = _dbContextFactory.Create();
