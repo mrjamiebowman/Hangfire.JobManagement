@@ -8,6 +8,6 @@ namespace Hangfire.JobManagement.Services.Notifications
 {
     public class NotificationEmailService : INotificationService
     {
-        public Task ProcessEventAsync(NotificationEvent<IEventNotification> @event, CancellationToken cancellation = default) => throw new System.NotImplementedException();
+        public Task ProcessEventAsync(NotificationEvent<BaseEvent> @event, CancellationToken cancellation = default) => throw new System.NotImplementedException();
     }
 }

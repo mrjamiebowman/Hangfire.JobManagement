@@ -103,8 +103,12 @@ namespace Hangfire.JobManagement
             // customization
             jobManagementOptions.Invoke(Options);
 
+            // service provider
+            var serviceProdvider = services.BuildServiceProvider();
+            var notificationsFactory = serviceProdvider.GetRequiredService<INotificationsFactoryService>();
+
             // filters
-            GlobalJobFilters.Filters.Add(new JobEventsFilter(services));
+            GlobalJobFilters.Filters.Add(new JobEventsFilter(notificationsFactory));
 
             // get all jobs
             PeriodicJobBuilder.GetAllJobs();

@@ -1,10 +1,12 @@
 ﻿using Hangfire.Client;
 using Hangfire.Common;
+using Hangfire.JobManagement.Abstractions.Events;
+using Hangfire.JobManagement.Events;
+using Hangfire.JobManagement.Services.Interfaces;
 using Hangfire.Logging;
 using Hangfire.Server;
 using Hangfire.States;
 using Hangfire.Storage;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace Hangfire.JobManagement.Filters;
 
@@ -13,9 +15,12 @@ public class JobEventsFilter : JobFilterAttribute, IClientFilter, IServerFilter,
     // logger
     private static readonly ILog Logger = LogProvider.GetCurrentClassLogger();
 
-    public JobEventsFilter(IServiceCollection services)
+    // notifications service
+    private readonly INotificationsFactoryService _notificationsFactoryService;
+
+    public JobEventsFilter(INotificationsFactoryService notificationsFactoryService)
     {
-        
+        _notificationsFactoryService = notificationsFactoryService;
     }
 
     public void OnCreating(CreatingContext context)
@@ -23,12 +28,19 @@ public class JobEventsFilter : JobFilterAttribute, IClientFilter, IServerFilter,
         Logger.InfoFormat("Creating a job based on method `{0}`...", context.Job.Method.Name);
     }
 
-    public void OnCreated(CreatedContext context)
+    public async void OnCreated(CreatedContext context)
     {
-        Logger.InfoFormat(
-            "Job that is based on method `{0}` has been created with id `{1}`",
-            context.Job.Method.Name,
-            context.BackgroundJob?.Id);
+        Logger.InfoFormat("Job that is based on method `{0}` has been created with id `{1}`", context.Job.Method.Name, context.BackgroundJob?.Id);
+
+        // build event
+        var jobStatusEvent = new JobStatusEvent();
+        jobStatusEvent.JobName = context.Job.Method.Name;
+        jobStatusEvent.JobId = context.BackgroundJob?.Id;
+
+        NotificationEvent<JobStatusEvent> @event = new NotificationEvent<JobStatusEvent>(jobStatusEvent);
+
+        // process notifications
+        await _notificationsFactoryService.ProcessEventAsync(@event);
     }
 
     public void OnPerforming(PerformingContext context)
