@@ -90,7 +90,7 @@
                 debugger;
 
                 const formData = new FormData();
-                formData.append('form.QueueName', this.queue.QueueName);
+                formData.append('queue.QueueName', this.queue.QueueName);
 
                 // hangfire: csrf token 
                 var csrfHeader = $('meta[name="csrf-header"]').attr('content');
