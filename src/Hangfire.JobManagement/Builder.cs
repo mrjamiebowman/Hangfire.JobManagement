@@ -191,10 +191,12 @@ namespace Hangfire.JobManagement
 
             // dispatcher: settings
             DashboardRoutes.Routes.Add("/management/settings/all", new SettingsGetDispatcher(settingsRepository));
-            DashboardRoutes.Routes.Add("/management/settings/all", new SettingsQueueGetDispatcher(settingsRepository, settingsQueueRepository));
-            DashboardRoutes.Routes.Add("/management/settings/queue/delete", new SettingsQueueDeleteDispatcher(settingsRepository, settingsQueueRepository));
-            DashboardRoutes.Routes.Add("/management/settings/queue/save", new SettingsQueueSaveDispatcher(settingsRepository, settingsQueueRepository));
             DashboardRoutes.Routes.Add("/management/settings/save", new SettingsSaveDispatcher(settingsRepository)); //serviceProvider.GetService<ILogger<SettingsSaveDispatcher>>()
+
+            // dispatcher: queues
+            DashboardRoutes.Routes.Add("/management/settings/queues/all", new SettingsQueueGetDispatcher(settingsRepository, settingsQueueRepository));
+            DashboardRoutes.Routes.Add("/management/settings/queues/delete", new SettingsQueueDeleteDispatcher(settingsRepository, settingsQueueRepository));
+            DashboardRoutes.Routes.Add("/management/settings/queues/save", new SettingsQueueSaveDispatcher(settingsRepository, settingsQueueRepository));
 
             // jobs stopped
             DashboardMetrics.AddMetric(TagDashboardMetrics.JobsStoppedCount);

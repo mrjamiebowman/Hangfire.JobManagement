@@ -14,7 +14,9 @@
 
                     <div class="form-group">
                         <label for="listBox">List of Defined Queues</label>
-                        <select multiple class="form-control" id="listBox" size="10"></select>
+                        <select multiple class="form-control" id="listBox" size="10">
+                            <option v-for="(item, index) in queues" :key="index" :value="item.SettingQueueId">{{item.QueueName}}</option>
+                        </select>
                     </div>
 
                     <!-- Input Field -->
@@ -87,8 +89,6 @@
         },
         methods: {
             AddQueue() {
-                debugger;
-
                 const formData = new FormData();
                 formData.append('queue.QueueName', this.queue.QueueName);
 
@@ -99,7 +99,7 @@
                 var headers = {};
                 headers[csrfHeader] = csrfToken;
 
-                axios.post('settings/queue/save', formData, { headers }).then(Response => {
+                axios.post('settings/queue/all"', formData, { headers }).then(Response => {
                     this.closeModal();
                     this.GetSettings();
                 }).catch(e => {
@@ -110,6 +110,13 @@
                 axios.get('settings/all')
                     .then(res => {
                         this.settings = res.data;
+                    });
+            },
+            GetQueues() {
+                axios.get('settings/queues/all')
+                    .then(res => {
+                        debugger;
+                        this.queues = res.data;
                     });
             },
             GetTimeZones() {
@@ -141,6 +148,7 @@
         },
         created() {
             this.GetTimeZones();
+            this.GetQueues();
             this.GetSettings();
         },
         computed: {

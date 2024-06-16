@@ -30,9 +30,6 @@ namespace Hangfire.JobManagement.Pages.Dispatchers
             }
 
             var jobId = conterecurringJobt.Request.GetQuery("Id");
-            //var jobId = (await conterecurringJobt.Request.GetFormValuesAsync("Id"))[0];
-
-
             var recurringJob = _connection.GetRecurringJobs().FirstOrDefault(x => x.Id == jobId);
 
             if (recurringJob == null) {

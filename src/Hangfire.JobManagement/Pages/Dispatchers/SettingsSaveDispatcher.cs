@@ -1,5 +1,4 @@
 ﻿using Hangfire.Dashboard;
-using Hangfire.JobManagement.Data.Entities;
 using Hangfire.JobManagement.Data.Repositories.Interfaces;
 using Hangfire.JobManagement.Models;
 using Hangfire.Storage;
@@ -24,7 +23,6 @@ namespace Hangfire.JobManagement.Pages.Dispatchers
         // repos
         private readonly ISettingsRepository _settingsRepository;
 
-        //ILogger<SettingsSaveDispatcher> logger, 
         public SettingsSaveDispatcher(ISettingsRepository settingsRepository)
         {
             _connection = JobStorage.Current.GetConnection();

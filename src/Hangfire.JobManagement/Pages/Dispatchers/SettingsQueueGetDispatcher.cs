@@ -44,11 +44,8 @@ internal class SettingsQueueGetDispatcher : IDashboardDispatcher
         }
 
         // data
-        var data = (await _settingsRepository.GetAsync()).ToList();
+        var data = (await _settingsQueueRepository.GetAsync()).ToList();
 
-        // global settings
-        var globalSettings = new GlobalSetting(data);
-
-        await context.Response.WriteAsync(JsonConvert.SerializeObject(globalSettings));
+        await context.Response.WriteAsync(JsonConvert.SerializeObject(data));
     }
 }

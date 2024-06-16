@@ -205,7 +205,7 @@
             },
             GetJobs() {
                 axios.get('data/GetJobs')
-                    .then(res => (this.jobs = res.data))
+                     .then(res => (this.jobs = res.data))
             },
             GetJob(_Id) {
                 this.title = 'Edit Job';
