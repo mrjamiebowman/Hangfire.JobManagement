@@ -9,5 +9,7 @@ public interface ISettingsQueueRepository
 {
     Task<IEnumerable<SettingQueue>> GetAsync(CancellationToken cancellationToken = default);
 
+    Task DeleteAsync(int id, CancellationToken cancellationToken = default);
+
     Task<SettingQueue> SaveAsync(SettingQueue model, CancellationToken cancellation = default);
 }

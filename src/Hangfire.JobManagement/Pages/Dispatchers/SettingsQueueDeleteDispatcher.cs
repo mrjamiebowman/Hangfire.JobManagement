@@ -25,13 +25,20 @@ namespace Hangfire.JobManagement.Pages.Dispatchers
         {
             using var activity = OTel.Application.StartActivity("SettingsQueueDeleteDispatcher.Dispatch");
 
-            if (!"POST".Equals(context.Request.Method, StringComparison.InvariantCultureIgnoreCase))
-            {
+            if (!"GET".Equals(context.Request.Method, StringComparison.InvariantCultureIgnoreCase)) {
                 context.Response.StatusCode = 405;
                 return;
             }
 
+            // vars
+            var id = context.Request.GetQuery("id");
+            var idInt = Convert.ToInt32(id);
+
+            // delete
+            await _settingsQueueRepository.DeleteAsync(idInt);
+
             //await context.Response.WriteAsync(JsonConvert.SerializeObject(periodicJob));
+            await context.Response.WriteAsync("OK");
         }
     }
 }

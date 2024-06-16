@@ -6,32 +6,33 @@
         </div>
     </div>
     <div class="row mb-3">
-        <form>
+        <form @submit="submit">
             <!-- Column 1 -->
             <div class="col-md-4">
                 <fieldset>
                     <legend>Queue List</legend>
-
                     <div class="form-group">
                         <label for="listBox">List of Defined Queues</label>
-                        <select multiple class="form-control" id="listBox" size="10">
+                        <select multiple class="form-control" id="SelectedQueueId" v-model="queue.SelectedQueueId" size="10">
                             <option v-for="(item, index) in queues" :key="index" :value="item.SettingQueueId">{{item.QueueName}}</option>
                         </select>
                     </div>
 
-                    <!-- Input Field -->
+                    <!-- delete button -->
+                    <button id="deleteButton" class="btn btn-primary pull-right" @click="DeleteQueue">Delete</button>
+
+                    <!-- input field -->
                     <div class="form-group">
                         <label for="stringInput">Enter Queue</label>
                         <input type="text" class="form-control" v-model="queue.QueueName" id="stringInput" placeholder="Enter queue name">
                     </div>
 
-                    <!-- Add Button -->
+                    <!-- add button -->
                     <button id="addButton" class="btn btn-primary pull-right" @click="AddQueue">Add</button>
                 </fieldset>
             </div>
 
             <div class="col-md-4">
-
             </div>
 
             <!-- Column 2 -->
@@ -78,7 +79,8 @@
                 },
                 timeZones: [],
                 queue: {
-                    QueueName : '',
+                    QueueName: '',
+                    SelectedQueueId: ''
                 },
                 queues: [],
                 pagination: {
@@ -99,12 +101,28 @@
                 var headers = {};
                 headers[csrfHeader] = csrfToken;
 
-                axios.post('settings/queue/all"', formData, { headers }).then(Response => {
+                axios.post('settings/queues/save', formData, { headers }).then(Response => {
                     this.closeModal();
                     this.GetSettings();
                 }).catch(e => {
                     console.log(e);
                 });
+            },
+            DeleteQueue() {
+                try {
+                queues = this.queue.SelectedQueueId;
+                queues.map(function(value, key) {
+                    axios.get('settings/queues/delete?id=' + value).then(Response => {
+                        this.GetSettings();
+                        this.GetQueues();
+                    }).catch(e => {
+                        console.log(e);
+                        });
+                    });
+                } catch (err) {
+                    console.error(err);
+                }
+                console.log('delete queue');
             },
             GetSettings() {
                 axios.get('settings/all')
@@ -115,7 +133,6 @@
             GetQueues() {
                 axios.get('settings/queues/all')
                     .then(res => {
-                        debugger;
                         this.queues = res.data;
                     });
             },
@@ -144,6 +161,10 @@
                 }).catch(e => {
                     console.log(e);
                 });
+            },
+            submit(e) {
+              e.preventDefault();
+              console.log("Success!");
             }
         },
         created() {

@@ -63,5 +63,19 @@ namespace Hangfire.JobManagement.Data.Repositories
                 return await db.SettingsQueues.ToListAsync();
             }
         }
+
+        public async Task DeleteAsync(int id, CancellationToken cancellationToken = default)
+        {
+            using var db = _dbContextFactory.Create();
+
+            var record = await db.SettingsQueues.SingleOrDefaultAsync(x => x.SettingQueueId == id);
+
+            if (record == null) {
+                return;
+            }
+
+            db.SettingsQueues.Remove(record);
+            await db.SaveChangesAsync(cancellationToken);
+        }
     }
 }
