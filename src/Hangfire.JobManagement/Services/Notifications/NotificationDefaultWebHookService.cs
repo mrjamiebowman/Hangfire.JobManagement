@@ -7,13 +7,13 @@ using System.Threading.Tasks;
 
 namespace Hangfire.JobManagement.Services.Notifications
 {
-    public class NotificationEmailService : BaseNotificationService, INotificationService
+    public class NotificationDefaultWebHookService : BaseNotificationService, INotificationService
     {
-        public override string Name { get; set; } = "DefaultEmailService";
+        public override string Name { get; set; } = "DefaultWebHooks";
 
         public Task ProcessEventAsync<T>(NotificationEvent<T> @event, NotificationOptions notificationOptions, CancellationToken cancellation = default) where T : BaseEvent
         {
-            using var activity = OTel.Application.StartActivity("NotificationEmailService.ProcessEventAsync");
+            using var activity = OTel.Application.StartActivity("NotificationWebHookService.ProcessEventAsync");
 
             return Task.CompletedTask;
         }

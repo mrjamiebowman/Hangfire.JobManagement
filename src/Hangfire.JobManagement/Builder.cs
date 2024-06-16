@@ -139,8 +139,8 @@ namespace Hangfire.JobManagement
             services.AddTransient<IBatchService, BatchService>();
             services.AddTransient<IJobHistoryService, JobHistoryService>();
 
-            services.AddTransient<INotificationService, NotificationEmailService>();
-            services.AddTransient<INotificationService, NotificationWebHookService>();
+            services.AddTransient<INotificationService, NotificationDefaultEmailService>();
+            services.AddTransient<INotificationService, NotificationDefaultWebHookService>();
 
             // inject: repositories
             services.AddTransient<ISettingsRepository, SettingsRepository>();
