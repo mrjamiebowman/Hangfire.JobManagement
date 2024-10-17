@@ -1,7 +1,5 @@
 ﻿using Hangfire.Client;
 using Hangfire.Common;
-using Hangfire.JobManagement.Abstractions.Events;
-using Hangfire.JobManagement.Events;
 using Hangfire.JobManagement.Services.Interfaces;
 using Hangfire.Logging;
 using Hangfire.Server;
@@ -30,22 +28,22 @@ public class JobEventsFilter : JobFilterAttribute, IClientFilter, IServerFilter,
         Logger.InfoFormat("Creating a job based on method `{0}`...", context.Job.Method.Name);
     }
 
-    public async void OnCreated(CreatedContext context)
+    public void OnCreated(CreatedContext context)
     {
         using var activity = OTel.Application.StartActivity("JobEventsFilter.OnCreated");
 
         Logger.InfoFormat("Job that is based on method `{0}` has been created with id `{1}`", context.Job.Method.Name, context.BackgroundJob?.Id);
 
-        // build event
-        var jobStatusEvent = new JobStatusEvent();
-        jobStatusEvent.JobName = context.Job.Method.Name;
-        jobStatusEvent.JobId = context.BackgroundJob?.Id;
+        //// build event
+        //var jobStatusEvent = new JobStatusEvent();
+        //jobStatusEvent.JobName = context.Job.Method.Name;
+        //jobStatusEvent.JobId = context.BackgroundJob?.Id;
 
-        // notification event
-        NotificationEvent<JobStatusEvent> @event = new NotificationEvent<JobStatusEvent>(jobStatusEvent);
+        //// notification event
+        //NotificationEvent<JobStatusEvent> @event = new NotificationEvent<JobStatusEvent>(jobStatusEvent);
 
         // process notifications
-        await _notificationsFactoryService.ProcessEventAsync(@event);
+        //await _notificationsFactoryService.ProcessEventAsync(@event);
     }
 
     public void OnPerforming(PerformingContext context)

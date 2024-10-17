@@ -7,29 +7,28 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Hangfire.JobManagement.Pages.Dispatchers
+namespace Hangfire.JobManagement.Pages.Dispatchers;
+
+internal sealed class GetJobsStoppedDispatcher : Dashboard.IDashboardDispatcher
 {
-    internal sealed class GetJobsStoppedDispatcher : Dashboard.IDashboardDispatcher
-    {
-        private readonly IStorageConnection _connection;
+    private readonly IStorageConnection _connection;
 
-        public GetJobsStoppedDispatcher() {
-            _connection = JobStorage.Current.GetConnection();
+    public GetJobsStoppedDispatcher() {
+        _connection = JobStorage.Current.GetConnection();
+    }
+
+    public async Task Dispatch([NotNull] Dashboard.DashboardContext context) {
+        using var activity = OTel.Application.StartActivity("GetJobsStoppedDispatcher.Dispatch");
+
+        if (!"GET".Equals(context.Request.Method, StringComparison.InvariantCultureIgnoreCase)) {
+            context.Response.StatusCode = 405;
+
+            return;
         }
 
-        public async Task Dispatch([NotNull] Dashboard.DashboardContext context) {
-            using var activity = OTel.Application.StartActivity("GetJobsStoppedDispatcher.Dispatch");
+        var periodicJob = new List<PeriodicJob>();
+        periodicJob.AddRange(JobAgent.GetAllJobStopped());
 
-            if (!"GET".Equals(context.Request.Method, StringComparison.InvariantCultureIgnoreCase)) {
-                context.Response.StatusCode = 405;
-
-                return;
-            }
-
-            var periodicJob = new List<PeriodicJob>();
-            periodicJob.AddRange(JobAgent.GetAllJobStopped());
-
-            await context.Response.WriteAsync(JsonConvert.SerializeObject(periodicJob));
-        }
+        await context.Response.WriteAsync(JsonConvert.SerializeObject(periodicJob));
     }
 }

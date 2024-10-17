@@ -1,31 +1,30 @@
 ﻿using Hangfire.Dashboard.Pages;
 using Hangfire.JobManagement.Core;
 
-namespace Hangfire.JobManagement.Pages
+namespace Hangfire.JobManagement.Pages;
+
+internal sealed class JobsStoppedPage : PageBase
 {
-    internal sealed class JobsStoppedPage : PageBase
+    public const string Title = "Stopped Jobs";
+    public const string PageRoute = "/jobs/stopped";
+
+    private static readonly string PageHtml;
+
+    static JobsStoppedPage() 
     {
-        public const string Title = "Stopped Jobs";
-        public const string PageRoute = "/jobs/stopped";
+        PageHtml = Utility.ReadStringResource("Hangfire.JobManagement.Dashboard.JobsStopped.html");
+    }
 
-        private static readonly string PageHtml;
+    public override void Execute()
+    {
+        using var activity = OTel.Application.StartActivity("JobsStoppedPage.Execute");
 
-        static JobsStoppedPage() 
-        {
-            PageHtml = Utility.ReadStringResource("Hangfire.JobManagement.Dashboard.JobsStopped.html");
-        }
-
-        public override void Execute()
-        {
-            using var activity = OTel.Application.StartActivity("JobsStoppedPage.Execute");
-
-            WriteResources();
-            WriteEmptyLine();
-            Layout = new LayoutPage(Title);
-            WriteSidebarHeader();
-            Write(Html.JobsSidebar());
-            WriteLiteralLine(PageHtml);
-            WriteEmptyLine();
-        }
+        WriteResources();
+        WriteEmptyLine();
+        Layout = new LayoutPage(Title);
+        WriteSidebarHeader();
+        Write(Html.JobsSidebar());
+        WriteLiteralLine(PageHtml);
+        WriteEmptyLine();
     }
 }

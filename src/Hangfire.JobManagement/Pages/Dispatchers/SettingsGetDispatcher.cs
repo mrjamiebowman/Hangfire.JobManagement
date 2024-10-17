@@ -7,42 +7,41 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Hangfire.JobManagement.Pages.Dispatchers
+namespace Hangfire.JobManagement.Pages.Dispatchers;
+
+internal class SettingsGetDispatcher : IDashboardDispatcher
 {
-    internal class SettingsGetDispatcher : IDashboardDispatcher
+    // logger
+
+    // hangfire
+    private readonly IStorageConnection _connection;
+
+    // repos
+    private readonly ISettingsRepository _settingsRepository;
+
+    public SettingsGetDispatcher(ISettingsRepository settingsRepository)
     {
-        // logger
+        _connection = JobStorage.Current.GetConnection();
 
-        // hangfire
-        private readonly IStorageConnection _connection;
+        _settingsRepository = settingsRepository;
+    }
 
-        // repos
-        private readonly ISettingsRepository _settingsRepository;
+    public async Task Dispatch(DashboardContext context)
+    {
+        using var activity = OTel.Application.StartActivity("SettingsGetDispatcher.Dispatch");
 
-        public SettingsGetDispatcher(ISettingsRepository settingsRepository)
+        if (!"GET".Equals(context.Request.Method, StringComparison.InvariantCultureIgnoreCase))
         {
-            _connection = JobStorage.Current.GetConnection();
-
-            _settingsRepository = settingsRepository;
+            context.Response.StatusCode = 405;
+            return;
         }
 
-        public async Task Dispatch(DashboardContext context)
-        {
-            using var activity = OTel.Application.StartActivity("SettingsGetDispatcher.Dispatch");
+        // data
+        var data = (await _settingsRepository.GetAsync()).ToList();
 
-            if (!"GET".Equals(context.Request.Method, StringComparison.InvariantCultureIgnoreCase))
-            {
-                context.Response.StatusCode = 405;
-                return;
-            }
+        // global settings
+        var globalSettings = new GlobalSetting(data);
 
-            // data
-            var data = (await _settingsRepository.GetAsync()).ToList();
-
-            // global settings
-            var globalSettings = new GlobalSetting(data);
-
-            await context.Response.WriteAsync(JsonConvert.SerializeObject(globalSettings));
-        }
+        await context.Response.WriteAsync(JsonConvert.SerializeObject(globalSettings));
     }
 }

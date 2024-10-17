@@ -1,6 +1,5 @@
 ﻿using Hangfire.Dashboard;
 using Hangfire.JobManagement.Data.Repositories.Interfaces;
-using Hangfire.JobManagement.Models;
 using Hangfire.Storage;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;

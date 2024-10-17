@@ -1,9 +1,8 @@
-﻿namespace Hangfire.JobManagement.Models
-{
-    public class JobItem
-    {
-        public string JobName { get; set; }
+﻿namespace Hangfire.JobManagement.Models;
 
-        public string Data { get; set; }
-    }
+public class JobItem
+{
+    public string JobName { get; set; }
+
+    public string Data { get; set; }
 }

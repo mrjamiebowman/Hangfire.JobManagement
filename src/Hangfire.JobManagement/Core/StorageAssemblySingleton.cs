@@ -4,45 +4,43 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 
-namespace Hangfire.JobManagement.Core
+namespace Hangfire.JobManagement.Core;
+
+internal sealed class StorageAssemblySingleton
 {
-    internal sealed class StorageAssemblySingleton
-    {
-        private StorageAssemblySingleton() {
+    private StorageAssemblySingleton() {
+    }
+
+    private static StorageAssemblySingleton _instance;
+    private string[] prefixIgnore = new[] { "Hangfire.JobManagement.dll", "Microsoft." };
+
+    public List<Assembly> currentAssembly { get; private set; } = new List<Assembly>();
+
+    internal static StorageAssemblySingleton GetInstance() {
+        if (_instance == null) {
+            _instance = new StorageAssemblySingleton();
         }
 
-        private static StorageAssemblySingleton _instance;
-        private string[] prefixIgnore = new[] { "Hangfire.JobManagement.dll", "Microsoft." };
+        return _instance;
+    }
 
+    internal void SetCurrentAssembly(bool includeReferences = false, params Assembly[] assemblies) {
+        currentAssembly.AddRange(assemblies);
 
-        public List<Assembly> currentAssembly { get; private set; } = new List<Assembly>();
+        if (includeReferences) {
+            var referencedPaths = Directory.GetFiles(AppDomain.CurrentDomain.BaseDirectory, "*.dll");
+            var toLoad = referencedPaths.Where(r => !assemblies.Any(x => x.Location.Equals(r)))
+                            .Where(x => !prefixIgnore.Any(p => p.Contains(x)))
+                            .ToList();
 
-        internal static StorageAssemblySingleton GetInstance() {
-            if (_instance == null) {
-                _instance = new StorageAssemblySingleton();
-            }
-            return _instance;
+            toLoad.ForEach(path => currentAssembly.Add(Assembly.LoadFile(path)));
         }
-
-        internal void SetCurrentAssembly(bool includeReferences = false, params Assembly[] assemblies) {
-            currentAssembly.AddRange(assemblies);
-
-            if (includeReferences) {
-                var referencedPaths = Directory.GetFiles(AppDomain.CurrentDomain.BaseDirectory, "*.dll");
-                var toLoad = referencedPaths.Where(r => !assemblies.Any(x => x.Location.Equals(r)))
-                                .Where(x => !prefixIgnore.Any(p => p.Contains(x)))
-                                .ToList();
-
-                toLoad.ForEach(path => currentAssembly.Add(Assembly.LoadFile(path)));
-            }
-
-        }
-
-        public bool IsValidType(string type) => currentAssembly.Any(x => x.GetType(type) != null);
-
-        public bool IsValidMethod(string type, string method) => currentAssembly?
-                                                                    .FirstOrDefault(x => x.GetType(type) != null)?.GetType(type)?.GetMethod(method) != null;
-
 
     }
+
+    public bool IsValidType(string type) => currentAssembly.Any(x => x.GetType(type) != null);
+
+    public bool IsValidMethod(string type, string method) => currentAssembly?
+                                                                .FirstOrDefault(x => x.GetType(type) != null)?.GetType(type)?.GetMethod(method) != null;
+
 }

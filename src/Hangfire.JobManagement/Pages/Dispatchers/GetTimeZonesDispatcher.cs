@@ -5,26 +5,25 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Hangfire.JobManagement.Pages.Dispatchers
+namespace Hangfire.JobManagement.Pages.Dispatchers;
+
+internal sealed class GetTimeZonesDispatcher : Dashboard.IDashboardDispatcher
 {
-    internal sealed class GetTimeZonesDispatcher : Dashboard.IDashboardDispatcher
-    {
-        public async Task Dispatch([NotNull] Dashboard.DashboardContext context) {
-            using var activity = OTel.Application.StartActivity("GetTimeZonesDispatcher.Dispatch");
+    public async Task Dispatch([NotNull] Dashboard.DashboardContext context) {
+        using var activity = OTel.Application.StartActivity("GetTimeZonesDispatcher.Dispatch");
 
-            // get local time zone
-            var localZone = TimeZone.CurrentTimeZone;
+        // get local time zone
+        var localZone = TimeZone.CurrentTimeZone;
 
-            // get time zones
-            var timeZones = Utility.GetTimeZones().ToList();
+        // get time zones
+        var timeZones = Utility.GetTimeZones().ToList();
 
-            // title
-            var title = timeZones.SingleOrDefault(x => x.Item1 == localZone.StandardName)?.Item2 ?? localZone.StandardName;
+        // title
+        var title = timeZones.SingleOrDefault(x => x.Item1 == localZone.StandardName)?.Item2 ?? localZone.StandardName;
 
-            // set default time zone
-            timeZones.Insert(0, new Tuple<string, string>(localZone.StandardName, title));
+        // set default time zone
+        timeZones.Insert(0, new Tuple<string, string>(localZone.StandardName, title));
 
-            await context.Response.WriteAsync(JsonConvert.SerializeObject(timeZones));
-        }
+        await context.Response.WriteAsync(JsonConvert.SerializeObject(timeZones));
     }
 }

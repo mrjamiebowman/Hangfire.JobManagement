@@ -1,16 +1,15 @@
-﻿namespace Hangfire.JobManagement.Configuration
+﻿namespace Hangfire.JobManagement.Configuration;
+
+public class JobManagementConfiguration
 {
-    public class JobManagementConfiguration
-    {
-        public const string Position = "JobManagement";
+    public const string Position = "JobManagement";
 
-        public string ConnectionString { get; set; }
+    public string ConnectionString { get; set; }
 
-        public DebugConfiguration Debug { get; set; } = new DebugConfiguration();
-    }
+    public DebugConfiguration Debug { get; set; } = new DebugConfiguration();
+}
 
-    public class DebugConfiguration
-    {
-        public bool Migrations { get; set; }
-    }
+public class DebugConfiguration
+{
+    public bool Migrations { get; set; }
 }

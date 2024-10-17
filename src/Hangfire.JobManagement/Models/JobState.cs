@@ -1,9 +1,8 @@
-﻿namespace Hangfire.JobManagement.Models
+﻿namespace Hangfire.JobManagement.Models;
+
+public enum JobState
 {
-    public enum JobState
-    {
-        DeletedState,
-        FailedState,
-        EnqueuedState,
-    }
+    DeletedState,
+    FailedState,
+    EnqueuedState,
 }

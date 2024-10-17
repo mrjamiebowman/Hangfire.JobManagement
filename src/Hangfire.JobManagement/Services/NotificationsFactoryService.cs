@@ -1,8 +1,6 @@
 ﻿using Hangfire.JobManagement.Abstractions;
-using Hangfire.JobManagement.Abstractions.Events;
-using Hangfire.JobManagement.Abstractions.Notifications;
-using Hangfire.JobManagement.Events;
 using Hangfire.JobManagement.Services.Interfaces;
+using Hangfire.JobManagement.Services.Notifications;
 using Microsoft.Extensions.DependencyInjection;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,7 +23,7 @@ public class NotificationsFactoryService : INotificationsFactoryService
 
     public Task<List<INotificationService>> GetNotificationServicesAsync(CancellationToken cancellation = default)
     {
-        using var activity = OTel.Application.StartActivity("NotificationsFactoryService.GetNotificationServicesAsync");
+        using var activity = OTel.Application.StartActivity($"{nameof(NotificationsFactoryService)}.{nameof(GetNotificationServicesAsync)}");
 
         // get notification services
         var serviceProvider = Builder.Services.BuildServiceProvider();
@@ -34,27 +32,28 @@ public class NotificationsFactoryService : INotificationsFactoryService
         return Task.FromResult(_notificationServices);
     }
 
-    public async Task ProcessEventAsync<T>(NotificationEvent<T> @event, CancellationToken cancellation = default) where T : BaseEvent
-    {
-        using var activity = OTel.Application.StartActivity("NotificationsFactoryService.ProcessEventAsync");
+    //public async Task ProcessEventAsync<T>(NotificationEvent<T> @event, CancellationToken cancellation = default) where T : BaseEvent
+    //{
+    //    using var activity = OTel.Application.StartActivity("NotificationsFactoryService.ProcessEventAsync");
+    //    using var activity = OTel.Application.StartActivity($"{nameof(NotificationsFactoryService)}.{nameof(ProcessEventAsync)}");
 
-        // lookup notifications by the job or global
-        var notificationServices = await GetNotificationServicesAsync();
+    //    // lookup notifications by the job or global
+    //    var notificationServices = await GetNotificationServicesAsync();
 
-        // get job notification settings (global or individual jobs)
-        var notificationOptions = new NotificationOptions();
+    //    // get job notification settings (global or individual jobs)
+    //    var notificationOptions = new NotificationOptions();
 
-        // tasks
-        var tasks = new List<Task>();
+    //    // tasks
+    //    var tasks = new List<Task>();
 
-        // process notifications
-        foreach (var notificationService in notificationServices)
-        {
-            // process event
-            tasks.Add(notificationService.ProcessEventAsync<T>(@event, notificationOptions, cancellation));
-        }
+    //    // process notifications
+    //    foreach (var notificationService in notificationServices)
+    //    {
+    //        // process event
+    //        tasks.Add(notificationService.ProcessEventAsync<T>(@event, notificationOptions, cancellation));
+    //    }
 
-        // await all
-        await Task.WhenAll(tasks);
-    } 
+    //    // await all
+    //    await Task.WhenAll(tasks);
+    //} 
 }
