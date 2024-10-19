@@ -176,8 +176,8 @@ public static class Builder
         // pages
         DashboardRoutes.Routes.AddRazorPage(Pages.JobManagement.PageRoute, x => new Pages.JobManagement());
         DashboardRoutes.Routes.AddRazorPage(JobsStoppedPage.PageRoute, x => new JobsStoppedPage());
-        DashboardRoutes.Routes.AddRazorPage(SettingsPage.PageRoute, x => new SettingsPage());
-        DashboardRoutes.Routes.AddRazorPage(NotificationsPage.PageRoute, x => new NotificationsPage());
+        //DashboardRoutes.Routes.AddRazorPage(SettingsPage.PageRoute, x => new SettingsPage());
+        //DashboardRoutes.Routes.AddRazorPage(NotificationsPage.PageRoute, x => new NotificationsPage());
 
         // routes sidebar
         DashboardRoutes.Routes.Add("/jobs/GetJobsStopped", new GetJobsStoppedDispatcher());
@@ -213,21 +213,21 @@ public static class Builder
             Metric = DashboardMetrics.RecurringJobCount
         });
 
-        // notifications
-        if (Builder.Options.Features.Notifications) 
-        {
-            NavigationMenu.Items.Add(page => new MenuItem(NotificationsPage.Title, page.Url.To(NotificationsPage.PageRoute)) {
-                Active = page.RequestPath.StartsWith(NotificationsPage.PageRoute)
-            });
-        }
+        //// notifications
+        //if (Builder.Options.Features.Notifications) 
+        //{
+        //    NavigationMenu.Items.Add(page => new MenuItem(NotificationsPage.Title, page.Url.To(NotificationsPage.PageRoute)) {
+        //        Active = page.RequestPath.StartsWith(NotificationsPage.PageRoute)
+        //    });
+        //}
 
-        // settings
-        if (Builder.Options.Features.Settings)
-        {
-            NavigationMenu.Items.Add(page => new MenuItem(SettingsPage.Title, page.Url.To(SettingsPage.PageRoute)) {
-                Active = page.RequestPath.StartsWith(SettingsPage.PageRoute)
-            });
-        }
+        //// settings
+        //if (Builder.Options.Features.Settings)
+        //{
+        //    NavigationMenu.Items.Add(page => new MenuItem(SettingsPage.Title, page.Url.To(SettingsPage.PageRoute)) {
+        //        Active = page.RequestPath.StartsWith(SettingsPage.PageRoute)
+        //    });
+        //}
 
         // css 
         AddDashboardRouteToEmbeddedResource("/resources/css/jobExtension", "text/css", "Hangfire.JobManagement.Dashboard.Content.css.JobExtension.css");

@@ -17,7 +17,7 @@ internal sealed class JobsStoppedPage : PageBase
 
     public override void Execute()
     {
-        using var activity = OTel.Application.StartActivity("JobsStoppedPage.Execute");
+        using var activity = OTel.Application.StartActivity($"{nameof(JobManagement)}.{nameof(Execute)}");
 
         WriteResources();
         WriteEmptyLine();

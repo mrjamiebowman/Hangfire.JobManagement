@@ -23,7 +23,7 @@ internal class SettingsQueueDeleteDispatcher : IDashboardDispatcher
 
     public async Task Dispatch(DashboardContext context)
     {
-        using var activity = OTel.Application.StartActivity("SettingsQueueDeleteDispatcher.Dispatch");
+        using var activity = OTel.Application.StartActivity($"{nameof(SettingsQueueDeleteDispatcher)}.{nameof(Dispatch)}");
 
         if (!"GET".Equals(context.Request.Method, StringComparison.InvariantCultureIgnoreCase)) {
             context.Response.StatusCode = 405;

@@ -34,7 +34,6 @@ public class NotificationsFactoryService : INotificationsFactoryService
 
     //public async Task ProcessEventAsync<T>(NotificationEvent<T> @event, CancellationToken cancellation = default) where T : BaseEvent
     //{
-    //    using var activity = OTel.Application.StartActivity("NotificationsFactoryService.ProcessEventAsync");
     //    using var activity = OTel.Application.StartActivity($"{nameof(NotificationsFactoryService)}.{nameof(ProcessEventAsync)}");
 
     //    // lookup notifications by the job or global

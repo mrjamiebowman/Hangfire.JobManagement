@@ -32,7 +32,7 @@ internal class SettingsQueueSaveDispatcher : IDashboardDispatcher
 
     public async Task Dispatch(DashboardContext context)
     {
-        using var activity = OTel.Application.StartActivity("SettingsQueueSaveDispatcher.Dispatch");
+        using var activity = OTel.Application.StartActivity($"{nameof(SettingsQueueGetDispatcher)}.{nameof(Dispatch)}");
 
         try
         {

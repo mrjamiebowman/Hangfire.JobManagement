@@ -31,7 +31,7 @@ internal class SettingsSaveDispatcher : IDashboardDispatcher
 
     public async Task Dispatch(DashboardContext context)
     {
-        using var activity = OTel.Application.StartActivity("SettingsSaveDispatcher.Dispatch");
+        using var activity = OTel.Application.StartActivity($"{nameof(SettingsSaveDispatcher)}.{nameof(Dispatch)}");
 
         if (!"POST".Equals(context.Request.Method, StringComparison.InvariantCultureIgnoreCase)) {
             _logger.LogWarning($"Invalid POST.");

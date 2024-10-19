@@ -19,7 +19,7 @@ internal sealed class GetJobForEdit : IDashboardDispatcher
 
     public async Task Dispatch([NotNull] DashboardContext conterecurringJobt) 
     {
-        using var activity = OTel.Application.StartActivity("GetJobForEdit.Dispatch");
+        using var activity = OTel.Application.StartActivity($"{nameof(GetJobForEdit)}.{nameof(Dispatch)}");
 
         var response = new Response() { Status = true };
 

@@ -11,15 +11,18 @@
             <div class="col-md-4">
                 <fieldset>
                     <legend>Queue List</legend>
+
                     <div class="form-group">
                         <label for="listBox">List of Defined Queues</label>
                         <select multiple class="form-control" id="SelectedQueueId" v-model="queue.SelectedQueueId" size="10">
                             <option v-for="(item, index) in queues" :key="index" :value="item.SettingQueueId">{{item.QueueName}}</option>
                         </select>
-                    </div>
 
-                    <!-- delete button -->
-                    <button id="deleteButton" class="btn btn-primary pull-right" @click="DeleteQueue">Delete</button>
+                        <!-- delete button -->
+                        <div style="padding-top: 15px;"><button id="deleteButton" class="btn btn-primary pull-right" @click="DeleteQueue">Delete</button></div>
+
+                        <div class="clearfix"></div>
+                    </div>
 
                     <!-- input field -->
                     <div class="form-group">
@@ -33,6 +36,7 @@
             </div>
 
             <div class="col-md-4">
+
             </div>
 
             <!-- Column 2 -->
@@ -65,6 +69,14 @@
         </div>
     </div>
 </div>
+
+<style type="text/css">
+
+    .mb-3 {
+        margin-bottom: 1rem !important;
+    }
+
+</style>
 
 <script setup lang="ts">
 

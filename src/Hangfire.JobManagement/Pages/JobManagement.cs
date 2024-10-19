@@ -1,5 +1,6 @@
 ﻿using Hangfire.Dashboard.Pages;
 using Hangfire.JobManagement.Core;
+using Hangfire.JobManagement.Pages.Dispatchers;
 
 namespace Hangfire.JobManagement.Pages;
 
@@ -17,7 +18,7 @@ internal sealed class JobManagement : PageBase
 
     public override void Execute() 
     {
-        using var activity = OTel.Application.StartActivity("JobManagement.Execute");
+        using var activity = OTel.Application.StartActivity($"{nameof(JobManagement)}.{nameof(Execute)}");
 
         WriteEmptyLine();
         Layout = new LayoutPage(Title);

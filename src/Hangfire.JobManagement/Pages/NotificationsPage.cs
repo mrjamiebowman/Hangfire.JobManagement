@@ -17,7 +17,7 @@ internal sealed class NotificationsPage : PageBase
 
     public override void Execute()
     {
-        using var activity = OTel.Application.StartActivity("NotificationsPage.Execute");
+        using var activity = OTel.Application.StartActivity($"{nameof(NotificationsPage)}.{nameof(Execute)}");
 
         WriteEmptyLine();
         Layout = new LayoutPage(Title);

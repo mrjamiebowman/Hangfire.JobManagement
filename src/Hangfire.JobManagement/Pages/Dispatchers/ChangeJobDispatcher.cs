@@ -24,7 +24,7 @@ internal sealed class ChangeJobDispatcher : IDashboardDispatcher
     }
 
     public async Task Dispatch([NotNull] DashboardContext context) {
-        using var activity = OTel.Application.StartActivity("ChangeJobDispatcher.Dispatch");
+        using var activity = OTel.Application.StartActivity($"{nameof(ChangeJobDispatcher)}.{nameof(Dispatch)}");
 
         var response = new Response() { Status = true };
 
@@ -60,7 +60,7 @@ internal sealed class ChangeJobDispatcher : IDashboardDispatcher
             return;
         }
 
-
+        // verify class
         if (!StorageAssemblySingleton.GetInstance().IsValidType(job.Class)) {
             response.Status = false;
             response.Message = "The Class not found";
@@ -70,6 +70,7 @@ internal sealed class ChangeJobDispatcher : IDashboardDispatcher
             return;
         }
 
+        // verify method
         if (!StorageAssemblySingleton.GetInstance().IsValidMethod(job.Class, job.Method)) {
             response.Status = false;
             response.Message = "The Method not found";

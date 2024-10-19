@@ -10,7 +10,7 @@ namespace Hangfire.JobManagement.Pages.Dispatchers;
 internal sealed class GetTimeZonesDispatcher : Dashboard.IDashboardDispatcher
 {
     public async Task Dispatch([NotNull] Dashboard.DashboardContext context) {
-        using var activity = OTel.Application.StartActivity("GetTimeZonesDispatcher.Dispatch");
+        using var activity = OTel.Application.StartActivity($"{nameof(GetTimeZonesDispatcher)}.{nameof(Dispatch)}");
 
         // get local time zone
         var localZone = TimeZone.CurrentTimeZone;

@@ -18,7 +18,7 @@ internal sealed class GetJobsStoppedDispatcher : Dashboard.IDashboardDispatcher
     }
 
     public async Task Dispatch([NotNull] Dashboard.DashboardContext context) {
-        using var activity = OTel.Application.StartActivity("GetJobsStoppedDispatcher.Dispatch");
+        using var activity = OTel.Application.StartActivity($"{nameof(GetJobsStoppedDispatcher)}.{nameof(Dispatch)}");
 
         if (!"GET".Equals(context.Request.Method, StringComparison.InvariantCultureIgnoreCase)) {
             context.Response.StatusCode = 405;

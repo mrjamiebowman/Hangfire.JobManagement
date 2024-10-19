@@ -32,7 +32,7 @@ internal class SettingsQueueGetDispatcher : IDashboardDispatcher
 
     public async Task Dispatch(DashboardContext context)
     {
-        using var activity = OTel.Application.StartActivity("SettingsQueueGetDispatcher.Dispatch");
+        using var activity = OTel.Application.StartActivity($"{nameof(SettingsQueueGetDispatcher)}.{nameof(Dispatch)}");
 
         if (!"GET".Equals(context.Request.Method, StringComparison.InvariantCultureIgnoreCase))
         {

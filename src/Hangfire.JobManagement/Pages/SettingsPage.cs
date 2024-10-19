@@ -17,7 +17,7 @@ internal class SettingsPage : PageBase
 
     public override void Execute()
     {
-        using var activity = OTel.Application.StartActivity("SettingsPage.Execute");
+        using var activity = OTel.Application.StartActivity($"{nameof(SettingsPage)}.{nameof(Execute)}");
 
         WriteEmptyLine();
         Layout = new LayoutPage(Title);
