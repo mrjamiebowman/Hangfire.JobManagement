@@ -5,7 +5,7 @@
 [![Official Site](https://img.shields.io/badge/site-hangfire.io-blue.svg)](http://hangfire.io)
 [![License MIT](https://img.shields.io/badge/license-MIT-green.svg)](http://opensource.org/licenses/MIT)
 
-Note: This is a fork that's going a different direction. Just getting started... Below will be updated. - 05/27/2024 @mrjamiebowman
+*NOTE:* This is a fork that's going a different direction. Just getting started... Below will be updated. - 05/27/2024 @mrjamiebowman
 
 A robust extension to .NET Hangfire that adds a Job Management Dashboard, Notifications, and Settings. 
 
@@ -59,6 +59,43 @@ services.AddHangfire(h => h.UseSqlServerStorage(Configuration.GetConnectionStrin
             f.Settings = true;
         });
     })
+```
+
+## Controller Job Management
+Typically, I use a controller to rapidly set up (Add or Update) or remove all of the jobs rapidly. This is useful for deploying to multiple environments.   
+
+```csharp
+app.MapGet("/setup/jobs", () =>
+{
+    var recurringJobOptions = new RecurringJobOptions();
+
+    // jobs
+    RecurringJob.AddOrUpdate<IJobLogCleanUp>("LogCleanup", job => job.ExecuteAsync(null, null, CancellationToken.None), Cron.Daily);
+    RecurringJob.AddOrUpdate<IJobReports>("Reports", job => job.ExecuteAsync(null, null, CancellationToken.None), Cron.Daily);
+
+    return "OK";
+})
+    .WithName("jobs")
+    //.RequireAuthorization()
+    .WithOpenApi();
+
+app.MapGet("/setup/remove", () =>
+{
+    // remove if exists...
+    RecurringJob.RemoveIfExists("LogCleanup");
+    RecurringJob.RemoveIfExists("Reports");
+
+    return "OK";
+})
+    .WithName("jobs")
+    //.RequireAuthorization()
+    .WithOpenApi();
+
+app.MapGet("/up", () => {
+    return "UP";
+})
+    .WithName("up")
+    .WithOpenApi();
 ```
 
 ## EntityFramework Core
