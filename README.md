@@ -1,5 +1,5 @@
 # mrjamiebowman.Hangfire.JobManagement (.NET 8)
-[![NuGet](https://buildstats.info/nuget/mrjamiebowman.Hangfire.JobManagement)](https://buildstats.info/nuget/mrjamiebowman.Hangfire.JobManagement)
+[![NuGet](https://img.shields.io/nuget/v/MyNugetPackage.svg)](https://github.com/mrjamiebowman/Hangfire.JobManagement/)
 [![Build status](https://ci.appveyor.com/api/projects/status/u2xrias2vk727beg/branch/master?svg=true)](https://ci.appveyor.com/project/mrjamiebowman/hangfire-jobmanagement/branch/main)
 [![Build Status](https://github.com/mrjamiebowman/Hangfire.JobManagement/actions/workflows/dotnet.yml/badge.svg)](https://github.com/mrjamiebowman/Hangfire.JobManagement/actions)
 [![Official Site](https://img.shields.io/badge/site-hangfire.io-blue.svg)](http://hangfire.io)
