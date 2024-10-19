@@ -19,6 +19,7 @@
       <TargetFramework>net8.0</TargetFramework>
       <OutputType>Library</OutputType>
       <LangVersion>latest</LangVersion>
+      <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
      
   <ItemGroup>

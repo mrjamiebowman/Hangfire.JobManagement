@@ -106,8 +106,8 @@ public static class Builder
         jobManagementOptions.Invoke(Options);
 
         // service provider
-        var serviceProdvider = services.BuildServiceProvider();
-        var notificationsFactory = serviceProdvider.GetRequiredService<INotificationsFactoryService>();
+        var serviceProvider = services.BuildServiceProvider();
+        var notificationsFactory = serviceProvider.GetRequiredService<INotificationsFactoryService>();
 
         // filters
         GlobalJobFilters.Filters.Add(new JobEventsFilter(notificationsFactory));
