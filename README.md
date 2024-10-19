@@ -75,7 +75,7 @@ app.MapGet("/setup/jobs", () =>
 
     return "OK";
 })
-    .WithName("jobs")
+    .WithName("JobSetup")
     //.RequireAuthorization()
     .WithOpenApi();
 
@@ -87,7 +87,7 @@ app.MapGet("/setup/remove", () =>
 
     return "OK";
 })
-    .WithName("jobs")
+    .WithName("JobRemoval")
     //.RequireAuthorization()
     .WithOpenApi();
 

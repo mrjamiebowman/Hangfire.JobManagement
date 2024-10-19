@@ -379,7 +379,7 @@
             },
             getTime(date) {
                 if (date == "N/A") {
-                    return 0;
+                    return "N/A";
                 }
                 var data = dayjs(date).format('hh:mm:ss A');
                 return data;
