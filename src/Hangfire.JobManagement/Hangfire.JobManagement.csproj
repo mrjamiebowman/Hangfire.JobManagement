@@ -9,9 +9,9 @@
       <NeutralLanguage>en</NeutralLanguage>
       <PackageProjectUrl>https://github.com/mrjamiebowman/Hangfire.JobManagement.git</PackageProjectUrl>
       <RepositoryUrl>https://github.com/mrjamiebowman/Hangfire.JobManagement.git</RepositoryUrl>
-      <Version>8.0.0</Version>
+      <Version>8.0.1</Version>
       <PackOnBuild>true</PackOnBuild>
-      <Description>A Job Management extension to Hangfire</Description>
+      <Description>A .NET 8 extension for Hangfire that supports Job Management.</Description>
       <Title>mrjamiebowman.Hangfire.JobManagement</Title>
       <PackageReadmeFile>README.md</PackageReadmeFile>
       <IncludeSymbols>True</IncludeSymbols>
