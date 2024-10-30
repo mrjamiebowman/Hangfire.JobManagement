@@ -5,6 +5,7 @@ using Hangfire.Storage;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Hangfire.JobManagement.Pages.Dispatchers;
@@ -22,12 +23,15 @@ internal sealed class GetJobsStoppedDispatcher : Dashboard.IDashboardDispatcher
 
         if (!"GET".Equals(context.Request.Method, StringComparison.InvariantCultureIgnoreCase)) {
             context.Response.StatusCode = 405;
-
             return;
         }
 
         var periodicJob = new List<PeriodicJob>();
+
         periodicJob.AddRange(JobAgent.GetAllJobStopped());
+
+        // sort by id
+        periodicJob = periodicJob.OrderBy(x => x.Id).ToList();
 
         await context.Response.WriteAsync(JsonConvert.SerializeObject(periodicJob));
     }

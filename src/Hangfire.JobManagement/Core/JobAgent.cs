@@ -32,71 +32,84 @@ namespace Hangfire.JobManagement.Core
 
         public static List<PeriodicJob> GetAllJobStopped() {
             var outPut = new List<PeriodicJob>();
-            using (var connection = JobStorage.Current.GetConnection()) {
-                var allJobStopped = connection.GetAllItemsFromSet(tagStopJob);
 
-                allJobStopped.ToList().ForEach(jobId => {
+            using (var connection = JobStorage.Current.GetConnection()) {
+                var allJobStopped = connection.GetAllItemsFromSet(tagStopJob).ToList();
+
+                allJobStopped.ForEach(jobId => {
                     var dto = new PeriodicJob();
 
                     var dataJob = connection.GetAllEntriesFromHash($"{tagRecurringJob}:{jobId}");
                     dto.Id = jobId;
                     dto.TimeZoneId = "UTC"; // Default
 
-                    try {
-                        if (dataJob.TryGetValue("Job", out var payload) && !string.IsNullOrWhiteSpace(payload)) {
-                            var invocationData = InvocationData.DeserializePayload(payload);
-                            var job = invocationData.DeserializeJob();
-                            dto.Method = job.Method.Name;
-                            dto.Class = job.Type.Name;
+                    if (dataJob != null)
+                    {
+                        try
+                        {
+                            if (dataJob.TryGetValue("Job", out var payload) && !string.IsNullOrWhiteSpace(payload))
+                            {
+                                var invocationData = InvocationData.DeserializePayload(payload);
+                                var job = invocationData.DeserializeJob();
+                                dto.Method = job.Method.Name;
+                                dto.Class = job.Type.Name;
+                            }
                         }
-                    } catch (JobLoadException ex) {
-                        dto.Error = ex.Message;
-                    }
-
-                    if (dataJob.ContainsKey("TimeZoneId")) {
-                        dto.TimeZoneId = dataJob["TimeZoneId"];
-                    }
-
-                    if (dataJob.ContainsKey("NextExecution")) {
-                        var tempNextExecution = JobHelper.DeserializeNullableDateTime(dataJob["NextExecution"]);
-
-                        dto.NextExecution = tempNextExecution.HasValue ? tempNextExecution.Value.ChangeTimeZone(dto.TimeZoneId).ToString("G") : "N/A";
-                    }
-
-                    if (dataJob.ContainsKey("LastJobId") && !string.IsNullOrWhiteSpace(dataJob["LastJobId"])) {
-                        dto.LastJobId = dataJob["LastJobId"];
-
-                        var stateData = connection.GetStateData(dto.LastJobId);
-                        if (stateData != null) {
-                            dto.LastJobState = stateData.Name;
+                        catch (JobLoadException ex)
+                        {
+                            dto.Error = ex.Message;
                         }
+
+                        if (dataJob.ContainsKey("TimeZoneId"))
+                        {
+                            dto.TimeZoneId = dataJob["TimeZoneId"];
+                        }
+
+                        if (dataJob.ContainsKey("NextExecution"))
+                        {
+                            var tempNextExecution = JobHelper.DeserializeNullableDateTime(dataJob["NextExecution"]);
+
+                            dto.NextExecution = tempNextExecution.HasValue ? tempNextExecution.Value.ChangeTimeZone(dto.TimeZoneId).ToString("G") : "N/A";
+                        }
+
+                        if (dataJob.ContainsKey("LastJobId") && !string.IsNullOrWhiteSpace(dataJob["LastJobId"]))
+                        {
+                            dto.LastJobId = dataJob["LastJobId"];
+
+                            var stateData = connection.GetStateData(dto.LastJobId);
+                            if (stateData != null)
+                            {
+                                dto.LastJobState = stateData.Name;
+                            }
+                        }
+
+                        if (dataJob.ContainsKey("Queue"))
+                        {
+                            dto.Queue = dataJob["Queue"];
+                        }
+
+                        if (dataJob.ContainsKey("LastExecution"))
+                        {
+                            var tempLastExecution = JobHelper.DeserializeNullableDateTime(dataJob["LastExecution"]);
+                            dto.LastExecution = tempLastExecution.HasValue ? tempLastExecution.Value.ChangeTimeZone(dto.TimeZoneId).ToString("G") : "N/A";
+                        }
+
+                        if (dataJob.ContainsKey("CreatedAt"))
+                        {
+                            dto.CreatedAt = JobHelper.DeserializeNullableDateTime(dataJob["CreatedAt"]);
+                            dto.CreatedAt = dto.CreatedAt.HasValue ? dto.CreatedAt.Value.ChangeTimeZone(dto.TimeZoneId) : new DateTime();
+                        }
+
+                        if (dataJob.TryGetValue("Error", out var error) && !string.IsNullOrEmpty(error))
+                        {
+                            dto.Error = error;
+                        }
+
+                        dto.Removed = false;
+                        dto.JobState = "Stopped";
+
+                        outPut.Add(dto);
                     }
-
-                    if (dataJob.ContainsKey("Queue")) {
-                        dto.Queue = dataJob["Queue"];
-                    }
-
-                    if (dataJob.ContainsKey("LastExecution")) {
-
-                        var tempLastExecution = JobHelper.DeserializeNullableDateTime(dataJob["LastExecution"]);
-
-                        dto.LastExecution = tempLastExecution.HasValue ? tempLastExecution.Value.ChangeTimeZone(dto.TimeZoneId).ToString("G") : "N/A";
-                    }
-
-                    if (dataJob.ContainsKey("CreatedAt")) {
-                        dto.CreatedAt = JobHelper.DeserializeNullableDateTime(dataJob["CreatedAt"]);
-                        dto.CreatedAt = dto.CreatedAt.HasValue ? dto.CreatedAt.Value.ChangeTimeZone(dto.TimeZoneId) : new DateTime();
-                    }
-
-                    if (dataJob.TryGetValue("Error", out var error) && !string.IsNullOrEmpty(error)) {
-                        dto.Error = error;
-                    }
-
-                    dto.Removed = false;
-                    dto.JobState = "Stopped";
-
-                    outPut.Add(dto);
-
                 });
             }
             return outPut;

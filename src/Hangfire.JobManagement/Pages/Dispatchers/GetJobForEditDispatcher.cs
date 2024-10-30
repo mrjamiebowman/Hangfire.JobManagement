@@ -25,7 +25,6 @@ internal sealed class GetJobForEdit : IDashboardDispatcher
 
         if (!"GET".Equals(dashboardContext.Request.Method, StringComparison.InvariantCultureIgnoreCase)) {
             dashboardContext.Response.StatusCode = 405;
-
             return;
         }
 
@@ -52,13 +51,13 @@ internal sealed class GetJobForEdit : IDashboardDispatcher
             Cron = recurringJob.Cron,
             CreatedAt = recurringJob.CreatedAt,
             Error = recurringJob.Error,
-            //                LastExecution = recurringJob.LastExecution,
+            //LastExecution = recurringJob.LastExecution,
             Method = recurringJob?.Job?.Method?.Name,
             Class = recurringJob?.Job?.Method?.ReflectedType?.FullName,
             Queue = recurringJob.Queue,
             LastJobId = recurringJob.LastJobId,
             LastJobState = recurringJob.LastJobState,
-            //                NextExecution = recurringJob.NextExecution,
+            //NextExecution = recurringJob.NextExecution,
             Removed = recurringJob.Removed,
             TimeZoneId = recurringJob.TimeZoneId
         };

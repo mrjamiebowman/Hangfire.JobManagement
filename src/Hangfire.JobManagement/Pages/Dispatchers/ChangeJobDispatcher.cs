@@ -80,7 +80,6 @@ internal sealed class ChangeJobDispatcher : IDashboardDispatcher
             return;
         }
 
-
         var methodInfo = StorageAssemblySingleton.GetInstance().currentAssembly
                                                                             .Where(x => x?.GetType(job.Class)?.GetMethod(job.Method) != null)
                                                                             .FirstOrDefault()
@@ -93,7 +92,6 @@ internal sealed class ChangeJobDispatcher : IDashboardDispatcher
                   job.Cron,
                   timeZone,
                   job.Queue ?? EnqueuedState.DefaultQueue);
-
 
         context.Response.StatusCode = (int)HttpStatusCode.OK;
 

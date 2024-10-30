@@ -22,7 +22,6 @@ internal class SettingsGetDispatcher : IDashboardDispatcher
     public SettingsGetDispatcher(ISettingsRepository settingsRepository)
     {
         _connection = JobStorage.Current.GetConnection();
-
         _settingsRepository = settingsRepository;
     }
 
