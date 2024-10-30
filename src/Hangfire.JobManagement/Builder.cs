@@ -29,8 +29,6 @@ public class JobManagementFeatures
 
 public class JobManagementBuilder 
 {
-    public Assembly[] Assemblies { get; set;  }
-
     public JobManagementConfiguration Settings { get; set; } = new JobManagementConfiguration();
 
     public JobManagementFeatures Features { get; set; } = new JobManagementFeatures();
