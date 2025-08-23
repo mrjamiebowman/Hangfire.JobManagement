@@ -1,13 +1,10 @@
 name: Abstractions NuGet (Build & Publish)
 
 on:
-  push:
-    tags:
-      - 'v*'          # e.g. v1.2.3
-  workflow_dispatch:  # allow manual run with optional version input
+  workflow_dispatch:
     inputs:
       version:
-        description: 'Semantic version (e.g. 1.2.3). If empty and not a tag run, uses csproj version.'
+        description: 'Semantic version (e.g. 1.2.3). If empty, uses csproj version.'
         required: false
         default: ''
 

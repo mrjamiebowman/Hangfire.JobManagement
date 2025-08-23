@@ -19,6 +19,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hangfire.JobManagement", "s
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hangfire.JobManagement.Abstractions", "..\Hangfire.JobManagement.Abstractions\Hangfire.JobManagement.Abstractions\Hangfire.JobManagement.Abstractions.csproj", "{103A1E2F-BD9A-F36D-8C1F-E2E3E0274F05}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "client", "client", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -40,6 +42,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{DB5CFE7E-6D1A-4145-B601-E6483945185D} = {AC3628E1-ABD2-4E1E-882F-A2AD446C2803}
 		{103A1E2F-BD9A-F36D-8C1F-E2E3E0274F05} = {AC3628E1-ABD2-4E1E-882F-A2AD446C2803}
+		{02EA681E-C7D8-13C7-8484-4AC65E1B71E8} = {1D313BAE-3033-4A38-BE3C-C9F77B9BCAAF}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D4CBEAD4-C4F8-4FC4-8629-AED90D5D144F}
