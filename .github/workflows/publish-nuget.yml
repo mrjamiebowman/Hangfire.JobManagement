@@ -1,0 +1,103 @@
+name: NuGet Build & Publish
+
+on:
+  push:
+    tags:
+      - 'v*'          # e.g. v1.2.3
+  workflow_dispatch:  # allow manual run with optional version input
+    inputs:
+      version:
+        description: 'Semantic version (e.g. 1.2.3). If empty and not a tag run, uses csproj version.'
+        required: false
+        default: ''
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    env:
+      DOTNET_NOLOGO: true
+      CONFIGURATION: Release
+      NUGET_SOURCE: https://api.nuget.org/v3/index.json
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: |
+            9.0.x
+            8.0.x
+
+      - name: Cache NuGet
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj', '**/packages.lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+
+      - name: Restore
+        run: dotnet restore
+
+      - name: Build
+        run: dotnet build --no-restore -c $CONFIGURATION
+
+      - name: Test
+        run: dotnet test --no-build -c $CONFIGURATION --verbosity normal
+
+      - name: Determine package version
+        id: ver
+        shell: bash
+        run: |
+          # If this is a tag like v1.2.3 use that; else use input; else leave empty (uses csproj version)
+          TAG="${GITHUB_REF_NAME}"
+          if [[ "${GITHUB_REF_TYPE}" == "tag" && "${TAG}" == v* ]]; then
+            PKG_VERSION="${TAG#v}"
+          elif [[ -n "${{ github.event.inputs.version }}" ]]; then
+            PKG_VERSION="${{ github.event.inputs.version }}"
+          else
+            PKG_VERSION=""
+          fi
+          echo "PKG_VERSION=$PKG_VERSION" >> $GITHUB_OUTPUT
+
+      - name: Pack
+        run: |
+          mkdir -p artifacts
+          if [ -n "${{ steps.ver.outputs.PKG_VERSION }}" ]; then
+            dotnet pack --no-build -c $CONFIGURATION -o artifacts -p:PackageVersion=${{ steps.ver.outputs.PKG_VERSION }}
+          else
+            dotnet pack --no-build -c $CONFIGURATION -o artifacts
+          fi
+
+      - name: Publish to NuGet.org
+        if: always()
+        env:
+          NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+        run: |
+          if [ -z "$NUGET_API_KEY" ]; then
+            echo "Missing NUGET_API_KEY secret"; exit 1
+          fi
+          dotnet nuget push "artifacts/*.nupkg" \
+            --api-key "$NUGET_API_KEY" \
+            --source "$NUGET_SOURCE" \
+            --skip-duplicate \
+            --no-symbols true
+
+      # Optional: publish symbols/snupkg (if you pack symbols)
+      # - name: Publish symbols to NuGet.org
+      #   env:
+      #     NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+      #   run: dotnet nuget push "artifacts/*.snupkg" --api-key "$NUGET_API_KEY" --source https://api.nuget.org/v3/index.json --skip-duplicate
+
+      # Optional: also push to GitHub Packages
+      # - name: Publish to GitHub Packages
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   run: |
+      #     dotnet nuget push "artifacts/*.nupkg" \
+      #       --source "https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json" \
+      #       --api-key "$GITHUB_TOKEN" \
+      #       --skip-duplicate
