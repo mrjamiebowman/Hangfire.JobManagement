@@ -7,8 +7,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_Solution Items", "_Solutio
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
 		.github\workflows\publish-abstractions.yml = .github\workflows\publish-abstractions.yml
-		README.md = README.md
 		.github\workflows\publish-nuget.yml = .github\workflows\publish-nuget.yml
+		README.md = README.md
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{AC3628E1-ABD2-4E1E-882F-A2AD446C2803}"

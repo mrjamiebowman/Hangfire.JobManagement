@@ -15,6 +15,7 @@ using Hangfire.JobManagement.Services.Notifications;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using System;
 using System.Reflection;
 
@@ -124,25 +125,25 @@ public static class Builder
         // configuration
         JobManagementConfiguration jobManagementConfiguration = new JobManagementConfiguration();
         configuration.GetSection(JobManagementConfiguration.Position).Bind(jobManagementConfiguration);
-        services.AddSingleton<JobManagementConfiguration>(jobManagementConfiguration);
+        services.TryAddSingleton<JobManagementConfiguration>(jobManagementConfiguration);
 
         // inject: dbcontext factory
-        services.AddTransient<JobManagementDbFactory, JobManagementDbFactory>();
+        services.TryAddTransient<JobManagementDbFactory, JobManagementDbFactory>();
 
         // inject: factories
-        services.AddTransient<IDesignTimeDbContextFactory<JobManagementDbContext>, JobManagementDbFactory>();
-        services.AddTransient<INotificationsFactoryService, NotificationsFactoryService>();
+        services.TryAddTransient<IDesignTimeDbContextFactory<JobManagementDbContext>, JobManagementDbFactory>();
+        services.TryAddTransient<INotificationsFactoryService, NotificationsFactoryService>();
 
         // services
-        services.AddTransient<IBatchService, BatchService>();
-        services.AddTransient<IJobHistoryService, JobHistoryService>();
+        services.TryAddTransient<IBatchService, BatchService>();
+        services.TryAddTransient<IJobHistoryService, JobHistoryService>();
 
-        services.AddTransient<INotificationService, NotificationDefaultEmailService>();
-        services.AddTransient<INotificationService, NotificationDefaultWebHookService>();
+        services.TryAddTransient<INotificationService, NotificationDefaultEmailService>();
+        services.TryAddTransient<INotificationService, NotificationDefaultWebHookService>();
 
         // inject: repositories
-        services.AddTransient<ISettingsRepository, SettingsRepository>();
-        services.AddTransient<ISettingsQueueRepository, SettingsQueuesRepository>();
+        services.TryAddTransient<ISettingsRepository, SettingsRepository>();
+        services.TryAddTransient<ISettingsQueueRepository, SettingsQueuesRepository>();
 
         return services;
     }

@@ -5,7 +5,8 @@
 [![Official Site](https://img.shields.io/badge/site-hangfire.io-blue.svg)](http://hangfire.io)
 [![License MIT](https://img.shields.io/badge/license-MIT-green.svg)](http://opensource.org/licenses/MIT)
 
-*NOTE:* This is a fork that's going a different direction. Just getting started... Below will be updated. - 05/27/2024 @mrjamiebowman
+*NOTE:* This is a fork that's going a different direction. I appologize but I'm having to learn how to publish and manage
+        public nuget packages. 09/18/2025 - @mrjamiebowman
 
 A robust extension to .NET Hangfire that adds a Job Management Dashboard, Notifications, and Settings. 
 
