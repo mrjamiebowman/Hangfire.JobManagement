@@ -1,0 +1,6 @@
+@Hangfire.JobManagement.Test.SampleServer_HostAddress = http://localhost:5062
+
+GET {{Hangfire.JobManagement.Test.SampleServer_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
