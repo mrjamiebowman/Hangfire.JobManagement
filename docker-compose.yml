@@ -1,0 +1,24 @@
+name: mrjamiebowman-jobmanagement
+
+services:
+
+  # mssql
+  mssql:
+    container_name: mssql
+    hostname: mssql
+    build: 
+        context: ./.docker/mssql/
+        dockerfile: Dockerfile
+    env_file:
+      - .env
+    image: mrjamiebowman/hangfire-mssql:latest
+    ports:
+      - 1433:1433
+    restart: always
+    environment:
+      ACCEPT_EULA: 'Y'
+      SA_PASSWORD: '5yyEj47ZlXITk39o9#r'
+      MSSQL_AGENT_ENABLED: 'True'
+    volumes:
+     - ./data/:/var/opt/mssql/data
+     - ./db/:/var/opt/mssql/backup
