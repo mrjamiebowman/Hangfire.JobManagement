@@ -55,6 +55,9 @@ builder.Services.AddHangfireServer(options =>
     options.Queues = new[] { "default", "status-reports", "status-reports-test" };
 });
 
+// jobs
+builder.ConfigureJobManager();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -67,6 +70,7 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
+app.UseRouting();
 
 app.UseEndpoints(endpoints =>
 {
