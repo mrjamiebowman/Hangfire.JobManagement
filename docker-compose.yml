@@ -20,5 +20,7 @@ services:
       SA_PASSWORD: '5yyEj47ZlXITk39o9#r'
       MSSQL_AGENT_ENABLED: 'True'
     volumes:
-     - ./data/:/var/opt/mssql/data
-     - ./db/:/var/opt/mssql/backup
+      - mssql-data:/var/opt/mssql
+
+volumes:
+  mssql-data:

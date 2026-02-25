@@ -22,7 +22,6 @@
   </PropertyGroup>
      
   <ItemGroup>
-    <None Remove="appsettings.json" />
     <None Remove="Dashboard\Content\css\cron-expression-input.css" />
     <None Remove="Dashboard\Content\css\JobExtension.css" />
     <None Remove="Dashboard\Content\js\axios.min.js" />
@@ -40,14 +39,6 @@
     <None Remove="Dashboard\Resources.html" />
     <None Remove="Dashboard\Settings.html" />
     <None Remove="Dashboard\SidebarHeader.html" />
-  </ItemGroup>
-     
-  <ItemGroup>
-    <Content Include="appsettings.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
   </ItemGroup>
      
   <ItemGroup>

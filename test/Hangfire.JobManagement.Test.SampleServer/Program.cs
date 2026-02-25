@@ -68,6 +68,13 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
 
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllers();
+    // endpoints.MapRazorPages();
+    // endpoints.MapHub<ChatHub>("/hubs/chat");
+});
+
 // dashboard options
 DashboardOptions dashboardOptions = new DashboardOptions();
 
