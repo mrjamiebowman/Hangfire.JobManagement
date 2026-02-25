@@ -14,7 +14,7 @@ COPY entrypoint.sh /
 # files
 WORKDIR /opt/
 COPY db-init.sh .
-COPY scripts .
+COPY scripts scripts
 
 RUN chmod +x db-init.sh
 RUN chmod +x /entrypoint.sh
@@ -22,4 +22,4 @@ RUN chmod +x /entrypoint.sh
 # user
 USER mssql
 
-CMD /bin/bash /appdev/entrypoint.sh
+CMD /bin/bash /entrypoint.sh
