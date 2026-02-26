@@ -100,6 +100,7 @@ public static class Builder
         DashboardRoutes.Routes.Add("/management/data/GetJob", new GetJobForEdit());
         DashboardRoutes.Routes.Add("/management/data/JobAgent", new JobAgentDispatcher());
         DashboardRoutes.Routes.Add("/management/data/timezones", new GetTimeZonesDispatcher());
+        DashboardRoutes.Routes.Add("/management/data/queues", new GetQueuesDispatcher());
 
         // dispatcher: settings
         DashboardRoutes.Routes.Add("/management/settings/all", new SettingsGetDispatcher(settingsRepository));

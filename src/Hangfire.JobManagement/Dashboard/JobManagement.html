@@ -54,9 +54,11 @@
                     </select>
                 </div>
 
+                <hr />
+
                 <div class="form-group">
                     <label for="class">Class</label>
-                    <input type="text" class="form-control" v-model="job.Class" name="class" aria-describedby="class" id="class" placeholder="Enter Class Name">
+                    <input type="text" class="form-control" v-model="job.Class" name="class" aria-describedby="class" id="class" placeholder="Enter Class Name" style="margin-bottom: 6px;">
                     <small id="class" class="form-text text-muted">Please provider path complete about your class example: Hangfire.RecurringJob.MyClass</small>
                 </div>
 
@@ -189,6 +191,7 @@
                 showModal: false,
                 errors: [],
                 timeZones: [],
+                queues: [],
                 job: {
                     Id: '',
                     Cron: '',
@@ -334,7 +337,15 @@
                     });
                 }
             },
-            getTimeZones() {
+            GetJobQueues() {
+                debugger;
+                axios.get('data/queues').then(response => {
+                    this.queues = response.data;
+                }).catch(e => {
+                    console.log(e);
+                });
+            },
+            GetTimeZones() {
                 axios.get('data/timezones').then(response => {
                     this.timeZones = response.data;
                 }).catch(e => {
@@ -404,7 +415,8 @@
             }
         },
         created() {
-            this.getTimeZones();
+            this.GetTimeZones();
+            this.GetJobQueues();
             this.GetJobs();
         },
         computed: {
