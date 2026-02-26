@@ -1,5 +1,6 @@
 ﻿namespace Hangfire.JobManagement.Test.SampleServer.Jobs.Parameters;
 
-public class JobParametersBase
+public abstract class JobParametersBase
 {
+
 }

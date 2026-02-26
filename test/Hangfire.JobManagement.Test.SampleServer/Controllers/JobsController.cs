@@ -1,4 +1,5 @@
 ﻿using Hangfire.JobManagement.Test.SampleServer.Jobs;
+using Hangfire.JobManagement.Test.SampleServer.Jobs.Parameters;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Hangfire.JobManagement.Test.SampleServer.Controllers;
@@ -151,10 +152,18 @@ public class JobsController : ControllerBase
 
         };
 
-        // jobs
-        RecurringJob.AddOrUpdate<CustomRecurringJob>(CustomRecurringJob.JobName, job => job.ExecuteAsync(null, null, "Custom Job Title", CancellationToken.None), Cron.Daily(3, 0), recurringJobOptionsEst);
+        // job #1
+        CustomRecurringJobParameters customRecurringJobParameters = new CustomRecurringJobParameters();
+        customRecurringJobParameters.Parameter = "Job #1";
+        RecurringJob.AddOrUpdate<CustomRecurringJob>(CustomRecurringJob.JobName, job => job.ExecuteAsync(null, customRecurringJobParameters, "Custom Job #1", CancellationToken.None), Cron.Daily(3, 0), recurringJobOptionsEst);
 
-        //RecurringJob.AddOrUpdate<CustomRecurringJob>(CustomRecurringJob.JobName, job => job.ExecuteAsync(null, null, CancellationToken.None), Cron.Daily(3, 0), recurringJobOptionsEst);
+        // job #2
+        CustomRecurringJobParameters customRecurringJobParameters2 = new CustomRecurringJobParameters();
+        customRecurringJobParameters2.Parameter = "Job #2";
+        RecurringJob.AddOrUpdate<CustomRecurringJob>($"{CustomRecurringJob.JobName}-2", job => job.ExecuteAsync(null, customRecurringJobParameters2, "Custom Job #2", CancellationToken.None), Cron.Daily(3, 0), recurringJobOptionsEst);
+
+        // job #3
+        RecurringJob.AddOrUpdate<CustomRecurringJob>($"{CustomRecurringJob.JobName}-3", job => job.ExecuteAsync(null, null, "Custom Job #3", CancellationToken.None), Cron.Daily(3, 0), recurringJobOptionsEst);
 
         return Task.CompletedTask;
     }

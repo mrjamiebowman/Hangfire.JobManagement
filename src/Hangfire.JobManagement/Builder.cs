@@ -166,8 +166,8 @@ public static class Builder
 
     //    StorageAssemblySingleton.GetInstance().SetCurrentAssembly(includeReferences, assemblies);
 
-    private static void CreateJobManagement() {
-        // di
+    private static void CreateJobManagement() 
+    {
         var serviceProvider = Builder.Services.BuildServiceProvider();
 
         ISettingsRepository settingsRepository = serviceProvider.GetService<ISettingsRepository>();

@@ -33,7 +33,7 @@ public class CustomRecurringJob : JobBase
         cancellationToken = GetCancellationToken(context, cancellationToken);
 
         // progress bar
-        var progress = context.WriteProgressBar();
+        var progressBar = context.WriteProgressBar();
 
         // parameters
         var jobParams = parameters as CustomRecurringJobParameters ?? new CustomRecurringJobParameters();
@@ -42,14 +42,32 @@ public class CustomRecurringJob : JobBase
         {
             context.WriteLine("");
             context.WriteLine("");
-            context.WriteLine($"###############################################");
+            context.WriteLine($"##################################################");
             context.WriteLine($"# Custom Recurring Job: (Parameter Value: {jobParams.Parameter})");
-            context.WriteLine($"###############################################");
+            context.WriteLine($"##################################################");
             context.WriteLine("");
             context.WriteLine("");
 
             // simulate work
-            await Task.Delay(TimeSpan.FromMinutes(3).Milliseconds);
+            var totalDuration = TimeSpan.FromMinutes(3);
+            var interval = TimeSpan.FromSeconds(10);
+
+            int totalSteps = (int) (totalDuration / interval);
+            int step = 0;
+
+            while (step <= totalSteps)
+            {
+                int progress = (int) Math.Round((double) step / totalSteps * 100);
+
+                if (step == totalSteps) break;
+
+                await Task.Delay(interval);
+
+                step++;
+
+                progressBar.SetValue(progress);
+                context.WriteLine($"Progress: {progress}%");
+            }
         }
         catch (Exception ex)
         {
@@ -60,7 +78,7 @@ public class CustomRecurringJob : JobBase
         finally
         {
             // finish progress bar
-            progress.SetValue(100);
+            progressBar.SetValue(100);
         }
     }
 }

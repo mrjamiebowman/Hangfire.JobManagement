@@ -1,4 +1,5 @@
 using Hangfire;
+using Hangfire.Console;
 using Hangfire.JobManagement.Test.SampleServer;
 using Hangfire.JobManagement.Test.SampleServer.Configuration;
 using Serilog;
@@ -45,14 +46,18 @@ builder.Services.AddHangfire(config =>
             .UseSimpleAssemblyNameTypeSerializer()
             .UseRecommendedSerializerSettings()
             .UseActivator(new HangfireJobActivator(builder.Services))
-            .UseSqlServerStorage(hangfireConfiguration.ConnectionString);
+            .UseSqlServerStorage(hangfireConfiguration.ConnectionString)
+
+            // Console - https://github.com/pieceofsummer/Hangfire.Console
+            .UseConsole()
+    ;
 });
 
 // Add the processing server as IHostedService
 builder.Services.AddHangfireServer(options =>
 {
     options.WorkerCount = 3;
-    options.Queues = new[] { "default", "status-reports", "status-reports-test" };
+    options.Queues = new[] { "default", "alt-queue" };
 });
 
 // jobs

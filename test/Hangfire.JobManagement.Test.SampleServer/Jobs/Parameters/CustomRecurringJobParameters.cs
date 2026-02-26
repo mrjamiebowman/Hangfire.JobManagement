@@ -2,5 +2,5 @@
 
 public class CustomRecurringJobParameters : JobParametersBase
 {
-    public int? Parameter { get; set; }
+    public string? Parameter { get; set; }
 }
