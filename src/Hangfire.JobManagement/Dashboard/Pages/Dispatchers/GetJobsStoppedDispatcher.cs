@@ -1,4 +1,5 @@
 ﻿using Hangfire.Annotations;
+using Hangfire.Dashboard;
 using Hangfire.JobManagement.Core;
 using Hangfire.JobManagement.Models;
 using Hangfire.Storage;
@@ -7,9 +8,9 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Hangfire.JobManagement.Pages.Dispatchers;
+namespace Hangfire.JobManagement.Dashboard.Pages.Dispatchers;
 
-internal sealed class GetJobsStoppedDispatcher : Dashboard.IDashboardDispatcher
+internal sealed class GetJobsStoppedDispatcher : IDashboardDispatcher
 {
     private readonly IStorageConnection _connection;
 
@@ -17,7 +18,7 @@ internal sealed class GetJobsStoppedDispatcher : Dashboard.IDashboardDispatcher
         _connection = JobStorage.Current.GetConnection();
     }
 
-    public async Task Dispatch([NotNull] Dashboard.DashboardContext context) {
+    public async Task Dispatch([NotNull] DashboardContext context) {
         using var activity = OTel.Application.StartActivity($"{nameof(GetJobsStoppedDispatcher)}.{nameof(Dispatch)}");
 
         if (!"GET".Equals(context.Request.Method, StringComparison.InvariantCultureIgnoreCase)) {

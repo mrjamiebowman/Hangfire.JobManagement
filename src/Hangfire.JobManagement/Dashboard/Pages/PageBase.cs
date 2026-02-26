@@ -1,7 +1,7 @@
 ﻿using Hangfire.Dashboard;
 using Hangfire.JobManagement.Core;
 
-namespace Hangfire.JobManagement.Pages;
+namespace Hangfire.JobManagement.Dashboard.Pages;
 
 internal abstract class PageBase : RazorPage
 {

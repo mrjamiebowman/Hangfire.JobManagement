@@ -1,7 +1,7 @@
 ﻿using Hangfire.States;
 using System;
 
-namespace Hangfire.JobManagement.Attributes;
+namespace Hangfire.JobManagement.Jobs.Attributes;
 
 /// <summary>
 /// Attribute to add or update <see cref="RecurringJob"/> automatically

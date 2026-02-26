@@ -6,7 +6,7 @@ using Newtonsoft.Json;
 using System.Net;
 using System.Threading.Tasks;
 
-namespace Hangfire.JobManagement.Pages.Dispatchers;
+namespace Hangfire.JobManagement.Dashboard.Pages.Dispatchers;
 
 internal sealed class JobAgentDispatcher : IDashboardDispatcher
 {

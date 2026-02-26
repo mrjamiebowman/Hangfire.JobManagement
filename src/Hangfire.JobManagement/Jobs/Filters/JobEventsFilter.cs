@@ -6,7 +6,7 @@ using Hangfire.Server;
 using Hangfire.States;
 using Hangfire.Storage;
 
-namespace Hangfire.JobManagement.Filters;
+namespace Hangfire.JobManagement.Jobs.Filters;
 
 public class JobEventsFilter : JobFilterAttribute, IClientFilter, IServerFilter, IElectStateFilter, IApplyStateFilter
 {

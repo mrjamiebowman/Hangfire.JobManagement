@@ -4,7 +4,7 @@ using Hangfire.Storage;
 using System;
 using System.Threading.Tasks;
 
-namespace Hangfire.JobManagement.Pages.Dispatchers;
+namespace Hangfire.JobManagement.Dashboard.Pages.Dispatchers;
 
 internal class SettingsQueueDeleteDispatcher : IDashboardDispatcher
 {

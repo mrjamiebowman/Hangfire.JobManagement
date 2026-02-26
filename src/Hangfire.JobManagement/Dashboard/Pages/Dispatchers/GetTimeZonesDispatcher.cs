@@ -1,15 +1,16 @@
 ﻿using Hangfire.Annotations;
+using Hangfire.Dashboard;
 using Hangfire.JobManagement.Core;
 using Newtonsoft.Json;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Hangfire.JobManagement.Pages.Dispatchers;
+namespace Hangfire.JobManagement.Dashboard.Pages.Dispatchers;
 
-internal sealed class GetTimeZonesDispatcher : Dashboard.IDashboardDispatcher
+internal sealed class GetTimeZonesDispatcher : IDashboardDispatcher
 {
-    public async Task Dispatch([NotNull] Dashboard.DashboardContext context) {
+    public async Task Dispatch([NotNull] DashboardContext context) {
         using var activity = OTel.Application.StartActivity($"{nameof(GetTimeZonesDispatcher)}.{nameof(Dispatch)}");
 
         // get local time zone

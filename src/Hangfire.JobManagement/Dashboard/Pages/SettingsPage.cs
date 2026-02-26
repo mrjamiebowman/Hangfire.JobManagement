@@ -1,7 +1,7 @@
 ﻿using Hangfire.Dashboard.Pages;
 using Hangfire.JobManagement.Core;
 
-namespace Hangfire.JobManagement.Pages;
+namespace Hangfire.JobManagement.Dashboard.Pages;
 
 internal class SettingsPage : PageBase
 {

@@ -8,7 +8,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Hangfire.JobManagement.Pages.Dispatchers;
+namespace Hangfire.JobManagement.Dashboard.Pages.Dispatchers;
 
 internal class SettingsQueueGetDispatcher : IDashboardDispatcher
 {

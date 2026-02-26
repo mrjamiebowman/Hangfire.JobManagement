@@ -1,8 +1,7 @@
 ﻿using Hangfire.Dashboard.Pages;
 using Hangfire.JobManagement.Core;
-using Hangfire.JobManagement.Pages.Dispatchers;
 
-namespace Hangfire.JobManagement.Pages;
+namespace Hangfire.JobManagement.Dashboard.Pages;
 
 internal sealed class JobManagement : PageBase
 {

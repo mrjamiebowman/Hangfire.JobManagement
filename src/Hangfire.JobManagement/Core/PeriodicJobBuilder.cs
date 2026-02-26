@@ -1,4 +1,4 @@
-﻿using Hangfire.JobManagement.Attributes;
+﻿using Hangfire.JobManagement.Jobs.Attributes;
 using Hangfire.States;
 using System;
 using System.Linq;
@@ -14,14 +14,14 @@ internal static class PeriodicJobBuilder
         foreach (var assembly in StorageAssemblySingleton.GetInstance().currentAssembly) {
             foreach (var type in assembly.GetTypes()) {
                 foreach (var method in type.GetTypeInfo().DeclaredMethods) {
-                    if (!method.IsDefined(typeof(RecurringJobAttribute), false)) continue;
+                    if (!method.IsDefined(typeof(JobManagementAttribute), false)) continue;
 
-                    var attribute = method.GetCustomAttribute<RecurringJobAttribute>(false);
+                    var attribute = method.GetCustomAttribute<JobManagementAttribute>(false);
 
                     if (attribute == null) continue;
 
-                    if (method.GetCustomAttributes(true).OfType<RecurringJobAttribute>().Any()) {
-                        var attr = method.GetCustomAttribute<RecurringJobAttribute>();
+                    if (method.GetCustomAttributes(true).OfType<JobManagementAttribute>().Any()) {
+                        var attr = method.GetCustomAttribute<JobManagementAttribute>();
                     }
 
                     if (!JobAgent.IsValidJobId(attribute.RecurringJobId) && !JobAgent.IsValidJobId(attribute.RecurringJobId, JobAgent.tagStopJob)) {

@@ -3,7 +3,7 @@ using Hangfire.JobManagement.Models;
 using Hangfire.States;
 using System;
 
-namespace Hangfire.JobManagement.Attributes;
+namespace Hangfire.JobManagement.Jobs.Attributes;
 
 public class DisableConcurrentlyJobExecutionAttribute : JobFilterAttribute, IElectStateFilter
 {

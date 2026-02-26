@@ -3,12 +3,12 @@ using Hangfire.Dashboard;
 using Hangfire.JobManagement.Abstractions;
 using Hangfire.JobManagement.Configuration;
 using Hangfire.JobManagement.Core;
+using Hangfire.JobManagement.Dashboard.Pages;
+using Hangfire.JobManagement.Dashboard.Pages.Dispatchers;
 using Hangfire.JobManagement.Data;
 using Hangfire.JobManagement.Data.Repositories;
 using Hangfire.JobManagement.Data.Repositories.Interfaces;
-using Hangfire.JobManagement.Filters;
-using Hangfire.JobManagement.Pages;
-using Hangfire.JobManagement.Pages.Dispatchers;
+using Hangfire.JobManagement.Jobs.Filters;
 using Hangfire.JobManagement.Services;
 using Hangfire.JobManagement.Services.Interfaces;
 using Hangfire.JobManagement.Services.Notifications;
@@ -86,7 +86,7 @@ public static class Builder
         ISettingsQueueRepository settingsQueueRepository = serviceProvider.GetService<ISettingsQueueRepository>();
 
         // pages
-        DashboardRoutes.Routes.AddRazorPage(Pages.JobManagement.PageRoute, x => new Pages.JobManagement());
+        DashboardRoutes.Routes.AddRazorPage(Dashboard.Pages.JobManagement.PageRoute, x => new Dashboard.Pages.JobManagement());
         DashboardRoutes.Routes.AddRazorPage(JobsStoppedPage.PageRoute, x => new JobsStoppedPage());
         //DashboardRoutes.Routes.AddRazorPage(SettingsPage.PageRoute, x => new SettingsPage());
         //DashboardRoutes.Routes.AddRazorPage(NotificationsPage.PageRoute, x => new NotificationsPage());
@@ -121,10 +121,11 @@ public static class Builder
         });
 
         // navbar
-        NavigationMenu.Items.Add(page => new MenuItem(Pages.JobManagement.Title, page.Url.To(Pages.JobManagement.PageRoute)) {
-            Active = page.RequestPath.StartsWith(Pages.JobManagement.PageRoute),
+        NavigationMenu.Items.Add(page => new MenuItem(Dashboard.Pages.JobManagement.Title, page.Url.To(Dashboard.Pages.JobManagement.PageRoute)) {
+            Active = page.RequestPath.StartsWith(Dashboard.Pages.JobManagement.PageRoute),
             Metric = DashboardMetrics.RecurringJobCount
         });
+
 
         //// notifications
         //if (Builder.Options.Features.Notifications) 
@@ -141,6 +142,25 @@ public static class Builder
         //        Active = page.RequestPath.StartsWith(SettingsPage.PageRoute)
         //    });
         //}
+
+
+
+
+
+        // swagger link
+//        DashboardRoutes.Routes.Add("/custom.js", new EmbeddedJsDispatcher(@"
+//    document.addEventListener('DOMContentLoaded', function() {
+//        var navbar = document.querySelector('.navbar-right');
+//        if (navbar) {
+//            navbar.insertAdjacentHTML('beforeend',
+//                '<li><a href=""/my-link"">My Item</a></li>'
+//            );
+//        }
+//    });
+//"));
+
+
+
 
         // css 
         AddDashboardRouteToEmbeddedResource("/resources/css/jobExtension", "text/css", "Hangfire.JobManagement.Dashboard.Content.css.JobExtension.css");
