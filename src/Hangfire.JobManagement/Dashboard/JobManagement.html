@@ -43,6 +43,11 @@
                 </div>
 
                 <div class="form-group">
+                    <label for="queue">Queue</label>
+                    <input type="text" class="form-control" v-model="job.Queue" name="queue" id="queue" placeholder="Enter Queue Name">
+                </div>
+
+                <div class="form-group">
                     <label for="cron">Time Zone</label>
                     <select id="timezoneid" class="form-control" v-model="job.TimeZoneId" name="cron" placeholder="Enter the Time Zone">
                         <option v-for="(item, index) in timeZones" :key="index" :value="item.Item1">{{item.Item2}}</option>
@@ -58,11 +63,6 @@
                 <div class="form-group">
                     <label for="method">Method</label>
                     <input type="text" class="form-control" v-model="job.Method" id="method" name="method" placeholder="Enter Method Name">
-                </div>
-
-                <div class="form-group">
-                    <label for="queue">Queue</label>
-                    <input type="text" class="form-control" v-model="job.Queue" name="queue" id="queue" placeholder="Enter Queue Name">
                 </div>
 
                 <div class="form-group">
