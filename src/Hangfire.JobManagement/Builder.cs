@@ -15,6 +15,7 @@ using Hangfire.JobManagement.Services.Notifications;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using System;
 using System.Reflection;
 
@@ -67,8 +68,6 @@ public static class JobManagementBuilderExtensions
     {
         builder.ValidateConfiguration();
 
-
-
         return builder;
     }
 
@@ -92,21 +91,49 @@ public static class Builder
         return Services?.BuildServiceProvider();
     }
 
+    public static TBuilder ConfigureJobManagement<TBuilder>(this TBuilder builder) where TBuilder : IHostApplicationBuilder
+    {
+        // configuration
+        JobManagementConfiguration jobManagementConfiguration = new JobManagementConfiguration();
+        builder.Configuration.GetSection(JobManagementConfiguration.Position).Bind(jobManagementConfiguration);
+        builder.Services.AddSingleton<JobManagementConfiguration>(jobManagementConfiguration);
+
+        // inject: dbcontext factory
+        builder.Services.AddTransient<JobManagementDbFactory, JobManagementDbFactory>();
+
+        // inject: factories
+        builder.Services.AddTransient<IDesignTimeDbContextFactory<JobManagementDbContext>, JobManagementDbFactory>();
+        builder.Services.AddTransient<INotificationsFactoryService, NotificationsFactoryService>();
+
+        // services
+        builder.Services.AddTransient<IBatchService, BatchService>();
+        builder.Services.AddTransient<IJobHistoryService, JobHistoryService>();
+
+        builder.Services.AddTransient<INotificationService, NotificationDefaultEmailService>();
+        builder.Services.AddTransient<INotificationService, NotificationDefaultWebHookService>();
+
+        // inject: repositories
+        builder.Services.AddTransient<ISettingsRepository, SettingsRepository>();
+        builder.Services.AddTransient<ISettingsQueueRepository, SettingsQueuesRepository>();
+
+        return builder;
+    }
+    // TBuilder ConfigureJobManagement<TBuilder>(this TBuilder builder) where TBuilder : IHostApplicationBuilder
     [PublicAPI]
-    public static IGlobalConfiguration UseJobManagement(this IGlobalConfiguration config, IServiceCollection services, IConfiguration configuration, Action<JobManagementBuilder> jobManagementOptions)
+    public static IGlobalConfiguration UseJobManagement<TBuilder>(this IGlobalConfiguration config, TBuilder builder, Action<JobManagementBuilder> jobManagementOptions = default) where TBuilder : IHostApplicationBuilder
     {
         // injected
-        Services = services;
-        Configuration = configuration;
+        Services = builder.Services;
+        Configuration = builder.Configuration;
 
         // instantiate builder 
-        Options = new JobManagementBuilder(configuration);
+        Options = new JobManagementBuilder(Configuration);
 
         // customization
         jobManagementOptions.Invoke(Options);
 
         // service provider
-        var serviceProdvider = services.BuildServiceProvider();
+        var serviceProdvider = Services.BuildServiceProvider();
         var notificationsFactory = serviceProdvider.GetRequiredService<INotificationsFactoryService>();
 
         // filters
@@ -121,33 +148,6 @@ public static class Builder
         return config;
     }
 
-    public static IServiceCollection ConfigureJobManagement(this IServiceCollection services, IConfiguration configuration)
-    {
-        // configuration
-        JobManagementConfiguration jobManagementConfiguration = new JobManagementConfiguration();
-        configuration.GetSection(JobManagementConfiguration.Position).Bind(jobManagementConfiguration);
-        services.AddSingleton<JobManagementConfiguration>(jobManagementConfiguration);
-
-        // inject: dbcontext factory
-        services.AddTransient<JobManagementDbFactory, JobManagementDbFactory>();
-
-        // inject: factories
-        services.AddTransient<IDesignTimeDbContextFactory<JobManagementDbContext>, JobManagementDbFactory>();
-        services.AddTransient<INotificationsFactoryService, NotificationsFactoryService>();
-
-        // services
-        services.AddTransient<IBatchService, BatchService>();
-        services.AddTransient<IJobHistoryService, JobHistoryService>();
-
-        services.AddTransient<INotificationService, NotificationDefaultEmailService>();
-        services.AddTransient<INotificationService, NotificationDefaultWebHookService>();
-
-        // inject: repositories
-        services.AddTransient<ISettingsRepository, SettingsRepository>();
-        services.AddTransient<ISettingsQueueRepository, SettingsQueuesRepository>();
-
-        return services;
-    }
 
     // open telemetry
 

@@ -1,11 +1,19 @@
 using Hangfire;
 using Hangfire.Console;
+using Hangfire.JobManagement;
 using Hangfire.JobManagement.Test.SampleServer;
 using Hangfire.JobManagement.Test.SampleServer.Configuration;
 using Serilog;
 using Serilog.Sinks.SystemConsole.Themes;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// service defaults
+builder.AddServiceDefaults();
+
+/************************************************/
+/*                  logging                     */
+/************************************************/
 
 // serilog
 var loggerConfiguration = new LoggerConfiguration()
@@ -26,30 +34,45 @@ builder.Logging
     .ClearProviders()
     .AddSerilog(Log.Logger);
 
+/************************************************/
+/*                  app                         */
+/************************************************/
+
 builder.Services.AddControllers();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+/************************************************/
+/*                  hangfire                    */
+/************************************************/
+
 // hangfire configuration
 var hangfireConfiguration = new HangfireConfiguration();
 builder.Configuration.GetSection(HangfireConfiguration.Position).Bind(hangfireConfiguration);
 builder.Services.AddSingleton<HangfireConfiguration>(hangfireConfiguration);
+
+
+// JobManagement
+builder.ConfigureJobManagement();
 
 // hangfire (has to go last bc the HangfireJobActivator takes builder.Services...)
 builder.Services.AddHangfire(config =>
 {
     config
         .SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
-            .UseColouredConsoleLogProvider()
-            .UseSimpleAssemblyNameTypeSerializer()
-            .UseRecommendedSerializerSettings()
-            .UseActivator(new HangfireJobActivator(builder.Services))
-            .UseSqlServerStorage(hangfireConfiguration.ConnectionString)
+        .UseColouredConsoleLogProvider()
+        .UseSimpleAssemblyNameTypeSerializer()
+        .UseRecommendedSerializerSettings()
+        .UseActivator(new HangfireJobActivator(builder.Services))
+        .UseSqlServerStorage(hangfireConfiguration.ConnectionString)
 
-            // Console - https://github.com/pieceofsummer/Hangfire.Console
-            .UseConsole()
+        // Job Management
+        .UseJobManagement(builder)
+
+        // Console - https://github.com/pieceofsummer/Hangfire.Console
+        .UseConsole()
     ;
 });
 
@@ -61,7 +84,11 @@ builder.Services.AddHangfireServer(options =>
 });
 
 // jobs
-builder.ConfigureJobManager();
+builder.ConfigureJobs();
+
+/************************************************/
+/*                  build                       */
+/************************************************/
 
 var app = builder.Build();
 
@@ -73,15 +100,13 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseAuthorization();
+//app.UseAuthorization();
 app.MapControllers();
 app.UseRouting();
 
 app.UseEndpoints(endpoints =>
 {
     endpoints.MapControllers();
-    // endpoints.MapRazorPages();
-    // endpoints.MapHub<ChatHub>("/hubs/chat");
 });
 
 // dashboard options
@@ -90,11 +115,7 @@ DashboardOptions dashboardOptions = new DashboardOptions();
 // hangfire
 app.UseHangfireDashboard(hangfireConfiguration.DashboardUrl, dashboardOptions);
 
-//app.MapGet("/hangfire/reset-counters", async (IHangfireDatabaseRepository repository, HttpContext context) =>
-//{
-//    await repository.ResetCountersAsync();
-//    await context.Response.WriteAsync("Counters reset successfully!");
-//});
+app.MapDefaultEndpoints();
 
 try
 {
