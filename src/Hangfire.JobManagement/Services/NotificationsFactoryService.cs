@@ -1,6 +1,5 @@
 ﻿using Hangfire.JobManagement.Abstractions;
 using Hangfire.JobManagement.Services.Interfaces;
-using Hangfire.JobManagement.Services.Notifications;
 using Microsoft.Extensions.DependencyInjection;
 using System.Collections.Generic;
 using System.Linq;

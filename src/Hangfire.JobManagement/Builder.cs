@@ -21,75 +21,11 @@ using System.Reflection;
 
 namespace Hangfire.JobManagement;
 
-public class JobManagementFeatures
-{
-    public bool Notifications { get; set; } = false;
-
-    public bool Settings { get; set; } = true;
-}
-
-public class JobManagementBuilder 
-{
-    public Assembly[] Assemblies { get; set;  }
-
-    public JobManagementConfiguration Settings { get; set; } = new JobManagementConfiguration();
-
-    public JobManagementFeatures Features { get; set; } = new JobManagementFeatures();
-
-    public JobManagementBuilder(IConfiguration configuration)
-    {
-        // configure default services
-        this.ConfigureDefaultServices();
-    }
-}
-
-public static class JobManagementBuilderExtensions
-{
-    public static JobManagementBuilder ConfigureAssemblies(this JobManagementBuilder builder, [NotNull] params Assembly[] assemblies)
-    {
-        builder.ValidateConfiguration();
-        if (assemblies == null) throw new ArgumentNullException(nameof(assemblies));
-        StorageAssemblySingleton.GetInstance().SetCurrentAssembly(assemblies: assemblies);
-        return builder;
-    }
-
-    public static JobManagementBuilder ConfigureDatabase(this JobManagementBuilder builder)
-    {
-        return builder;
-    }
-
-    public static JobManagementBuilder ConfigureFeatures(this JobManagementBuilder builder, Action<JobManagementFeatures> features)
-    {
-        features.Invoke(builder.Features);
-        return builder;
-    }
-
-    internal static JobManagementBuilder ConfigureDefaultServices(this JobManagementBuilder builder)
-    {
-        builder.ValidateConfiguration();
-
-        return builder;
-    }
-
-    internal static JobManagementBuilder ValidateConfiguration(this JobManagementBuilder builder)
-    {
-        if (Builder.Configuration is null) throw new ArgumentNullException($"Please call SetConfiguration() first. Argument Null: {nameof(Builder.Configuration)}");
-        return builder;
-    }
-}
-
 public static class Builder
 {
-    private static JobManagementBuilder Options { get; set; }
-
     internal static IServiceCollection Services;
 
     internal static IConfiguration Configuration;
-
-    internal static IServiceProvider GetServiceProvider()
-    {
-        return Services?.BuildServiceProvider();
-    }
 
     public static TBuilder ConfigureJobManagement<TBuilder>(this TBuilder builder) where TBuilder : IHostApplicationBuilder
     {
@@ -99,38 +35,32 @@ public static class Builder
         builder.Services.AddSingleton<JobManagementConfiguration>(jobManagementConfiguration);
 
         // inject: dbcontext factory
-        builder.Services.AddTransient<JobManagementDbFactory, JobManagementDbFactory>();
+        builder.Services.AddScoped<JobManagementDbFactory, JobManagementDbFactory>();
 
         // inject: factories
-        builder.Services.AddTransient<IDesignTimeDbContextFactory<JobManagementDbContext>, JobManagementDbFactory>();
-        builder.Services.AddTransient<INotificationsFactoryService, NotificationsFactoryService>();
+        builder.Services.AddScoped<IDesignTimeDbContextFactory<JobManagementDbContext>, JobManagementDbFactory>();
+        builder.Services.AddScoped<INotificationsFactoryService, NotificationsFactoryService>();
 
         // services
-        builder.Services.AddTransient<IBatchService, BatchService>();
-        builder.Services.AddTransient<IJobHistoryService, JobHistoryService>();
+        builder.Services.AddScoped<IBatchService, BatchService>();
+        builder.Services.AddScoped<IJobHistoryService, JobHistoryService>();
 
-        builder.Services.AddTransient<INotificationService, NotificationDefaultEmailService>();
-        builder.Services.AddTransient<INotificationService, NotificationDefaultWebHookService>();
+        builder.Services.AddScoped<INotificationService, NotificationDefaultEmailService>();
+        builder.Services.AddScoped<INotificationService, NotificationDefaultWebHookService>();
 
         // inject: repositories
-        builder.Services.AddTransient<ISettingsRepository, SettingsRepository>();
-        builder.Services.AddTransient<ISettingsQueueRepository, SettingsQueuesRepository>();
+        builder.Services.AddScoped<ISettingsRepository, SettingsRepository>();
+        builder.Services.AddScoped<ISettingsQueueRepository, SettingsQueuesRepository>();
 
         return builder;
     }
-    // TBuilder ConfigureJobManagement<TBuilder>(this TBuilder builder) where TBuilder : IHostApplicationBuilder
+
     [PublicAPI]
     public static IGlobalConfiguration UseJobManagement<TBuilder>(this IGlobalConfiguration config, TBuilder builder, Action<JobManagementBuilder> jobManagementOptions = default) where TBuilder : IHostApplicationBuilder
     {
         // injected
         Services = builder.Services;
         Configuration = builder.Configuration;
-
-        // instantiate builder 
-        Options = new JobManagementBuilder(Configuration);
-
-        // customization
-        jobManagementOptions.Invoke(Options);
 
         // service provider
         var serviceProdvider = Services.BuildServiceProvider();
@@ -142,31 +72,13 @@ public static class Builder
         // get all jobs
         PeriodicJobBuilder.GetAllJobs();
 
-        // set up
-        CreateJobManagement();
+        // set up hangfire integration
+        SetJobManagementHangfireIntegration();
 
         return config;
     }
 
-
-    // open telemetry
-
-    //public static IGlobalConfiguration UseJobManagement(this IGlobalConfiguration config, [NotNull] params string[] assemblies) {
-    //    if (assemblies == null) throw new ArgumentNullException(nameof(assemblies));
-
-    //    StorageAssemblySingleton.GetInstance().SetCurrentAssembly(assemblies: assemblies.Select(x => Type.GetType(x).Assembly).ToArray());
-
-    //public static IGlobalConfiguration UseJobManagement(this IGlobalConfiguration config, bool includeReferences = false, [NotNull] params string[] assemblies) {
-
-    ///// <param name="includeReferences">If is true it will load all dlls references of the current project to find all jobs.</param>
-    ///// <param name="assembliess"></param>
-    //[PublicAPI]
-    //public static IGlobalConfiguration UseJobManagement(this IGlobalConfiguration config, bool includeReferences = false, [NotNull] params Assembly[] assemblies) {
-    //    if (assemblies == null) throw new ArgumentNullException(nameof(assemblies));
-
-    //    StorageAssemblySingleton.GetInstance().SetCurrentAssembly(includeReferences, assemblies);
-
-    private static void CreateJobManagement() 
+    private static void SetJobManagementHangfireIntegration() 
     {
         var serviceProvider = Builder.Services.BuildServiceProvider();
 
@@ -247,4 +159,39 @@ public static class Builder
 
     private static void AddDashboardRouteToEmbeddedResource(string route, string contentType, string resourceName)
        => DashboardRoutes.Routes.Add(route, new ContentDispatcher(contentType, resourceName, TimeSpan.FromDays(1)));
+}
+
+public static class JobManagementBuilderExtensions
+{
+    public static JobManagementBuilder ConfigureAssemblies(this JobManagementBuilder builder, [NotNull] params Assembly[] assemblies)
+    {
+        builder.ValidateConfiguration();
+        if (assemblies == null) throw new ArgumentNullException(nameof(assemblies));
+        StorageAssemblySingleton.GetInstance().SetCurrentAssembly(assemblies: assemblies);
+        return builder;
+    }
+
+    public static JobManagementBuilder ConfigureDatabase(this JobManagementBuilder builder)
+    {
+        return builder;
+    }
+
+    public static JobManagementBuilder ConfigureFeatures(this JobManagementBuilder builder, Action<JobManagementFeatures> features)
+    {
+        features.Invoke(builder.Features);
+        return builder;
+    }
+
+    internal static JobManagementBuilder ConfigureDefaultServices(this JobManagementBuilder builder)
+    {
+        builder.ValidateConfiguration();
+
+        return builder;
+    }
+
+    internal static JobManagementBuilder ValidateConfiguration(this JobManagementBuilder builder)
+    {
+        if (Builder.Configuration is null) throw new ArgumentNullException($"Please call SetConfiguration() first. Argument Null: {nameof(Builder.Configuration)}");
+        return builder;
+    }
 }

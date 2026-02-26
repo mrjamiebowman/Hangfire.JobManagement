@@ -50,11 +50,6 @@ public class JobManagementDbFactory : IDesignTimeDbContextFactory<JobManagementD
         JobManagementConfiguration jobManagementConfiguration = new JobManagementConfiguration();
         config.GetSection(JobManagementConfiguration.Position).Bind(jobManagementConfiguration);
 
-        // launch debugger (appSettings.json)
-        if (jobManagementConfiguration.Debug.Migrations == true) {
-            System.Diagnostics.Debugger.Launch();
-        }
-
         var builder = new DbContextOptionsBuilder<JobManagementDbContext>();
 
         return new JobManagementDbContext(builder.Options, jobManagementConfiguration);
