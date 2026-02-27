@@ -3,12 +3,8 @@ using System;
 
 namespace Hangfire.JobManagement.Jobs.Attributes;
 
-/// <summary>
-/// Attribute to add or update <see cref="RecurringJob"/> automatically
-/// by target it to interface/instance/static method.
-/// </summary>
 [AttributeUsage(AttributeTargets.Method)]
-public class JobManagementAttribute : Attribute
+public class JobMethod : Attribute
 {
     /// <summary>
     /// The identifier of the RecurringJob
@@ -38,25 +34,26 @@ public class JobManagementAttribute : Attribute
     public bool Enabled { get; set; } = true;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="JobManagementAttribute"/>
+    /// Initializes a new instance of the <see cref="JobManagerAttribute"/>
     /// </summary>
     /// <param name="cron">Cron expressions</param>
-    public JobManagementAttribute(string cron) : this(cron, EnqueuedState.DefaultQueue) { }
+    public JobMethod(string cron) : this(cron, EnqueuedState.DefaultQueue) { }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="JobManagementAttribute"/>
+    /// Initializes a new instance of the <see cref="JobManagerAttribute"/>
     /// </summary>
     /// <param name="cron">Cron expressions</param>
     /// <param name="queue">Queue name</param>
-    public JobManagementAttribute(string cron, string queue) : this(cron, "UTC", queue) { }
+    public JobMethod(string cron, string queue) : this(cron, "UTC", queue) { }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="JobManagementAttribute"/>
+    /// Initializes a new instance of the <see cref="JobManagerAttribute"/>
     /// </summary>
     /// <param name="cron">Cron expressions</param>
     /// <param name="timeZone">Converts to <see cref="TimeZoneInfo"/> via method <seealso cref="TimeZoneInfo.FindSystemTimeZoneById(string)"/>.</param>
     /// <param name="queue">Queue name</param>
-    public JobManagementAttribute(string cron, string timeZone, string queue) {
+    public JobMethod(string cron, string timeZone, string queue)
+    {
         if (string.IsNullOrEmpty(cron)) throw new ArgumentNullException(nameof(cron));
         if (string.IsNullOrEmpty(timeZone)) throw new ArgumentNullException(nameof(timeZone));
         if (string.IsNullOrEmpty(queue)) throw new ArgumentNullException(nameof(queue));

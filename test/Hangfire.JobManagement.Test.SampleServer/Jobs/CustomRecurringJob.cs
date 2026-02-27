@@ -1,10 +1,12 @@
 ﻿using Hangfire.Console;
+using Hangfire.JobManagement.Jobs.Attributes;
 using Hangfire.JobManagement.Test.SampleServer.Jobs.Parameters;
 using Hangfire.Server;
 using System.ComponentModel;
 
 namespace Hangfire.JobManagement.Test.SampleServer.Jobs;
 
+[JobManager("Current Recurring Job")]
 public class CustomRecurringJob : JobBase
 {
     // logging
@@ -26,6 +28,7 @@ public class CustomRecurringJob : JobBase
     /// <param name="title"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
+    //[JobMethod]
     [DisplayName("Custom Recurring Job")]
     public override async Task ExecuteAsync(PerformContext context, JobParametersBase parameters, string title, CancellationToken cancellationToken)
     {

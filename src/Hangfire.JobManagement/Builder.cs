@@ -106,6 +106,7 @@ public static class Builder
         ILogger<JobAgentDispatcher> loggerJobAgentDispatcher = serviceProvider.GetService<ILogger<JobAgentDispatcher>>();
         ILogger<GetTimeZonesDispatcher> loggerGetTimeZonesDispatcher = serviceProvider.GetService<ILogger<GetTimeZonesDispatcher>>();
         ILogger<GetQueuesDispatcher> loggerGetQueuesDispatcher = serviceProvider.GetService<ILogger<GetQueuesDispatcher>>();
+        ILogger<GetJobMethodsDispatchers> loggerGetJobMethodsDispatchers = serviceProvider.GetService<ILogger<GetJobMethodsDispatchers>>();
 
         ILogger<SettingsGetDispatcher> loggerSettingsGetDispatcher = serviceProvider.GetService<ILogger<SettingsGetDispatcher>>();
         ILogger<SettingsSaveDispatcher> loggerSettingsSaveDispatcher = serviceProvider.GetService<ILogger<SettingsSaveDispatcher>>();
@@ -130,6 +131,7 @@ public static class Builder
         DashboardRoutes.Routes.Add("/management/data/JobAgent", new JobAgentDispatcher(loggerJobAgentDispatcher));
         DashboardRoutes.Routes.Add("/management/data/timezones", new GetTimeZonesDispatcher(loggerGetTimeZonesDispatcher));
         DashboardRoutes.Routes.Add("/management/data/queues", new GetQueuesDispatcher(loggerGetQueuesDispatcher));
+        DashboardRoutes.Routes.Add("/management/data/jobs", new GetJobMethodsDispatchers(loggerGetJobMethodsDispatchers));
 
         // dispatcher: settings
         DashboardRoutes.Routes.Add("/management/settings/all", new SettingsGetDispatcher(loggerSettingsGetDispatcher, settingsRepository));

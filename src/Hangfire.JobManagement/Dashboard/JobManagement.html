@@ -214,6 +214,8 @@
                 jobs: null,
                 showModal: false,
                 errors: [],
+                assemblies: [],
+                methods: [],
                 timeZones: [],
                 queues: [],
                 job: {
@@ -237,7 +239,7 @@
             },
             GetJobs() {
                 axios.get('data/GetJobs')
-                     .then(res => (this.jobs = res.data))
+                    .then(res => (this.jobs = res.data))
             },
             GetJob(_Id) {
                 this.title = 'Edit Job';
@@ -304,7 +306,7 @@
 
                 // hangfire: csrf token 
                 var csrfHeader = $('meta[name="csrf-header"]').attr('content');
-                var csrfToken  = $('meta[name="csrf-token"]').attr('content');
+                var csrfToken = $('meta[name="csrf-token"]').attr('content');
 
                 var headers = {};
                 headers[csrfHeader] = csrfToken;
@@ -360,6 +362,15 @@
                         console.log(e);
                     });
                 }
+            },
+            GetJobsMethods() {
+                axios.get('data/jobs').then(response => {
+                    debugger;
+                    this.assemblies = response.data.assemblies;
+                    this.methods = repsonse.data.methods;
+                }).catch(e => {
+                    console.log(e);
+                });
             },
             GetJobQueues() {
                 axios.get('data/queues').then(response => {
@@ -441,6 +452,7 @@
             this.GetTimeZones();
             this.GetJobQueues();
             this.GetJobs();
+            this.GetJobsMethods(); 
         },
         computed: {
                 getItems: function () {
