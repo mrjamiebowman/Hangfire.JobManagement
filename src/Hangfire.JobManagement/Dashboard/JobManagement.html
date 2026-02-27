@@ -33,38 +33,58 @@
     <modal v-if="showModal" @close="CloseModal">
         <template #body>
             <form slot="body" id="formJob">
-                <div class="form-group">
-                    <label for="jobId">Job Id</label>
-                    <input type="text" class="form-control" v-model="job.Id" id="jobId" name="jobId" aria-describedby="emailHelp" placeholder="Enter Job Id">
-                </div>
-                <div class="form-group">
-                    <label for="cron">Cron</label>
-                    <cron-expression-input :value="job.Cron" v-on:input="job.Cron = $event.detail.value" color="d58512" />
+                <div class="row">
+                    <div class="col-sm-12 col-md-6">
+                        <div class="form-group">
+                            <label for="jobId">Job Id</label>
+                            <input type="text" class="form-control" v-model="job.Id" id="jobId" name="jobId" aria-describedby="emailHelp" placeholder="Enter Job Id">
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md-6">
+                        <div class="form-group">
+                            <label for="cron">Cron</label>
+                            <cron-expression-input :value="job.Cron" v-on:input="job.Cron = $event.detail.value" color="d58512" />
+                        </div>
+                    </div>
                 </div>
 
-                <div class="form-group">
-                    <label for="queue">Queue</label>
-                    <input type="text" class="form-control" v-model="job.Queue" name="queue" id="queue" placeholder="Enter Queue Name">
-                </div>
-
-                <div class="form-group">
-                    <label for="cron">Time Zone</label>
-                    <select id="timezoneid" class="form-control" v-model="job.TimeZoneId" name="cron" placeholder="Enter the Time Zone">
-                        <option v-for="(item, index) in timeZones" :key="index" :value="item.Item1">{{item.Item2}}</option>
-                    </select>
+                <div class="row">
+                    <div class="col-sm-12 col-md-6">
+                        <div class="form-group">
+                            <label for="cron">Time Zone</label>
+                            <select id="timezoneid" class="form-control" v-model="job.TimeZoneId" name="cron" placeholder="Enter the Time Zone">
+                                <option v-for="(item, index) in timeZones" :key="index" :value="item.Item1">{{item.Item2}}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md-6">
+                        <div class="form-group">
+                            <label for="queue">Queue</label>
+                            <input type="text" class="form-control" v-model="job.Queue" name="queue" id="queue" placeholder="Enter Queue Name">
+                        </div>
+                    </div>
                 </div>
 
                 <hr />
 
-                <div class="form-group">
-                    <label for="class">Class</label>
-                    <input type="text" class="form-control" v-model="job.Class" name="class" aria-describedby="class" id="class" placeholder="Enter Class Name" style="margin-bottom: 6px;">
-                    <small id="class" class="form-text text-muted">Please provider path complete about your class example: Hangfire.RecurringJob.MyClass</small>
+                <div class="row">
+                    <div class="col-sm-12 col-md-6">
+                        <div class="form-group">
+                            <label for="class">Class</label>
+                            <input type="text" class="form-control" v-model="job.Class" name="class" aria-describedby="class" id="class" placeholder="Enter Class Name" style="margin-bottom: 6px;">
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md-6">
+                        <div class="form-group">
+                            <label for="method">Method</label>
+                            <input type="text" class="form-control" v-model="job.Method" id="method" name="method" placeholder="Enter Method Name">
+                        </div>
+                    </div>
                 </div>
-
-                <div class="form-group">
-                    <label for="method">Method</label>
-                    <input type="text" class="form-control" v-model="job.Method" id="method" name="method" placeholder="Enter Method Name">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <small id="class" class="form-text text-muted">Please provider path complete about your class example: Hangfire.RecurringJob.MyClass</small>
+                    </div>
                 </div>
 
                 <div class="form-group">

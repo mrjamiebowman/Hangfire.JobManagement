@@ -145,8 +145,6 @@ public static class Builder
 
 
 
-
-
         // swagger link
 //        DashboardRoutes.Routes.Add("/custom.js", new EmbeddedJsDispatcher(@"
 //    document.addEventListener('DOMContentLoaded', function() {
@@ -159,11 +157,8 @@ public static class Builder
 //    });
 //"));
 
-
-
-
         // css 
-        AddDashboardRouteToEmbeddedResource("/resources/css/jobExtension", "text/css", "Hangfire.JobManagement.Dashboard.Content.css.JobExtension.css");
+        AddDashboardRouteToEmbeddedResource("/resources/css/jobmanagement", "text/css", "Hangfire.JobManagement.Dashboard.Content.css.jobmanagement.css");
         AddDashboardRouteToEmbeddedResource("/resources/css/cron-expression-input", "text/css", "Hangfire.JobManagement.Dashboard.Content.css.cron-expression-input.css");
 
         // js

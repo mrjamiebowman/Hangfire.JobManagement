@@ -10,7 +10,7 @@
     width: 100% !important;
 }
 
-/* Modal */
+/* modal */
 .modal-mask {
     overflow-y: scroll;
     position: absolute;
@@ -31,9 +31,9 @@
 }
 
 .modal-container {
-    width: 500px;
+    width: 800px;
     margin: 0px auto;
-    padding: 20px 30px;
+    padding: 10px 20px;
     background-color: #fff;
     border-radius: 2px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, .33);
@@ -47,7 +47,7 @@
 }
 
 .modal-body {
-    margin: 20px 0;
+    margin: 10px 0;
 }
 
 .modal-default-button {

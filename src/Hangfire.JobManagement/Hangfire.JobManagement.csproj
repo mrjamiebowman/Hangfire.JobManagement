@@ -23,7 +23,6 @@
      
   <ItemGroup>
     <None Remove="Dashboard\Content\css\cron-expression-input.css" />
-    <None Remove="Dashboard\Content\css\JobExtension.css" />
     <None Remove="Dashboard\Content\js\axios.min.js" />
     <None Remove="Dashboard\Content\js\cron-expression-input.js" />
     <None Remove="Dashboard\Content\js\daysjs.min.js" />
@@ -43,7 +42,7 @@
      
   <ItemGroup>
     <EmbeddedResource Include="Dashboard\Content\css\cron-expression-input.css" />
-    <EmbeddedResource Include="Dashboard\Content\css\JobExtension.css" />
+    <EmbeddedResource Include="Dashboard\Content\css\jobmanagement.css" />
     <EmbeddedResource Include="Dashboard\Content\js\axios.min.js" />
     <EmbeddedResource Include="Dashboard\Content\js\cron-expression-input.js" />
     <EmbeddedResource Include="Dashboard\Content\js\daysjs.min.js" />
