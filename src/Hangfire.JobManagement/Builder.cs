@@ -17,6 +17,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using System;
 using System.Reflection;
 
@@ -24,6 +25,8 @@ namespace Hangfire.JobManagement;
 
 public static class Builder
 {
+    private static JobManagementBuilder Options;
+
     internal static IServiceCollection Services;
 
     internal static IConfiguration Configuration;
@@ -62,6 +65,15 @@ public static class Builder
         // injected
         Services = builder.Services;
         Configuration = builder.Configuration;
+
+        // instantiate builder 
+        Options = new JobManagementBuilder();
+
+        // customization
+        jobManagementOptions.Invoke(Options);
+
+        // configure assemblies
+        Options.ConfigureAssemblies();
 
         // service provider
         var serviceProdvider = Services.BuildServiceProvider();
@@ -122,6 +134,7 @@ public static class Builder
         // dispatcher: settings
         DashboardRoutes.Routes.Add("/management/settings/all", new SettingsGetDispatcher(loggerSettingsGetDispatcher, settingsRepository));
         DashboardRoutes.Routes.Add("/management/settings/save", new SettingsSaveDispatcher(loggerSettingsSaveDispatcher, settingsRepository));
+
         // dispatcher: queues
         DashboardRoutes.Routes.Add("/management/settings/queues/all", new SettingsQueueGetDispatcher(loggerSettingsQueueGetDispatcher, settingsRepository, settingsQueueRepository));
         DashboardRoutes.Routes.Add("/management/settings/queues/delete", new SettingsQueueDeleteDispatcher(loggerSettingsQueueDeleteDispatcher, settingsRepository, settingsQueueRepository));
@@ -195,11 +208,11 @@ public static class Builder
 
 public static class JobManagementBuilderExtensions
 {
-    public static JobManagementBuilder ConfigureAssemblies(this JobManagementBuilder builder, [NotNull] params Assembly[] assemblies)
+    public static JobManagementBuilder ConfigureAssemblies(this JobManagementBuilder builder)
     {
         builder.ValidateConfiguration();
-        if (assemblies == null) throw new ArgumentNullException(nameof(assemblies));
-        StorageAssemblySingleton.GetInstance().SetCurrentAssembly(assemblies: assemblies);
+        if (builder.Assemblies == null) throw new ArgumentNullException(nameof(builder.Assemblies));
+        StorageAssemblySingleton.GetInstance().SetCurrentAssembly(assemblies: builder.Assemblies);
         return builder;
     }
 

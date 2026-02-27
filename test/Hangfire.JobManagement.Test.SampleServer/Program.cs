@@ -53,7 +53,6 @@ var hangfireConfiguration = new HangfireConfiguration();
 builder.Configuration.GetSection(HangfireConfiguration.Position).Bind(hangfireConfiguration);
 builder.Services.AddSingleton<HangfireConfiguration>(hangfireConfiguration);
 
-
 // JobManagement
 builder.ConfigureJobManagement();
 
@@ -69,7 +68,10 @@ builder.Services.AddHangfire(config =>
         .UseSqlServerStorage(hangfireConfiguration.ConnectionString)
 
         // Job Management
-        .UseJobManagement(builder)
+        .UseJobManagement(builder, o =>
+        {
+            o.Assemblies.Add(typeof(Program).Assembly);
+        })
 
         // Console - https://github.com/pieceofsummer/Hangfire.Console
         .UseConsole()

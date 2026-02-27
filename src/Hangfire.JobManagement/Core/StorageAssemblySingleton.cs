@@ -24,7 +24,7 @@ internal sealed class StorageAssemblySingleton
         return _instance;
     }
 
-    internal void SetCurrentAssembly(bool includeReferences = false, params Assembly[] assemblies) {
+    internal void SetCurrentAssembly(bool includeReferences = false, params List<Assembly> assemblies) {
         currentAssembly.AddRange(assemblies);
 
         if (includeReferences) {

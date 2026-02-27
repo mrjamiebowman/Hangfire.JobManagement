@@ -82,10 +82,10 @@ internal sealed class ChangeJobDispatcher : IDashboardDispatcher
             response.Status = false;
             response.Message = "The Class not found";
 
-            _logger.LogWarning("{className}.{methodName}, Error: {error}",
+            _logger.LogWarning("{className}.{methodName}, Job Class not found. (Job Class: {jobClass})",
                 nameof(ChangeJobDispatcher),
                 nameof(Dispatch),
-                response.Message
+                job.Class
             );
 
             await context.Response.WriteAsync(JsonConvert.SerializeObject(response));
@@ -98,10 +98,11 @@ internal sealed class ChangeJobDispatcher : IDashboardDispatcher
             response.Status = false;
             response.Message = "The Method not found";
 
-            _logger.LogWarning("{className}.{methodName}, Error: {error}",
+            _logger.LogWarning("{className}.{methodName}, Job Method not found. (Job Method: {jobMethod}) on class (Job Class: {jobClass}).",
                 nameof(ChangeJobDispatcher),
                 nameof(Dispatch),
-                response.Message
+                job.Method,
+                job.Class
             );
 
             await context.Response.WriteAsync(JsonConvert.SerializeObject(response));

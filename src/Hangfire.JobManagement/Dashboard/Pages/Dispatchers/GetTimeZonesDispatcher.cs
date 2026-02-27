@@ -20,7 +20,7 @@ internal sealed class GetTimeZonesDispatcher : IDashboardDispatcher
         using var activity = OTel.Application.StartActivity($"{nameof(GetTimeZonesDispatcher)}.{nameof(Dispatch)}");
 
         // get local time zone
-        var localZone = TimeZone.CurrentTimeZone;
+        var localZone = TimeZoneInfo.Local;
 
         // get time zones
         var timeZones = Utility.GetTimeZones().ToList();
