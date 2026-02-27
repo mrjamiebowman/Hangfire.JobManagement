@@ -2,6 +2,7 @@
 using Hangfire.JobManagement.Data.Repositories.Interfaces;
 using Hangfire.JobManagement.Models;
 using Hangfire.Storage;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
 using System.Linq;
@@ -12,6 +13,7 @@ namespace Hangfire.JobManagement.Dashboard.Pages.Dispatchers;
 internal class SettingsGetDispatcher : IDashboardDispatcher
 {
     // logger
+    private readonly ILogger<SettingsGetDispatcher> _logger;
 
     // hangfire
     private readonly IStorageConnection _connection;
@@ -19,10 +21,10 @@ internal class SettingsGetDispatcher : IDashboardDispatcher
     // repos
     private readonly ISettingsRepository _settingsRepository;
 
-    public SettingsGetDispatcher(ISettingsRepository settingsRepository)
+    public SettingsGetDispatcher(ILogger<SettingsGetDispatcher> logger, ISettingsRepository settingsRepository)
     {
+        _logger = logger;
         _connection = JobStorage.Current.GetConnection();
-
         _settingsRepository = settingsRepository;
     }
 

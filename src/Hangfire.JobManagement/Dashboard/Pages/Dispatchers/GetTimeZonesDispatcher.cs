@@ -1,6 +1,7 @@
 ﻿using Hangfire.Annotations;
 using Hangfire.Dashboard;
 using Hangfire.JobManagement.Core;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
 using System.Linq;
@@ -10,6 +11,11 @@ namespace Hangfire.JobManagement.Dashboard.Pages.Dispatchers;
 
 internal sealed class GetTimeZonesDispatcher : IDashboardDispatcher
 {
+    // logging
+    private readonly ILogger<GetTimeZonesDispatcher> _logger;
+
+    public GetTimeZonesDispatcher(ILogger<GetTimeZonesDispatcher> logger) => _logger = logger;
+
     public async Task Dispatch([NotNull] DashboardContext context) {
         using var activity = OTel.Application.StartActivity($"{nameof(GetTimeZonesDispatcher)}.{nameof(Dispatch)}");
 

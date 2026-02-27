@@ -14,7 +14,7 @@ namespace Hangfire.JobManagement.Dashboard.Pages.Dispatchers;
 internal class SettingsQueueSaveDispatcher : IDashboardDispatcher
 {
     // logging
-    private readonly ILogger<SettingsSaveDispatcher> _logger;
+    private readonly ILogger<SettingsQueueSaveDispatcher> _logger;
 
     // hangfire
     private readonly IStorageConnection _connection;
@@ -23,8 +23,9 @@ internal class SettingsQueueSaveDispatcher : IDashboardDispatcher
     private readonly ISettingsRepository _settingsRepository;
     private readonly ISettingsQueueRepository _settingsQueueRepository;
 
-    public SettingsQueueSaveDispatcher(ISettingsRepository settingsRepository, ISettingsQueueRepository settingsQueueRepository)
+    public SettingsQueueSaveDispatcher(ILogger<SettingsQueueSaveDispatcher> logger, ISettingsRepository settingsRepository, ISettingsQueueRepository settingsQueueRepository)
     {
+        _logger = logger;
         _connection = JobStorage.Current.GetConnection();
         _settingsRepository = settingsRepository;
         _settingsQueueRepository = settingsQueueRepository;

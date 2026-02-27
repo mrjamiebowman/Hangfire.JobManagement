@@ -2,6 +2,7 @@
 using Hangfire.Dashboard;
 using Hangfire.JobManagement.Models;
 using Hangfire.Storage;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
 using System.Linq;
@@ -11,9 +12,15 @@ namespace Hangfire.JobManagement.Dashboard.Pages.Dispatchers;
 
 internal sealed class GetJobForEdit : IDashboardDispatcher
 {
+    // logging
+    private readonly ILogger<GetJobForEdit> _logger;
+
+    // hangfire
     private readonly IStorageConnection _connection;
 
-    public GetJobForEdit() {
+    public GetJobForEdit(ILogger<GetJobForEdit> logger)
+    {
+        _logger = logger;
         _connection = JobStorage.Current.GetConnection();
     }
 

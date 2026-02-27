@@ -4,6 +4,7 @@ using Hangfire.JobManagement.Core;
 using Hangfire.JobManagement.Models;
 using Hangfire.States;
 using Hangfire.Storage;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
 using System.Linq;
@@ -14,11 +15,15 @@ namespace Hangfire.JobManagement.Dashboard.Pages.Dispatchers;
 
 internal sealed class ChangeJobDispatcher : IDashboardDispatcher
 {
+    // logging
+    private readonly ILogger<ChangeJobDispatcher> _logger;
+
+    // hangfire
     private readonly IStorageConnection _connection;
     private readonly RecurringJobRegistry _recurringJobRegistry;
 
-    public ChangeJobDispatcher() {
-
+    public ChangeJobDispatcher(ILogger<ChangeJobDispatcher> logger) {
+        _logger = logger;
         _connection = JobStorage.Current.GetConnection();
         _recurringJobRegistry = new RecurringJobRegistry();
     }
@@ -42,6 +47,12 @@ internal sealed class ChangeJobDispatcher : IDashboardDispatcher
             response.Status = false;
             response.Message = "Invalid CRON";
 
+            _logger.LogWarning("{className}.{methodName}, Error: {error}",
+                nameof(ChangeJobDispatcher),
+                nameof(Dispatch),
+                response.Message
+            );
+
             await context.Response.WriteAsync(JsonConvert.SerializeObject(response));
 
             return;
@@ -55,6 +66,12 @@ internal sealed class ChangeJobDispatcher : IDashboardDispatcher
             response.Status = false;
             response.Message = ex.Message;
 
+            _logger.LogError("{className}.{methodName}, Error: {error}",
+                nameof(ChangeJobDispatcher),
+                nameof(Dispatch),
+                ex.Message
+            );
+
             await context.Response.WriteAsync(JsonConvert.SerializeObject(response));
 
             return;
@@ -64,6 +81,12 @@ internal sealed class ChangeJobDispatcher : IDashboardDispatcher
         if (!StorageAssemblySingleton.GetInstance().IsValidType(job.Class)) {
             response.Status = false;
             response.Message = "The Class not found";
+
+            _logger.LogWarning("{className}.{methodName}, Error: {error}",
+                nameof(ChangeJobDispatcher),
+                nameof(Dispatch),
+                response.Message
+            );
 
             await context.Response.WriteAsync(JsonConvert.SerializeObject(response));
 
@@ -75,11 +98,16 @@ internal sealed class ChangeJobDispatcher : IDashboardDispatcher
             response.Status = false;
             response.Message = "The Method not found";
 
+            _logger.LogWarning("{className}.{methodName}, Error: {error}",
+                nameof(ChangeJobDispatcher),
+                nameof(Dispatch),
+                response.Message
+            );
+
             await context.Response.WriteAsync(JsonConvert.SerializeObject(response));
 
             return;
         }
-
 
         var methodInfo = StorageAssemblySingleton.GetInstance().currentAssembly
                                                                             .Where(x => x?.GetType(job.Class)?.GetMethod(job.Method) != null)

@@ -1,6 +1,7 @@
 ﻿using Hangfire.Dashboard;
 using Hangfire.JobManagement.Data.Repositories.Interfaces;
 using Hangfire.Storage;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
 
@@ -8,14 +9,18 @@ namespace Hangfire.JobManagement.Dashboard.Pages.Dispatchers;
 
 internal class SettingsQueueDeleteDispatcher : IDashboardDispatcher
 {
+    // logging
+    private readonly ILogger<SettingsQueueDeleteDispatcher> _logger;
+
     private readonly IStorageConnection _connection;
 
     // repos
     private readonly ISettingsRepository _settingsRepository;
     private readonly ISettingsQueueRepository _settingsQueueRepository;
 
-    public SettingsQueueDeleteDispatcher(ISettingsRepository settingsRepository, ISettingsQueueRepository settingsQueueRepository)
+    public SettingsQueueDeleteDispatcher(ILogger<SettingsQueueDeleteDispatcher> logger, ISettingsRepository settingsRepository, ISettingsQueueRepository settingsQueueRepository)
     {
+        _logger = logger;
         _connection = JobStorage.Current.GetConnection();
         _settingsRepository = settingsRepository;
         _settingsQueueRepository = settingsQueueRepository;

@@ -16,6 +16,7 @@ using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Reflection;
 
@@ -85,31 +86,46 @@ public static class Builder
         ISettingsRepository settingsRepository = serviceProvider.GetService<ISettingsRepository>();
         ISettingsQueueRepository settingsQueueRepository = serviceProvider.GetService<ISettingsQueueRepository>();
 
+        // logging
+        ILogger<GetJobsStoppedDispatcher> loggerGetJobsStoppedDispatcher = serviceProvider.GetService<ILogger<GetJobsStoppedDispatcher>>();
+        ILogger<GetJobDispatcher> loggerGetJobDispatcher = serviceProvider.GetService<ILogger<GetJobDispatcher>>();
+        ILogger<ChangeJobDispatcher> loggerChangeJobDispatcher = serviceProvider.GetService<ILogger<ChangeJobDispatcher>>();
+        ILogger<GetJobForEdit> loggerGetJobForEdit = serviceProvider.GetService<ILogger<GetJobForEdit>>();
+        ILogger<JobAgentDispatcher> loggerJobAgentDispatcher = serviceProvider.GetService<ILogger<JobAgentDispatcher>>();
+        ILogger<GetTimeZonesDispatcher> loggerGetTimeZonesDispatcher = serviceProvider.GetService<ILogger<GetTimeZonesDispatcher>>();
+        ILogger<GetQueuesDispatcher> loggerGetQueuesDispatcher = serviceProvider.GetService<ILogger<GetQueuesDispatcher>>();
+
+        ILogger<SettingsGetDispatcher> loggerSettingsGetDispatcher = serviceProvider.GetService<ILogger<SettingsGetDispatcher>>();
+        ILogger<SettingsSaveDispatcher> loggerSettingsSaveDispatcher = serviceProvider.GetService<ILogger<SettingsSaveDispatcher>>();
+
+        ILogger<SettingsQueueGetDispatcher> loggerSettingsQueueGetDispatcher = serviceProvider.GetService<ILogger<SettingsQueueGetDispatcher>>();
+        ILogger<SettingsQueueDeleteDispatcher> loggerSettingsQueueDeleteDispatcher = serviceProvider.GetService<ILogger<SettingsQueueDeleteDispatcher>>();
+        ILogger<SettingsQueueSaveDispatcher> loggerSettingsQueueSaveDispatcher = serviceProvider.GetService<ILogger<SettingsQueueSaveDispatcher>>();
+
         // pages
         DashboardRoutes.Routes.AddRazorPage(Dashboard.Pages.JobManagement.PageRoute, x => new Dashboard.Pages.JobManagement());
         DashboardRoutes.Routes.AddRazorPage(JobsStoppedPage.PageRoute, x => new JobsStoppedPage());
-        //DashboardRoutes.Routes.AddRazorPage(SettingsPage.PageRoute, x => new SettingsPage());
+        DashboardRoutes.Routes.AddRazorPage(SettingsPage.PageRoute, x => new SettingsPage());
         //DashboardRoutes.Routes.AddRazorPage(NotificationsPage.PageRoute, x => new NotificationsPage());
 
         // routes sidebar
-        DashboardRoutes.Routes.Add("/jobs/GetJobsStopped", new GetJobsStoppedDispatcher());
+        DashboardRoutes.Routes.Add("/jobs/GetJobsStopped", new GetJobsStoppedDispatcher(loggerGetJobsStoppedDispatcher));
 
         // routes
-        DashboardRoutes.Routes.Add("/management/data/GetJobs", new GetJobDispatcher());
-        DashboardRoutes.Routes.Add("/management/data/UpdateJobs", new ChangeJobDispatcher());
-        DashboardRoutes.Routes.Add("/management/data/GetJob", new GetJobForEdit());
-        DashboardRoutes.Routes.Add("/management/data/JobAgent", new JobAgentDispatcher());
-        DashboardRoutes.Routes.Add("/management/data/timezones", new GetTimeZonesDispatcher());
-        DashboardRoutes.Routes.Add("/management/data/queues", new GetQueuesDispatcher());
+        DashboardRoutes.Routes.Add("/management/data/GetJobs", new GetJobDispatcher(loggerGetJobDispatcher));
+        DashboardRoutes.Routes.Add("/management/data/UpdateJobs", new ChangeJobDispatcher(loggerChangeJobDispatcher));
+        DashboardRoutes.Routes.Add("/management/data/GetJob", new GetJobForEdit(loggerGetJobForEdit));
+        DashboardRoutes.Routes.Add("/management/data/JobAgent", new JobAgentDispatcher(loggerJobAgentDispatcher));
+        DashboardRoutes.Routes.Add("/management/data/timezones", new GetTimeZonesDispatcher(loggerGetTimeZonesDispatcher));
+        DashboardRoutes.Routes.Add("/management/data/queues", new GetQueuesDispatcher(loggerGetQueuesDispatcher));
 
         // dispatcher: settings
-        DashboardRoutes.Routes.Add("/management/settings/all", new SettingsGetDispatcher(settingsRepository));
-        DashboardRoutes.Routes.Add("/management/settings/save", new SettingsSaveDispatcher(settingsRepository)); //serviceProvider.GetService<ILogger<SettingsSaveDispatcher>>()
-
+        DashboardRoutes.Routes.Add("/management/settings/all", new SettingsGetDispatcher(loggerSettingsGetDispatcher, settingsRepository));
+        DashboardRoutes.Routes.Add("/management/settings/save", new SettingsSaveDispatcher(loggerSettingsSaveDispatcher, settingsRepository));
         // dispatcher: queues
-        DashboardRoutes.Routes.Add("/management/settings/queues/all", new SettingsQueueGetDispatcher(settingsRepository, settingsQueueRepository));
-        DashboardRoutes.Routes.Add("/management/settings/queues/delete", new SettingsQueueDeleteDispatcher(settingsRepository, settingsQueueRepository));
-        DashboardRoutes.Routes.Add("/management/settings/queues/save", new SettingsQueueSaveDispatcher(settingsRepository, settingsQueueRepository));
+        DashboardRoutes.Routes.Add("/management/settings/queues/all", new SettingsQueueGetDispatcher(loggerSettingsQueueGetDispatcher, settingsRepository, settingsQueueRepository));
+        DashboardRoutes.Routes.Add("/management/settings/queues/delete", new SettingsQueueDeleteDispatcher(loggerSettingsQueueDeleteDispatcher, settingsRepository, settingsQueueRepository));
+        DashboardRoutes.Routes.Add("/management/settings/queues/save", new SettingsQueueSaveDispatcher(loggerSettingsQueueSaveDispatcher, settingsRepository, settingsQueueRepository));
 
         // jobs stopped
         DashboardMetrics.AddMetric(TagDashboardMetrics.JobsStoppedCount);

@@ -23,8 +23,9 @@ internal class SettingsSaveDispatcher : IDashboardDispatcher
     // repos
     private readonly ISettingsRepository _settingsRepository;
 
-    public SettingsSaveDispatcher(ISettingsRepository settingsRepository)
+    public SettingsSaveDispatcher(ILogger<SettingsSaveDispatcher> logger, ISettingsRepository settingsRepository)
     {
+        _logger = logger;
         _connection = JobStorage.Current.GetConnection();
         _settingsRepository = settingsRepository;
     }

@@ -2,6 +2,7 @@
 using Hangfire.Dashboard;
 using Hangfire.JobManagement.Core;
 using Hangfire.JobManagement.Models;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System.Net;
 using System.Threading.Tasks;
@@ -10,6 +11,16 @@ namespace Hangfire.JobManagement.Dashboard.Pages.Dispatchers;
 
 internal sealed class JobAgentDispatcher : IDashboardDispatcher
 {
+    // logging
+    private readonly ILogger<JobAgentDispatcher> _logger;
+
+    // hangfire
+
+    public JobAgentDispatcher(ILogger<JobAgentDispatcher> logger)
+    {
+        _logger = logger;
+    }
+
     public async Task Dispatch([NotNull] DashboardContext context) {
         using var activity = OTel.Application.StartActivity($"{nameof(JobAgentDispatcher)}.{nameof(Dispatch)}");
 

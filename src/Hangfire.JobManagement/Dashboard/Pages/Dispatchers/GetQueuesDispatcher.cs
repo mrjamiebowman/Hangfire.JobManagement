@@ -1,6 +1,7 @@
 ﻿using Hangfire.Dashboard;
 using Hangfire.JobManagement.Models;
 using Hangfire.Storage;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
 using System.Diagnostics.CodeAnalysis;
@@ -10,10 +11,15 @@ namespace Hangfire.JobManagement.Dashboard.Pages.Dispatchers;
 
 internal sealed class GetQueuesDispatcher : IDashboardDispatcher
 {
+    // logging
+    private readonly ILogger<GetQueuesDispatcher> _logger;
+
+    // hangfire
     private readonly IStorageConnection _connection;
 
-    public GetQueuesDispatcher()
+    public GetQueuesDispatcher(ILogger<GetQueuesDispatcher> logger)
     {
+        _logger = logger;
         _connection = JobStorage.Current.GetConnection();
     }
 

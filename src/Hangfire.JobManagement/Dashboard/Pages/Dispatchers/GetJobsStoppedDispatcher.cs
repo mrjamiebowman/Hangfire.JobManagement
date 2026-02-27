@@ -3,6 +3,7 @@ using Hangfire.Dashboard;
 using Hangfire.JobManagement.Core;
 using Hangfire.JobManagement.Models;
 using Hangfire.Storage;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -12,9 +13,15 @@ namespace Hangfire.JobManagement.Dashboard.Pages.Dispatchers;
 
 internal sealed class GetJobsStoppedDispatcher : IDashboardDispatcher
 {
+    // logger
+    private readonly ILogger<GetJobsStoppedDispatcher> _logger;
+
+    // hangfire
     private readonly IStorageConnection _connection;
 
-    public GetJobsStoppedDispatcher() {
+    public GetJobsStoppedDispatcher(ILogger<GetJobsStoppedDispatcher> logger = null)
+    {
+        _logger = logger;
         _connection = JobStorage.Current.GetConnection();
     }
 
