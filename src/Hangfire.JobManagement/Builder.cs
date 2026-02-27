@@ -159,7 +159,7 @@ public static class Builder
 
         // css 
         AddDashboardRouteToEmbeddedResource("/resources/css/jobmanagement", "text/css", "Hangfire.JobManagement.Dashboard.Content.css.jobmanagement.css");
-        AddDashboardRouteToEmbeddedResource("/resources/css/cron-expression-input", "text/css", "Hangfire.JobManagement.Dashboard.Content.css.cron-expression-input.css");
+        AddDashboardRouteToEmbeddedResource("/resources/css/cron-input-ui", "text/css", "Hangfire.JobManagement.Dashboard.Content.css.cron-input-ui.css");
 
         // js
         AddDashboardRouteToEmbeddedResource("/resources/js/page", "application/javascript", "Hangfire.JobManagement.Dashboard.Content.js.jobextension.js");
@@ -170,7 +170,7 @@ public static class Builder
         AddDashboardRouteToEmbeddedResource("/resources/js/relativeTime", "application/javascript", "Hangfire.JobManagement.Dashboard.Content.js.relativeTime.min.js");
         AddDashboardRouteToEmbeddedResource("/resources/js/vuejsPaginate", "application/javascript", "Hangfire.JobManagement.Dashboard.Content.js.vuejs-paginate.js");
         AddDashboardRouteToEmbeddedResource("/resources/js/sweetalert", "application/javascript", "Hangfire.JobManagement.Dashboard.Content.js.sweetalert.js");
-        AddDashboardRouteToEmbeddedResource("/resources/js/cron-expression-input", "application/javascript", "Hangfire.JobManagement.Dashboard.Content.js.cron-expression-input.js");
+        AddDashboardRouteToEmbeddedResource("/resources/js/cron-input-ui", "application/javascript", "Hangfire.JobManagement.Dashboard.Content.js.cron-input-ui.js");
     }
 
     private static void AddDashboardRouteToEmbeddedResource(string route, string contentType, string resourceName)

@@ -43,7 +43,11 @@
                     <div class="col-sm-12 col-md-6">
                         <div class="form-group">
                             <label for="cron">Cron</label>
-                            <cron-expression-input :value="job.Cron" v-on:input="job.Cron = $event.detail.value" color="d58512" />
+                            <cron-input-ui :value="job.Cron" v-on:input="job.Cron = $event.detail.value"
+                                color='d58512'
+                                value={this.job.cron}
+                                required
+                                hotValidate />
                         </div>
                     </div>
                 </div>
@@ -358,7 +362,6 @@
                 }
             },
             GetJobQueues() {
-                debugger;
                 axios.get('data/queues').then(response => {
                     this.queues = response.data;
                 }).catch(e => {

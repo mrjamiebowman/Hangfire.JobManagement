@@ -23,8 +23,12 @@
      
   <ItemGroup>
     <None Remove="Dashboard\Content\css\cron-expression-input.css" />
+    <None Remove="Dashboard\Content\css\cron-input-ui.css" />
+    <None Remove="Dashboard\Content\css\cron-input-ui.min.css" />
     <None Remove="Dashboard\Content\js\axios.min.js" />
     <None Remove="Dashboard\Content\js\cron-expression-input.js" />
+    <None Remove="Dashboard\Content\js\cron-input-ui.js" />
+    <None Remove="Dashboard\Content\js\cron-input-ui.min.js" />
     <None Remove="Dashboard\Content\js\daysjs.min.js" />
     <None Remove="Dashboard\Content\js\jobextension.js" />
     <None Remove="Dashboard\Content\js\relativeTime.min.js" />
@@ -42,9 +46,13 @@
      
   <ItemGroup>
     <EmbeddedResource Include="Dashboard\Content\css\cron-expression-input.css" />
+    <EmbeddedResource Include="Dashboard\Content\css\cron-input-ui.css" />
+    <EmbeddedResource Include="Dashboard\Content\css\cron-input-ui.min.css" />
     <EmbeddedResource Include="Dashboard\Content\css\jobmanagement.css" />
     <EmbeddedResource Include="Dashboard\Content\js\axios.min.js" />
     <EmbeddedResource Include="Dashboard\Content\js\cron-expression-input.js" />
+    <EmbeddedResource Include="Dashboard\Content\js\cron-input-ui.js" />
+    <EmbeddedResource Include="Dashboard\Content\js\cron-input-ui.min.js" />
     <EmbeddedResource Include="Dashboard\Content\js\daysjs.min.js" />
     <EmbeddedResource Include="Dashboard\Content\js\jobextension.js" />
     <EmbeddedResource Include="Dashboard\Content\js\relativeTime.min.js" />
