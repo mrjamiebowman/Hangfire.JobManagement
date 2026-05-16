@@ -11,7 +11,6 @@ public class JobManagementBuilder
 
     public JobManagementBuilder()
     {
-        // configure default services
         this.ConfigureDefaultServices();
     }
 }

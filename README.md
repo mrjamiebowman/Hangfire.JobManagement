@@ -118,3 +118,9 @@ This project was inspired by other Hangfire projects and forked from Brayan Mota
 ## License
 This project is under MIT license. You can obtain the license copy [here](https://github.com/mrjamiebowman/mrjamiebowman.Hangfire.RecurringJobAdmin/blob/master/LICENSE).
 
+
+## BUG FIXES
+
+### 5/16/2026
+* [Assembly exclusion list.](https://github.com/mrjamiebowman/Hangfire.JobManagement/commit/d990edfbab9aab66ce7a9536de2ef2f3d075065a)   
+* [Default to loading all assemblies](https://github.com/mrjamiebowman/Hangfire.JobManagement/commit/c83251bfa4f276921fbbf74fd86fb9328e20a9bb)
