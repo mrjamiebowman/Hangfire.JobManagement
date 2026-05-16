@@ -53,10 +53,13 @@ var hangfireConfiguration = new HangfireConfiguration();
 builder.Configuration.GetSection(HangfireConfiguration.Position).Bind(hangfireConfiguration);
 builder.Services.AddSingleton<HangfireConfiguration>(hangfireConfiguration);
 
-// JobManagement
+// job management
 builder.ConfigureJobManagement();
 
-// hangfire (has to go last bc the HangfireJobActivator takes builder.Services...)
+GlobalJobFilters.Filters.Add(new AutomaticRetryAttribute {
+    Attempts = 0
+});
+
 builder.Services.AddHangfire(config =>
 {
     config
@@ -64,12 +67,10 @@ builder.Services.AddHangfire(config =>
         .UseColouredConsoleLogProvider()
         .UseSimpleAssemblyNameTypeSerializer()
         .UseRecommendedSerializerSettings()
-        //.UseActivator(new HangfireJobActivator(builder.Services))
         .UseSqlServerStorage(hangfireConfiguration.ConnectionString)
 
         // Job Management
-        .UseJobManagement(builder, o =>
-        {
+        .UseJobManagement(builder, o => {
             o.Assemblies.Add(typeof(Program).Assembly);
         })
 

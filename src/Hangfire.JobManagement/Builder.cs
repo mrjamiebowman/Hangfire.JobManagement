@@ -12,6 +12,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using OpenTelemetry.Metrics;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
 using System;
 
 namespace Hangfire.JobManagement;
@@ -195,6 +198,23 @@ public static class JobManagementBuilderExtensions
     internal static JobManagementBuilder ValidateConfiguration(this JobManagementBuilder builder)
     {
         if (Builder.Configuration is null) throw new ArgumentNullException($"Please call SetConfiguration() first. Argument Null: {nameof(Builder.Configuration)}");
+        return builder;
+    }
+}
+
+public static class OpenTelemetryExtensions
+{
+    public static TracerProviderBuilder AddHangfireJobManagement(this TracerProviderBuilder builder)
+    {
+        ArgumentNullException.ThrowIfNull(builder);
+        builder.AddSource(OTel.Application.Name);
+        return builder;
+    }
+
+    public static MeterProviderBuilder AddHangfireJobManagement(this MeterProviderBuilder builder)
+    {
+        ArgumentNullException.ThrowIfNull(builder);
+        builder.AddMeter(OTel.Meters.JobManagementMeter.Name);
         return builder;
     }
 }

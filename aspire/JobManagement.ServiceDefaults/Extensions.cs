@@ -1,3 +1,5 @@
+using Hangfire.JobManagement;
+using Hangfire.JobManagement.Test.Jobs;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.DependencyInjection;
@@ -56,7 +58,12 @@ namespace Microsoft.Extensions.Hosting
                 {
                     metrics.AddAspNetCoreInstrumentation()
                         .AddHttpClientInstrumentation()
-                        .AddRuntimeInstrumentation();
+                        .AddRuntimeInstrumentation()
+
+                        /* job management plugin */
+                        .AddHangfireJobManagement()
+
+                        .AddHangfireTest();
                 })
                 .WithTracing(tracing =>
                 {
@@ -69,7 +76,12 @@ namespace Microsoft.Extensions.Hosting
                         )
                         // Uncomment the following line to enable gRPC instrumentation (requires the OpenTelemetry.Instrumentation.GrpcNetClient package)
                         //.AddGrpcClientInstrumentation()
-                        .AddHttpClientInstrumentation();
+                        .AddHttpClientInstrumentation()
+
+                        /* job management plugin */
+                        .AddHangfireJobManagement()
+
+                        .AddHangfireTest();
                 });
 
             builder.AddOpenTelemetryExporters();

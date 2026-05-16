@@ -165,6 +165,9 @@ public class JobsController : ControllerBase
         // recurring job: every hour
         RecurringJob.AddOrUpdate<HourlyRecurringJob>($"{HourlyRecurringJob.JobName}", job => job.ExecuteAsync(null, null, "Hourly", CancellationToken.None), "0 * * * *", recurringJobOptionsCst);
 
+        // recuring job: fail 50/50
+        RecurringJob.AddOrUpdate<RandomlyFailingRecurringJob>($"{RandomlyFailingRecurringJob.JobName}", job => job.ExecuteAsync(null, null, "Randomly Failing", CancellationToken.None), Cron.Hourly, recurringJobOptionsCst);
+
         return Task.CompletedTask;
     }
 

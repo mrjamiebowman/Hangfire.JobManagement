@@ -5,6 +5,7 @@ using Hangfire.JobManagement.Test.Jobs.Abstractions.Parameters;
 using Hangfire.Server;
 using Microsoft.Extensions.Logging;
 using System.ComponentModel;
+using System.Diagnostics;
 
 namespace Hangfire.JobManagement.Test.Jobs.Recurring;
 
@@ -34,6 +35,14 @@ public class CustomRecurringJob : JobBase
     [DisplayName("Custom Recurring Job")]
     public override async Task ExecuteAsync(PerformContext context, JobParametersBase parameters, string title, CancellationToken cancellationToken)
     {
+        using var activity = OTel.Application.StartActivity($"{nameof(CustomRecurringJob)}.{nameof(ExecuteAsync)}", ActivityKind.Internal);
+        activity?.SetTag("job.name", JobName);
+
+        var tags = new TagList
+        {
+            { "job.name", JobName }
+        };
+
         // cancellation token
         cancellationToken = GetCancellationToken(context, cancellationToken);
 
@@ -73,11 +82,23 @@ public class CustomRecurringJob : JobBase
                 progressBar.SetValue(progress);
                 context.WriteLine($"Progress: {progress}%");
             }
+
+            activity?.SetStatus(ActivityStatusCode.Ok);
+
+            tags.Add(Spans.Status, Spans.Values.Success);
+            OTel.Meters.AddJobRun(tags);
         }
         catch (Exception ex)
         {
+            activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
+            activity?.AddException(ex);
+
             _logger.LogError(ex, "{jobName}: {error}", JobName, ex.Message);
             context.WriteLine($"ERROR: {ex.Message}");
+
+            tags.Add(Spans.Status, Spans.Values.Failure);
+            OTel.Meters.AddJobRun(tags);
+
             throw;
         }
         finally

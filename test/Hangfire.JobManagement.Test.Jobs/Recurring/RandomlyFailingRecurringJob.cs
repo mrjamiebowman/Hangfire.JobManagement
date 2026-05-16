@@ -9,16 +9,16 @@ using System.Diagnostics;
 
 namespace Hangfire.JobManagement.Test.Jobs.Recurring;
 
-[JobManager("Hourly Recurring Job")]
-public class HourlyRecurringJob : JobBase
+[JobManager("Randomly.Failling.Job")]
+public class RandomlyFailingRecurringJob : JobBase
 {
     // logging
-    private ILogger<HourlyRecurringJob> _logger;
+    private ILogger<RandomlyFailingRecurringJob> _logger;
 
     // vars
-    public static string JobName { get; } = "Hourly.Recurring.Job";
+    public static string JobName { get; } = "Randomly.Failling.Job";
 
-    public HourlyRecurringJob(ILogger<HourlyRecurringJob> logger)
+    public RandomlyFailingRecurringJob(ILogger<RandomlyFailingRecurringJob> logger)
     {
         _logger = logger;
     }
@@ -32,10 +32,10 @@ public class HourlyRecurringJob : JobBase
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     //[JobMethod]
-    [DisplayName("Hourly Recurring Job")]
+    [DisplayName("Randomly Failling Job")]
     public override async Task ExecuteAsync(PerformContext context, JobParametersBase parameters, string title, CancellationToken cancellationToken)
     {
-        using var activity = OTel.Application.StartActivity($"{nameof(HourlyRecurringJob)}.{nameof(ExecuteAsync)}", ActivityKind.Internal);
+        using var activity = OTel.Application.StartActivity($"{nameof(CustomRecurringJob)}.{nameof(ExecuteAsync)}", ActivityKind.Internal);
         activity?.SetTag("job.name", JobName);
 
         var tags = new TagList
@@ -57,30 +57,19 @@ public class HourlyRecurringJob : JobBase
             context.WriteLine("");
             context.WriteLine("");
             context.WriteLine($"##################################################");
-            context.WriteLine($"# Hourly Recurring Job: (Parameter Value: {jobParams.Parameter})");
+            context.WriteLine($"# Randomly Failing Job: (Parameter Value: {jobParams.Parameter})");
             context.WriteLine($"##################################################");
             context.WriteLine("");
             context.WriteLine("");
 
             // simulate work
-            var totalDuration = TimeSpan.FromMinutes(20);
-            var interval = TimeSpan.FromSeconds(10);
+            var totalDuration = TimeSpan.FromSeconds(10);
+            await Task.Delay(totalDuration);
 
-            int totalSteps = (int)(totalDuration / interval);
-            int step = 0;
-
-            while (step <= totalSteps)
+            // randomly fail
+            if (Random.Shared.Next(2) == 0)
             {
-                int progress = (int)Math.Round((double)step / totalSteps * 100);
-
-                if (step == totalSteps) break;
-
-                await Task.Delay(interval);
-
-                step++;
-
-                progressBar.SetValue(progress);
-                context.WriteLine($"Progress: {progress}%");
+                throw new InvalidOperationException("Fake 50/50 failure for OpenTelemetry testing.");
             }
 
             activity?.SetStatus(ActivityStatusCode.Ok);
