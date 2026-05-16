@@ -1,4 +1,4 @@
-﻿using Hangfire.JobManagement.Test.SampleServer.Jobs;
+﻿using Hangfire.JobManagement.Test.Jobs.Recurring;
 
 namespace Hangfire.JobManagement.Test.SampleServer;
 

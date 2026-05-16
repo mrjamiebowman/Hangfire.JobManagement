@@ -12,6 +12,7 @@
     <Project Path="src/Hangfire.JobManagement/Hangfire.JobManagement.csproj" />
   </Folder>
   <Folder Name="/test/">
+    <Project Path="test/Hangfire.JobManagement.Test.Jobs/Hangfire.JobManagement.Test.Jobs.csproj" Id="156510a5-122e-4de0-bdc2-f84efab4b32e" />
     <Project Path="test/Hangfire.JobManagement.Test.SampleServer/Hangfire.JobManagement.Test.SampleServer.csproj" />
   </Folder>
 </Solution>

@@ -1,7 +1,7 @@
-﻿using Hangfire.JobManagement.Test.SampleServer.Jobs.Parameters;
+﻿using Hangfire.JobManagement.Test.Jobs.Abstractions.Parameters;
 using Hangfire.Server;
 
-namespace Hangfire.JobManagement.Test.SampleServer.Interfaces;
+namespace Hangfire.JobManagement.Test.Jobs.Interfaces;
 
 public interface IJob
 {

@@ -15,16 +15,12 @@
     <PackageReference Include="Hangfire.SqlServer" Version="1.8.23" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.23.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
-    <PackageReference Include="Serilog" Version="4.3.1" />
-    <PackageReference Include="Serilog.Extensions.Hosting" Version="10.0.0" />
-    <PackageReference Include="Serilog.Settings.Configuration" Version="10.0.0" />
-    <PackageReference Include="Serilog.Sinks.Console" Version="6.1.1" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="10.1.7" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\aspire\JobManagement.ServiceDefaults\JobManagement.ServiceDefaults.csproj" />
-    <ProjectReference Include="..\..\src\Hangfire.JobManagement\Hangfire.JobManagement.csproj" />
+    <ProjectReference Include="..\Hangfire.JobManagement.Test.Jobs\Hangfire.JobManagement.Test.Jobs.csproj" />
   </ItemGroup>
 
 </Project>

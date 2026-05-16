@@ -1,8 +1,8 @@
 using Hangfire;
 using Hangfire.Console;
 using Hangfire.JobManagement;
+using Hangfire.JobManagement.Test.Jobs.Configuration;
 using Hangfire.JobManagement.Test.SampleServer;
-using Hangfire.JobManagement.Test.SampleServer.Configuration;
 using Serilog;
 using Serilog.Sinks.SystemConsole.Themes;
 
@@ -64,7 +64,7 @@ builder.Services.AddHangfire(config =>
         .UseColouredConsoleLogProvider()
         .UseSimpleAssemblyNameTypeSerializer()
         .UseRecommendedSerializerSettings()
-        .UseActivator(new HangfireJobActivator(builder.Services))
+        //.UseActivator(new HangfireJobActivator(builder.Services))
         .UseSqlServerStorage(hangfireConfiguration.ConnectionString)
 
         // Job Management

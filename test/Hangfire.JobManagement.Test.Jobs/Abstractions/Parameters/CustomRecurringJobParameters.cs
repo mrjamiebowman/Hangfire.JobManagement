@@ -1,4 +1,4 @@
-﻿namespace Hangfire.JobManagement.Test.SampleServer.Jobs.Parameters;
+﻿namespace Hangfire.JobManagement.Test.Jobs.Abstractions.Parameters;
 
 public class CustomRecurringJobParameters : JobParametersBase
 {

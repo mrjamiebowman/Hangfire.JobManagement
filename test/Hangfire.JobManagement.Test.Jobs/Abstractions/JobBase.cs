@@ -1,8 +1,8 @@
-﻿using Hangfire.JobManagement.Test.SampleServer.Interfaces;
-using Hangfire.JobManagement.Test.SampleServer.Jobs.Parameters;
+﻿using Hangfire.JobManagement.Test.Jobs.Abstractions.Parameters;
+using Hangfire.JobManagement.Test.Jobs.Interfaces;
 using Hangfire.Server;
 
-namespace Hangfire.JobManagement.Test.SampleServer.Jobs;
+namespace Hangfire.JobManagement.Test.Jobs.Abstractions;
 
 public abstract class JobBase : IJob
 {

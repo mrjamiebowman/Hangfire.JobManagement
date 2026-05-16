@@ -1,4 +1,4 @@
-﻿namespace Hangfire.JobManagement.Test.SampleServer.Configuration;
+﻿namespace Hangfire.JobManagement.Test.Jobs.Configuration;
 
 public class HangfireConfiguration
 {

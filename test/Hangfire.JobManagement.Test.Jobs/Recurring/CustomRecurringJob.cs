@@ -1,10 +1,12 @@
 ﻿using Hangfire.Console;
 using Hangfire.JobManagement.Jobs.Attributes;
-using Hangfire.JobManagement.Test.SampleServer.Jobs.Parameters;
+using Hangfire.JobManagement.Test.Jobs.Abstractions;
+using Hangfire.JobManagement.Test.Jobs.Abstractions.Parameters;
 using Hangfire.Server;
+using Microsoft.Extensions.Logging;
 using System.ComponentModel;
 
-namespace Hangfire.JobManagement.Test.SampleServer.Jobs;
+namespace Hangfire.JobManagement.Test.Jobs.Recurring;
 
 [JobManager("Current Recurring Job")]
 public class CustomRecurringJob : JobBase

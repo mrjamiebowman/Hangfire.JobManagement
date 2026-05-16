@@ -1,5 +1,5 @@
-﻿using Hangfire.JobManagement.Test.SampleServer.Jobs;
-using Hangfire.JobManagement.Test.SampleServer.Jobs.Parameters;
+﻿using Hangfire.JobManagement.Test.Jobs.Abstractions.Parameters;
+using Hangfire.JobManagement.Test.Jobs.Recurring;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Hangfire.JobManagement.Test.SampleServer.Controllers;
@@ -24,7 +24,7 @@ public class JobsController : ControllerBase
     ///  Kills all running jobs in Hangfire
     /// </summary>
     /// <returns></returns>
-    [HttpPost("Kill-All")]
+    [HttpPost("Kill/All")]
     public Task JobsKillAll()
     {
         // get all jobs
@@ -152,18 +152,18 @@ public class JobsController : ControllerBase
 
         };
 
-        // job #1
+        // recurring job: 
         CustomRecurringJobParameters customRecurringJobParameters = new CustomRecurringJobParameters();
         customRecurringJobParameters.Parameter = "Job #1";
-        RecurringJob.AddOrUpdate<CustomRecurringJob>(CustomRecurringJob.JobName, job => job.ExecuteAsync(null, customRecurringJobParameters, "Custom Job #1", CancellationToken.None), Cron.Daily(3, 0), recurringJobOptionsEst);
+        RecurringJob.AddOrUpdate<CustomRecurringJob>(CustomRecurringJob.JobName, job => job.ExecuteAsync(null, customRecurringJobParameters, "Custom Job #1", CancellationToken.None), Cron.Daily(3, 0), recurringJobOptionsCst);
 
-        // job #2
+        // recurring job: 
         CustomRecurringJobParameters customRecurringJobParameters2 = new CustomRecurringJobParameters();
         customRecurringJobParameters2.Parameter = "Job #2";
-        RecurringJob.AddOrUpdate<CustomRecurringJob>($"{CustomRecurringJob.JobName}-2", job => job.ExecuteAsync(null, customRecurringJobParameters2, "Custom Job #2", CancellationToken.None), Cron.Daily(3, 0), recurringJobOptionsEst);
+        RecurringJob.AddOrUpdate<CustomRecurringJob>($"{CustomRecurringJob.JobName}-2", job => job.ExecuteAsync(null, customRecurringJobParameters2, "Custom Job #2", CancellationToken.None), Cron.Daily(3, 0), recurringJobOptionsCst);
 
-        // job #3
-        RecurringJob.AddOrUpdate<CustomRecurringJob>($"{CustomRecurringJob.JobName}-3", job => job.ExecuteAsync(null, null, "Custom Job #3", CancellationToken.None), Cron.Daily(3, 0), recurringJobOptionsEst);
+        // recurring job: every hour
+        RecurringJob.AddOrUpdate<HourlyRecurringJob>($"{HourlyRecurringJob.JobName}", job => job.ExecuteAsync(null, null, "Hourly", CancellationToken.None), "0 * * * *", recurringJobOptionsCst);
 
         return Task.CompletedTask;
     }

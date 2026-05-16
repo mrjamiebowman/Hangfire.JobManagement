@@ -76,11 +76,11 @@
   </ItemGroup>
      
   <ItemGroup>
-    <PackageReference Include="Cronos" Version="0.11.1" />
+    <PackageReference Include="Cronos" Version="0.13.0" />
     <PackageReference Include="Hangfire" Version="1.8.23" />
     <PackageReference Include="Hangfire.Core" Version="1.8.23" />
     <PackageReference Include="Hangfire.SqlServer" Version="1.8.23" />
-    <PackageReference Include="Humanizer" Version="3.0.1" />
+    <PackageReference Include="Humanizer" Version="3.0.10" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Abstractions" Version="10.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.0">

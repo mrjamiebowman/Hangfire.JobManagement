@@ -1,6 +1,11 @@
 Clear-Host
 
-dos2unix .\.docker\mssql\db-init.sh
-dos2unix .\.docker\mssql\entrypoint.sh
+# docker build
+$VERSION = 'local'
 
-docker-compose build --no-cache
+docker build --no-cache -f "test\Hangfire.JobManagement.Test.SampleServer\Dockerfile" `
+    --label "company=mrjamiebowman" `
+    -t mrjamiebowman/hangfire-jobmanagement:$VERSION .
+
+# display built images
+docker images | findstr mrjamiebowman/hangfire-jobmanagement
