@@ -365,7 +365,6 @@
             },
             GetJobsMethods() {
                 axios.get('data/jobs').then(response => {
-                    debugger;
                     this.assemblies = response.data.assemblies;
                     this.methods = repsonse.data.methods;
                 }).catch(e => {
@@ -381,7 +380,8 @@
             },
             GetTimeZones() {
                 axios.get('data/timezones').then(response => {
-                    this.timeZones = response.data;
+                    this.timeZones = response.data.timeZones;
+                    this.defaultTimeZone = response.data.defaultTimeZone;
                 }).catch(e => {
                     console.log(e);
                 });
@@ -399,6 +399,10 @@
             },
             OpenModal() {
                 this.title = 'Add New Job';
+                if (!this.job.TimeZoneId) {
+                    this.job.TimeZoneId = this.defaultTimeZone;
+                }
+
                 this.showModal = true;
             },
             checkForm: function (e) {
