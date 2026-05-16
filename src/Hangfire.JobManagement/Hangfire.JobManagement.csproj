@@ -94,11 +94,12 @@
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="10.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="10.0.0" />
     <PackageReference Include="mrjamiebowman.Hangfire.JobManagement.Abstractions" Version="1.0.0" />
-    <PackageReference Include="OpenTelemetry" Version="1.15.0" />
+    <PackageReference Include="OpenTelemetry" Version="1.15.3" />
   </ItemGroup>
      
   <ItemGroup>
     <Folder Include="Data\Migrations\" />
+    <Folder Include="Services\Interfaces\" />
   </ItemGroup>
 
 </Project>

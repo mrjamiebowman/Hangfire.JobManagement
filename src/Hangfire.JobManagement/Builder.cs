@@ -9,17 +9,12 @@ using Hangfire.JobManagement.Data;
 using Hangfire.JobManagement.Data.Repositories;
 using Hangfire.JobManagement.Data.Repositories.Interfaces;
 using Hangfire.JobManagement.Jobs.Filters;
-using Hangfire.JobManagement.Services;
-using Hangfire.JobManagement.Services.Interfaces;
-using Hangfire.JobManagement.Services.Notifications;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using System;
-using System.Reflection;
 
 namespace Hangfire.JobManagement;
 
@@ -43,14 +38,6 @@ public static class Builder
 
         // inject: factories
         builder.Services.AddScoped<IDesignTimeDbContextFactory<JobManagementDbContext>, JobManagementDbFactory>();
-        builder.Services.AddScoped<INotificationsFactoryService, NotificationsFactoryService>();
-
-        // services
-        builder.Services.AddScoped<IBatchService, BatchService>();
-        builder.Services.AddScoped<IJobHistoryService, JobHistoryService>();
-
-        builder.Services.AddScoped<INotificationService, NotificationDefaultEmailService>();
-        builder.Services.AddScoped<INotificationService, NotificationDefaultWebHookService>();
 
         // inject: repositories
         builder.Services.AddScoped<ISettingsRepository, SettingsRepository>();
@@ -77,10 +64,6 @@ public static class Builder
 
         // service provider
         var serviceProdvider = Services.BuildServiceProvider();
-        var notificationsFactory = serviceProdvider.GetRequiredService<INotificationsFactoryService>();
-
-        // filters
-        GlobalJobFilters.Filters.Add(new JobEventsFilter(notificationsFactory));
 
         // get all jobs
         PeriodicJobBuilder.GetAllJobs();
@@ -156,37 +139,6 @@ public static class Builder
             Active = page.RequestPath.StartsWith(Dashboard.Pages.JobManagement.PageRoute),
             Metric = DashboardMetrics.RecurringJobCount
         });
-
-
-        //// notifications
-        //if (Builder.Options.Features.Notifications) 
-        //{
-        //    NavigationMenu.Items.Add(page => new MenuItem(NotificationsPage.Title, page.Url.To(NotificationsPage.PageRoute)) {
-        //        Active = page.RequestPath.StartsWith(NotificationsPage.PageRoute)
-        //    });
-        //}
-
-        //// settings
-        //if (Builder.Options.Features.Settings)
-        //{
-        //    NavigationMenu.Items.Add(page => new MenuItem(SettingsPage.Title, page.Url.To(SettingsPage.PageRoute)) {
-        //        Active = page.RequestPath.StartsWith(SettingsPage.PageRoute)
-        //    });
-        //}
-
-
-
-        // swagger link
-//        DashboardRoutes.Routes.Add("/custom.js", new EmbeddedJsDispatcher(@"
-//    document.addEventListener('DOMContentLoaded', function() {
-//        var navbar = document.querySelector('.navbar-right');
-//        if (navbar) {
-//            navbar.insertAdjacentHTML('beforeend',
-//                '<li><a href=""/my-link"">My Item</a></li>'
-//            );
-//        }
-//    });
-//"));
 
         // css 
         AddDashboardRouteToEmbeddedResource("/resources/css/jobmanagement", "text/css", "Hangfire.JobManagement.Dashboard.Content.css.jobmanagement.css");

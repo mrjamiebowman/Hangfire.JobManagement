@@ -24,7 +24,6 @@ public class DisableConcurrentlyJobExecutionAttribute : JobFilterAttribute, IEle
         if (string.IsNullOrEmpty(methodName)) throw new ArgumentNullException(nameof(methodName));
 
         _methodName = methodName;
-
     }
 
     public DisableConcurrentlyJobExecutionAttribute(string methodName, JobState jobState = JobState.DeletedState) {

@@ -1,6 +1,5 @@
 ﻿using Hangfire.Client;
 using Hangfire.Common;
-using Hangfire.JobManagement.Services.Interfaces;
 using Hangfire.Logging;
 using Hangfire.Server;
 using Hangfire.States;
@@ -13,12 +12,9 @@ public class JobEventsFilter : JobFilterAttribute, IClientFilter, IServerFilter,
     // logger
     private static readonly ILog Logger = LogProvider.GetCurrentClassLogger();
 
-    // notifications service
-    private readonly INotificationsFactoryService _notificationsFactoryService;
-
-    public JobEventsFilter(INotificationsFactoryService notificationsFactoryService)
+    public JobEventsFilter()
     {
-        _notificationsFactoryService = notificationsFactoryService;
+
     }
 
     public void OnCreating(CreatingContext context)
@@ -33,17 +29,6 @@ public class JobEventsFilter : JobFilterAttribute, IClientFilter, IServerFilter,
         using var activity = OTel.Application.StartActivity("JobEventsFilter.OnCreated");
 
         Logger.InfoFormat("Job that is based on method `{0}` has been created with id `{1}`", context.Job.Method.Name, context.BackgroundJob?.Id);
-
-        //// build event
-        //var jobStatusEvent = new JobStatusEvent();
-        //jobStatusEvent.JobName = context.Job.Method.Name;
-        //jobStatusEvent.JobId = context.BackgroundJob?.Id;
-
-        //// notification event
-        //NotificationEvent<JobStatusEvent> @event = new NotificationEvent<JobStatusEvent>(jobStatusEvent);
-
-        // process notifications
-        //await _notificationsFactoryService.ProcessEventAsync(@event);
     }
 
     public void OnPerforming(PerformingContext context)
