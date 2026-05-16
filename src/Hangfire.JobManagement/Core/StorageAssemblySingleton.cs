@@ -12,7 +12,15 @@ internal sealed class StorageAssemblySingleton
     }
 
     private static StorageAssemblySingleton _instance;
-    private string[] prefixIgnore = new[] { "Hangfire.JobManagement.dll", "Microsoft." };
+
+    private string[] prefixIgnore = new[] { 
+        "Hangfire.JobManagement.dll", 
+        "Microsoft.",
+        "System.",
+        "mscorlib",
+        "netstandard",
+        "Azure."
+    };
 
     public List<Assembly> currentAssembly { get; private set; } = new List<Assembly>();
 
@@ -30,7 +38,7 @@ internal sealed class StorageAssemblySingleton
         if (includeReferences) {
             var referencedPaths = Directory.GetFiles(AppDomain.CurrentDomain.BaseDirectory, "*.dll");
             var toLoad = referencedPaths.Where(r => !assemblies.Any(x => x.Location.Equals(r)))
-                            .Where(x => !prefixIgnore.Any(p => p.Contains(x)))
+                            .Where(x => !prefixIgnore.Any(p => x.Contains(p)))
                             .ToList();
 
             toLoad.ForEach(path => currentAssembly.Add(Assembly.LoadFile(path)));
