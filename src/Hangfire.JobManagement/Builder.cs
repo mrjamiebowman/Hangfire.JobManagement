@@ -1,6 +1,5 @@
 ﻿using Hangfire.Annotations;
 using Hangfire.Dashboard;
-using Hangfire.JobManagement.Abstractions;
 using Hangfire.JobManagement.Configuration;
 using Hangfire.JobManagement.Core;
 using Hangfire.JobManagement.Dashboard.Pages;
@@ -8,7 +7,6 @@ using Hangfire.JobManagement.Dashboard.Pages.Dispatchers;
 using Hangfire.JobManagement.Data;
 using Hangfire.JobManagement.Data.Repositories;
 using Hangfire.JobManagement.Data.Repositories.Interfaces;
-using Hangfire.JobManagement.Jobs.Filters;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -81,6 +79,9 @@ public static class Builder
         ISettingsRepository settingsRepository = serviceProvider.GetService<ISettingsRepository>();
         ISettingsQueueRepository settingsQueueRepository = serviceProvider.GetService<ISettingsQueueRepository>();
 
+        // configuration
+        var jobManagementConfiguration = serviceProvider.GetService<JobManagementConfiguration>();
+
         // logging
         ILogger<GetJobsStoppedDispatcher> loggerGetJobsStoppedDispatcher = serviceProvider.GetService<ILogger<GetJobsStoppedDispatcher>>();
         ILogger<GetJobDispatcher> loggerGetJobDispatcher = serviceProvider.GetService<ILogger<GetJobDispatcher>>();
@@ -112,7 +113,7 @@ public static class Builder
         DashboardRoutes.Routes.Add("/management/data/UpdateJobs", new ChangeJobDispatcher(loggerChangeJobDispatcher));
         DashboardRoutes.Routes.Add("/management/data/GetJob", new GetJobForEdit(loggerGetJobForEdit));
         DashboardRoutes.Routes.Add("/management/data/JobAgent", new JobAgentDispatcher(loggerJobAgentDispatcher));
-        DashboardRoutes.Routes.Add("/management/data/timezones", new GetTimeZonesDispatcher(loggerGetTimeZonesDispatcher));
+        DashboardRoutes.Routes.Add("/management/data/timezones", new GetTimeZonesDispatcher(loggerGetTimeZonesDispatcher, jobManagementConfiguration));
         DashboardRoutes.Routes.Add("/management/data/queues", new GetQueuesDispatcher(loggerGetQueuesDispatcher));
         DashboardRoutes.Routes.Add("/management/data/jobs", new GetJobMethodsDispatchers(loggerGetJobMethodsDispatchers));
 

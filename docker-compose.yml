@@ -1,4 +1,4 @@
-name: mrjamiebowman-jobmanagement
+name: hangfire-jobmanagement
 
 services:
 
@@ -11,7 +11,6 @@ services:
         dockerfile: Dockerfile
     env_file:
       - .env
-    image: mrjamiebowman/hangfire-mssql:latest
     ports:
       - 1433:1433
     restart: always

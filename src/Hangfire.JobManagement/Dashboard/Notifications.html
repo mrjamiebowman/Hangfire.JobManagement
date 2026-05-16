@@ -64,7 +64,6 @@
         },
         methods: {
             GetJobs() {
-                debugger;
                 axios.get('GetJobsStopped')
                      .then(res => (this.notifications = res.data))
             },
