@@ -1,0 +1,14 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="../Hangfire.JobManagement.Abstractions/Hangfire.JobManagement.Abstractions/Hangfire.JobManagement.Abstractions.csproj" />
+    <Project Path="src/Hangfire.JobManagement/Hangfire.JobManagement.csproj" />
+  </Folder>
+  <Folder Name="/test/" />
+  <Folder Name="/test/client/" />
+  <Folder Name="/_Solution Items/">
+    <File Path=".github/workflows/publish-abstractions.yml" />
+    <File Path=".github/workflows/publish-nuget.yml" />
+    <File Path=".gitignore" />
+    <File Path="README.md" />
+  </Folder>
+</Solution>
