@@ -1,0 +1,17 @@
+<Solution>
+  <Folder Name="/.Solution Items/">
+    <File Path=".gitignore" />
+    <File Path="appveyor.yml" />
+    <File Path="README.md" />
+  </Folder>
+  <Folder Name="/aspire/">
+    <Project Path="aspire/JobManagement.AppHost/JobManagement.AppHost.csproj" />
+    <Project Path="aspire/JobManagement.ServiceDefaults/JobManagement.ServiceDefaults.csproj" />
+  </Folder>
+  <Folder Name="/src/">
+    <Project Path="src/Hangfire.JobManagement/Hangfire.JobManagement.csproj" />
+  </Folder>
+  <Folder Name="/test/">
+    <Project Path="test/Hangfire.JobManagement.Test.SampleServer/Hangfire.JobManagement.Test.SampleServer.csproj" />
+  </Folder>
+</Solution>
