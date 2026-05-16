@@ -12,17 +12,6 @@ internal static class OTel
 
     public static ActivitySource Application = new(ApplicationName);
 
-    public static class Spans
-    {
-        #region user
-
-        public const string UserName = "user.username";
-
-        public const string UserId = "user.id";
-
-        #endregion
-    }
-
     public static class Meters
     {
         public static class Application
