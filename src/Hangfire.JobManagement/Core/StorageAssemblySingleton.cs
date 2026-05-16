@@ -35,7 +35,6 @@ internal sealed class StorageAssemblySingleton
 
             toLoad.ForEach(path => currentAssembly.Add(Assembly.LoadFile(path)));
         }
-
     }
 
     public bool IsValidType(string type) => currentAssembly.Any(x => x.GetType(type) != null);

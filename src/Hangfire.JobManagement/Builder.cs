@@ -167,7 +167,10 @@ public static class JobManagementBuilderExtensions
     {
         builder.ValidateConfiguration();
         if (builder.Assemblies == null) throw new ArgumentNullException(nameof(builder.Assemblies));
-        StorageAssemblySingleton.GetInstance().SetCurrentAssembly(assemblies: builder.Assemblies);
+
+        // include references: this loads all of the DLLs for searching.
+        StorageAssemblySingleton.GetInstance().SetCurrentAssembly(true, assemblies: builder.Assemblies);
+
         return builder;
     }
 
