@@ -162,6 +162,15 @@ public class JobsController : ControllerBase
         customRecurringJobParameters2.Parameter = "Job #2";
         RecurringJob.AddOrUpdate<CustomRecurringJob>($"{CustomRecurringJob.JobName}-2", job => job.ExecuteAsync(null, customRecurringJobParameters2, "Custom Job #2", CancellationToken.None), Cron.Daily(3, 0), recurringJobOptionsCst);
 
+        // add 20 jobs...
+        for (int i = 3; i < 23; i++)
+        {
+            // recurring job: 
+            var customRecurringJobParametersLoop = new CustomRecurringJobParameters();
+            customRecurringJobParametersLoop.Parameter = $"Job #{i}";
+            RecurringJob.AddOrUpdate<CustomRecurringJob>($"{CustomRecurringJob.JobName}-{i}", job => job.ExecuteAsync(null, customRecurringJobParametersLoop, $"Custom Job #{i}", CancellationToken.None), Cron.Daily(3, 0), recurringJobOptionsCst);
+        }   
+
         // recurring job: every hour
         RecurringJob.AddOrUpdate<HourlyRecurringJob>($"{HourlyRecurringJob.JobName}", job => job.ExecuteAsync(null, null, "Hourly", CancellationToken.None), "0 * * * *", recurringJobOptionsCst);
 
