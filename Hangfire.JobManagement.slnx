@@ -3,7 +3,6 @@
     <Project Path="aspire/JobManagement.AppHost/JobManagement.AppHost.csproj" />
   </Folder>
   <Folder Name="/src/">
-    <Project Path="../Hangfire.JobManagement.Abstractions/Hangfire.JobManagement.Abstractions/Hangfire.JobManagement.Abstractions.csproj" />
     <Project Path="src/Hangfire.JobManagement/Hangfire.JobManagement.csproj" />
   </Folder>
   <Folder Name="/test/">
