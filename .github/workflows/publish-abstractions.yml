@@ -20,6 +20,7 @@ jobs:
       DOTNET_NOLOGO: true
       CONFIGURATION: Release
       NUGET_SOURCE: https://api.nuget.org/v3/index.json
+      PACK_PROJECT: src/Hangfire.JobManagement.Abstractions/Hangfire.JobManagement.Abstractions.csproj
 
     steps:
       - name: Checkout
@@ -63,13 +64,18 @@ jobs:
           fi
           echo "PKG_VERSION=$PKG_VERSION" >> $GITHUB_OUTPUT
 
+      # The Abstractions project is not in the solution, so the solution build above does not build it.
+      - name: Build Abstractions
+        run: dotnet build "$PACK_PROJECT" -c $CONFIGURATION
+
+      # Pack only the Abstractions package; packing the solution would also produce the main/test packages
       - name: Pack
         run: |
           mkdir -p artifacts
           if [ -n "${{ steps.ver.outputs.PKG_VERSION }}" ]; then
-            dotnet pack --no-build -c $CONFIGURATION -o artifacts -p:PackageVersion=${{ steps.ver.outputs.PKG_VERSION }}
+            dotnet pack "$PACK_PROJECT" --no-build -c $CONFIGURATION -o artifacts -p:PackageVersion=${{ steps.ver.outputs.PKG_VERSION }}
           else
-            dotnet pack --no-build -c $CONFIGURATION -o artifacts
+            dotnet pack "$PACK_PROJECT" --no-build -c $CONFIGURATION -o artifacts
           fi
 
       # Trusted Publishing: exchange the GitHub OIDC token for a short-lived NuGet API key (no stored secret)
