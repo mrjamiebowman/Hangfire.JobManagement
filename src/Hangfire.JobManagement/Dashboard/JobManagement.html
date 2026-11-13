@@ -124,19 +124,29 @@
                         <span class="glyphicon glyphicon-plus"></span>
                         Add new Job
                     </button>
+                </div>
 
-                    <div class="btn-group" v-if="jobsCount > 0">
+                <!-- center: text search + state filter -->
+                <div v-if="jobsCount > 0" style="display: flex; align-items: center; gap: 10px;">
+                    <div class="input-group input-group-sm" style="width: 320px;">
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-search"></span></span>
+                        <input type="text" class="form-control" v-model.trim="filter.search"
+                               placeholder="Search by id, class, method, queue or cron" aria-label="Search jobs"
+                               @keyup.esc="filter.search = ''">
+                        <span class="input-group-btn" v-if="filter.search">
+                            <button type="button" class="btn btn-default" title="Clear search" aria-label="Clear search"
+                                    @click="filter.search = ''">
+                                <span class="glyphicon glyphicon-remove"></span>
+                            </button>
+                        </span>
+                    </div>
+
+                    <div class="btn-group" style="white-space: nowrap; display: flex;">
                         <a v-for="state in filter.states" :key="state" href="#" class="btn btn-sm btn-default"
                            :class="{ active: state === filter.state }" @click.prevent="filter.state = state">
                             {{state}}
                         </a>
                     </div>
-                </div>
-
-                <!-- center: text search -->
-                <div v-if="jobsCount > 0" style="flex: 0 1 320px;">
-                    <input type="search" class="form-control input-sm" v-model.trim="filter.search"
-                           placeholder="Search jobs..." aria-label="Search jobs">
                 </div>
 
                 <!-- right: items per page -->
@@ -173,7 +183,7 @@
                             <th>State</th>
                             <th>Class</th>
                             <th>Method</th>
-                            <th>TimeZone</th>
+                            <th>Time Zone</th>
                             <th class="align-right">Last Execution</th>
                             <th class="align-right">Next Execution</th>
                             <th class="align-right">Options</th>
