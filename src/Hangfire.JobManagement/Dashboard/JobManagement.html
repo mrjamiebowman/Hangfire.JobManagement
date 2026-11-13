@@ -124,6 +124,20 @@
                         <span class="glyphicon glyphicon-plus"></span>
                         Add new Job
                     </button>
+
+                    <!-- bulk actions on the selected jobs -->
+                    <template v-if="jobsCount > 0">
+                        <button type="button" class="btn btn-sm btn-default" :disabled="bulkBusy || startableIds.length === 0"
+                                title="Start the selected stopped jobs" @click="bulkAction('Start')">
+                            <span class="glyphicon glyphicon-play"></span>
+                            Start<span v-if="startableIds.length > 0"> ({{startableIds.length.toLocaleString('en-US')}})</span>
+                        </button>
+                        <button type="button" class="btn btn-sm btn-default" :disabled="bulkBusy || stoppableIds.length === 0"
+                                title="Stop the selected running jobs" @click="bulkAction('Stop')">
+                            <span class="glyphicon glyphicon-stop"></span>
+                            Stop<span v-if="stoppableIds.length > 0"> ({{stoppableIds.length.toLocaleString('en-US')}})</span>
+                        </button>
+                    </template>
                 </div>
 
                 <!-- center: text search + state filter -->
@@ -177,6 +191,11 @@
                 <table class="table table-hover">
                     <thead>
                         <tr>
+                            <th class="min-width" style="cursor: pointer;" title="Select all" @click="toggleSelectAll">
+                                <input type="checkbox" aria-label="Select all jobs" :checked="allSelected"
+                                       :indeterminate="selected.length > 0 && !allSelected"
+                                       @click.stop @change="toggleSelectAll">
+                            </th>
                             <th>Id</th>
                             <th>Cron</th>
                             <th>Queue</th>
@@ -191,9 +210,12 @@
                     </thead>
                     <tbody>
                         <tr v-if="jobsCount > 0 && filteredCount === 0">
-                            <td colspan="10" class="text-muted" style="text-align: center;"><em>No jobs match the current search or filter.</em></td>
+                            <td colspan="11" class="text-muted" style="text-align: center;"><em>No jobs match the current search or filter.</em></td>
                         </tr>
-                        <tr v-for="job in getItems" :key="job.Id">
+                        <tr v-for="job in getItems" :key="job.Id" :class="{ highlight: selected.includes(job.Id) }">
+                            <td class="min-width">
+                                <input type="checkbox" :aria-label="'Select job ' + job.Id" :value="job.Id" v-model="selected">
+                            </td>
                             <td>{{job.Id}}</td>
                             <td>{{job.Cron}}</td>
                             <td>{{job.Queue}}</td>
@@ -297,6 +319,8 @@
                     Method: '',
                     JobState: ''
                 },
+                selected: [],
+                bulkBusy: false,
                 filter: {
                     search: '',
                     state: 'All',
@@ -315,7 +339,53 @@
             },
             GetJobs() {
                 axios.get('data/GetJobs')
-                    .then(res => (this.jobs = res.data))
+                    .then(res => {
+                        this.jobs = res.data;
+                        // drop selections for jobs that no longer exist
+                        let ids = new Set(this.jobs.map(job => job.Id));
+                        this.selected = this.selected.filter(id => ids.has(id));
+                    })
+            },
+            // select every job matching the current search/filter (all pages), or clear if they already are
+            toggleSelectAll() {
+                this.selected = this.allSelected ? [] : this.filteredJobs.map(job => job.Id);
+            },
+            // start or stop the selected jobs, one request at a time
+            async bulkAction(action) {
+                let ids = action === 'Start' ? this.startableIds : this.stoppableIds;
+                if (ids.length === 0 || this.bulkBusy) return;
+
+                let confirmed = await Swal.fire({
+                    title: action + ' ' + ids.length.toLocaleString('en-US') + (ids.length === 1 ? ' job?' : ' jobs?'),
+                    showCancelButton: true,
+                    confirmButtonText: action
+                });
+                if (!confirmed.value) return;
+
+                this.bulkBusy = true;
+                let failures = [];
+                for (const id of ids) {
+                    try {
+                        let response = await axios.get('data/JobAgent?Id=' + encodeURIComponent(id) + '&Action=' + action);
+                        if (!response.data.Status) failures.push(id + ': ' + response.data.Message);
+                    } catch (e) {
+                        console.log(e);
+                        failures.push(id + ': ' + e.message);
+                    }
+                }
+                this.bulkBusy = false;
+                this.selected = [];
+                this.GetJobs();
+
+                if (failures.length > 0) {
+                    Swal.fire({
+                        title: 'Error!',
+                        text: failures.length + ' of ' + ids.length + ' jobs failed to ' + action.toLowerCase() + '. '
+                            + failures.slice(0, 5).join('; ') + (failures.length > 5 ? '; ...' : ''),
+                        type: 'error',
+                        confirmButtonText: 'Okay'
+                    });
+                }
             },
             GetJob(_Id) {
                 this.title = 'Edit Job';
@@ -546,8 +616,9 @@
         },
         watch: {
             // a new search or filter starts again from the first page
-            'filter.search'() { this.pagination.currentPage = 1; },
-            'filter.state'() { this.pagination.currentPage = 1; }
+            // (and clears the selection, so hidden jobs are never acted on)
+            'filter.search'() { this.pagination.currentPage = 1; this.selected = []; },
+            'filter.state'() { this.pagination.currentPage = 1; this.selected = []; }
         },
         created() {
             this.GetTimeZones();
@@ -582,6 +653,18 @@
                     if (this.jobs == null) return [];
                     return [...this.jobs].sort((a, b) =>
                         String(a.Id).localeCompare(String(b.Id), undefined, { numeric: true, sensitivity: 'base' }));
+                },
+                allSelected: function () {
+                    return this.filteredCount > 0 && this.selected.length === this.filteredCount;
+                },
+                // selected jobs that Start / Stop would actually change
+                startableIds: function () {
+                    let selected = new Set(this.selected);
+                    return this.filteredJobs.filter(job => selected.has(job.Id) && job.JobState === 'Stopped').map(job => job.Id);
+                },
+                stoppableIds: function () {
+                    let selected = new Set(this.selected);
+                    return this.filteredJobs.filter(job => selected.has(job.Id) && job.JobState === 'Running').map(job => job.Id);
                 },
                 perPageIndex: function () {
                     return this.pagination.perPageOptions.indexOf(this.pagination.parPage);
