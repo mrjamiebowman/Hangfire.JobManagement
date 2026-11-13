@@ -139,7 +139,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="job in jobs">
+                        <tr v-for="job in getItems" :key="job.Id">
                             <td>{{job.Id}}</td>
                             <td>{{job.Cron}}</td>
                             <td>{{job.Queue}}</td>
@@ -469,7 +469,7 @@
                     return this.jobs != null ? this.jobs.length : 0;
                 },
                 getPageCount: function () {
-                    return Math.ceil(this.jobs?.length / this.pagination.parPage);
+                    return Math.ceil(this.jobsCount / this.pagination.parPage);
                 }
             }
         })
