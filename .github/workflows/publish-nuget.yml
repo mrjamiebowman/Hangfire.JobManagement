@@ -26,6 +26,7 @@ jobs:
       DOTNET_NOLOGO: true
       CONFIGURATION: Release
       NUGET_SOURCE: https://api.nuget.org/v3/index.json
+      PACK_PROJECT: src/Hangfire.JobManagement/Hangfire.JobManagement.csproj
 
     steps:
       - name: Checkout
@@ -69,13 +70,14 @@ jobs:
           fi
           echo "PKG_VERSION=$PKG_VERSION" >> $GITHUB_OUTPUT
 
+      # Pack only the main package; packing the solution would also produce test/aspire packages
       - name: Pack
         run: |
           mkdir -p artifacts
           if [ -n "${{ steps.ver.outputs.PKG_VERSION }}" ]; then
-            dotnet pack --no-build -c $CONFIGURATION -o artifacts -p:PackageVersion=${{ steps.ver.outputs.PKG_VERSION }}
+            dotnet pack "$PACK_PROJECT" --no-build -c $CONFIGURATION -o artifacts -p:PackageVersion=${{ steps.ver.outputs.PKG_VERSION }}
           else
-            dotnet pack --no-build -c $CONFIGURATION -o artifacts
+            dotnet pack "$PACK_PROJECT" --no-build -c $CONFIGURATION -o artifacts
           fi
 
       # Trusted Publishing: exchange the GitHub OIDC token for a short-lived NuGet API key (no stored secret)
