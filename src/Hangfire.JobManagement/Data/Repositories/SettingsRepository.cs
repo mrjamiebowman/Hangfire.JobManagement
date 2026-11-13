@@ -94,7 +94,7 @@ public class SettingsRepository : BaseEfRepository, ISettingsRepository
             db.Settings.Update(settingDefaultTimeZoneId);
 
             // save (DefaultQueue)
-            var defaultQueue = model.DefaultTimeZoneId;
+            var defaultQueue = model.DefaultQueue;
             var settingDefaultQueue = await db.Settings.SingleOrDefaultAsync(x => x.Name == nameof(GlobalSetting.DefaultQueue)) ?? new Setting(nameof(GlobalSetting.DefaultQueue));
             settingDefaultQueue.Value = defaultQueue;
 
