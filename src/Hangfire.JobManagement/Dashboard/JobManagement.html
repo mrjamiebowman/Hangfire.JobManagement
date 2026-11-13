@@ -196,15 +196,13 @@
                                        :indeterminate="selected.length > 0 && !allSelected"
                                        @click.stop @change="toggleSelectAll">
                             </th>
-                            <th>Id</th>
-                            <th>Cron</th>
-                            <th>Queue</th>
-                            <th>State</th>
-                            <th>Class</th>
-                            <th>Method</th>
-                            <th>Time Zone</th>
-                            <th class="align-right">Last Execution</th>
-                            <th class="align-right">Next Execution</th>
+                            <th v-for="column in sort.columns" :key="column.key" :class="{ 'align-right': column.right }"
+                                style="cursor: pointer; white-space: nowrap; user-select: none;"
+                                :aria-sort="sort.key === column.key ? (sort.direction === 1 ? 'ascending' : 'descending') : 'none'"
+                                @click="sortBy(column.key)">
+                                {{column.label}}
+                                <span :style="{ visibility: sort.key === column.key ? 'visible' : 'hidden' }">{{sort.direction === 1 ? '&#9650;' : '&#9660;'}}</span>
+                            </th>
                             <th class="align-right">Options</th>
                         </tr>
                     </thead>
@@ -322,6 +320,21 @@
                 },
                 selected: [],
                 bulkBusy: false,
+                sort: {
+                    key: 'Id',
+                    direction: 1, // 1 = ascending, -1 = descending
+                    columns: [
+                        { key: 'Id', label: 'Id' },
+                        { key: 'Cron', label: 'Cron' },
+                        { key: 'Queue', label: 'Queue' },
+                        { key: 'JobState', label: 'State' },
+                        { key: 'Class', label: 'Class' },
+                        { key: 'Method', label: 'Method' },
+                        { key: 'TimeZoneId', label: 'Time Zone' },
+                        { key: 'LastExecution', label: 'Last Execution', right: true, date: true },
+                        { key: 'NextExecution', label: 'Next Execution', right: true, date: true }
+                    ]
+                },
                 filter: {
                     search: '',
                     state: 'All',
@@ -346,6 +359,18 @@
                         let ids = new Set(this.jobs.map(job => job.Id));
                         this.selected = this.selected.filter(id => ids.has(id));
                     })
+            },
+            // sort by a column; clicking the current sort column flips its direction
+            sortBy(key) {
+                if (this.sort.key === key) {
+                    this.sort.direction = -this.sort.direction;
+                } else {
+                    this.sort.key = key;
+                    this.sort.direction = 1;
+                }
+                // the rows on screen change, so start from page 1 with nothing selected
+                this.pagination.currentPage = 1;
+                this.selected = [];
             },
             // select every job on the page currently displayed, or clear if they already are
             toggleSelectAll() {
@@ -668,11 +693,32 @@
                 filteredCount: function () {
                     return this.filteredJobs.length;
                 },
-                // always ordered by Id (case-insensitive, "job2" before "job10")
+                // jobs ordered by the chosen column (default Id); text is case-insensitive and
+                // number-aware ("job2" before "job10"), ties fall back to Id, empty values go last
                 sortedJobs: function () {
                     if (this.jobs == null) return [];
-                    return [...this.jobs].sort((a, b) =>
-                        String(a.Id).localeCompare(String(b.Id), undefined, { numeric: true, sensitivity: 'base' }));
+
+                    let column = this.sort.columns.find(c => c.key === this.sort.key) || this.sort.columns[0];
+                    let direction = this.sort.direction;
+                    let text = (a, b) => String(a).localeCompare(String(b), undefined, { numeric: true, sensitivity: 'base' });
+
+                    // work out each job's sort value once, not on every comparison
+                    let rows = this.jobs.map(job => {
+                        let value = job[column.key];
+                        if (column.date) value = this.hasDate(value) ? dayjs(value).valueOf() : null;
+                        else if (value === undefined || value === '') value = null;
+                        return { job, value };
+                    });
+
+                    rows.sort((a, b) => {
+                        if (a.value === null && b.value === null) return text(a.job.Id, b.job.Id);
+                        if (a.value === null) return 1;
+                        if (b.value === null) return -1;
+                        let result = column.date ? a.value - b.value : text(a.value, b.value);
+                        return result !== 0 ? result * direction : text(a.job.Id, b.job.Id);
+                    });
+
+                    return rows.map(row => row.job);
                 },
                 allSelected: function () {
                     let items = this.getItems || [];
