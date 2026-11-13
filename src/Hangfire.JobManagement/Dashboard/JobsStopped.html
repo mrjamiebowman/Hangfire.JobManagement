@@ -30,16 +30,26 @@
                     </tbody>
                 </table>
 
-                <div style="float: right;">
-                    <paginate :page-count="getPageCount"
-                              :page-range="3"
-                              :margin-pages="2"
-                              :click-handler="clickCallbackPagination"
-                              :prev-text="'＜'"
-                              :next-text="'＞'"
-                              :container-class="'pagination'"
-                              :page-class="'page-item'">
-                    </paginate>
+                <div class="btn-toolbar" v-if="getPageCount > 1">
+                    <div class="btn-group paginator">
+                        <a href="#" class="btn btn-default" :class="{ disabled: pagination.currentPage <= 1 }"
+                           @click.prevent="clickCallbackPagination(pagination.currentPage - 1)">
+                            Prev
+                        </a>
+                        <template v-for="(page, index) in getPages" :key="index">
+                            <a v-if="page === null" href="#" class="btn btn-default disabled" @click.prevent>
+                                &hellip;
+                            </a>
+                            <a v-else href="#" class="btn btn-default" :class="{ active: page === pagination.currentPage }"
+                               @click.prevent="clickCallbackPagination(page)">
+                                {{page}}
+                            </a>
+                        </template>
+                        <a href="#" class="btn btn-default" :class="{ disabled: pagination.currentPage >= getPageCount }"
+                           @click.prevent="clickCallbackPagination(pagination.currentPage + 1)">
+                            Next
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -67,7 +77,9 @@
                      .then(res => (this.jobs = res.data))
             },
             clickCallbackPagination(pageNum) {
-                this.pagination.currentPage = Number(pageNum);
+                let page = Number(pageNum);
+                if (page < 1 || page > this.getPageCount) return;
+                this.pagination.currentPage = page;
             }
         },
         created() {
@@ -81,7 +93,22 @@
                 else return null;
             },
             getPageCount: function () {
-                return Math.ceil(this.jobs.length / this.pagination.parPage);
+                return this.jobs != null ? Math.ceil(this.jobs.length / this.pagination.parPage) : 0;
+            },
+            // page numbers to show: first, last and a window around the current page; null = gap
+            getPages: function () {
+                let total = this.getPageCount;
+                let current = this.pagination.currentPage;
+                let pages = [];
+                let last = 0;
+                for (let page = 1; page <= total; page++) {
+                    if (page === 1 || page === total || Math.abs(page - current) <= 2) {
+                        if (page - last > 1) pages.push(null);
+                        pages.push(page);
+                        last = page;
+                    }
+                }
+                return pages;
             }
         }
     });
