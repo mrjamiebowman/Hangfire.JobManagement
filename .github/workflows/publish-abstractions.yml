@@ -93,7 +93,7 @@ jobs:
             --api-key "$NUGET_API_KEY" \
             --source "$NUGET_SOURCE" \
             --skip-duplicate \
-            --no-symbols true
+            --no-symbols
 
       # Optional: publish symbols/snupkg (if you pack symbols)
       # - name: Publish symbols to NuGet.org
