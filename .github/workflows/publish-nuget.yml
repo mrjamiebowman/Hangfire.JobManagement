@@ -15,6 +15,9 @@ jobs:
   publish:
     runs-on: ubuntu-latest
 
+    # must match the Environment set on the nuget.org Trusted Publishing policy
+    environment: production
+
     permissions:
       contents: read
       id-token: write   # lets the job request a GitHub OIDC token for NuGet Trusted Publishing
