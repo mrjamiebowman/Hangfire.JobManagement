@@ -117,10 +117,34 @@
         <div class="col-md-12">
             <h1 class="page-header">Job Management <span class="badge badge-warning">{{jobsCount}}</span></h1>
 
-            <button class="js-jobs-list-command btn btn-sm btn-primary" style="margin-bottom: 20px;" @click="OpenModal">
-                <span class="glyphicon glyphicon-plus"></span>
-                Add new Job
-            </button>
+            <div class="btn-toolbar btn-toolbar-top" style="margin-bottom: 20px;">
+                <button class="js-jobs-list-command btn btn-sm btn-primary" @click="OpenModal">
+                    <span class="glyphicon glyphicon-plus"></span>
+                    Add new Job
+                </button>
+
+                <template v-if="jobsCount > 0">
+                    <div class="btn-group pull-right paginator">
+                        <a href="#" class="btn btn-sm btn-default" :class="{ disabled: perPageIndex <= 0 }"
+                           @click.prevent="stepPerPage(-1)">
+                            Prev
+                        </a>
+                        <a href="#" class="btn btn-sm btn-default" :class="{ disabled: perPageIndex >= pagination.perPageOptions.length - 1 }"
+                           @click.prevent="stepPerPage(1)">
+                            Next
+                        </a>
+                    </div>
+                    <div class="btn-toolbar-spacer pull-right"></div>
+                    <div class="btn-group pull-right paginator">
+                        <a v-for="count in pagination.perPageOptions" :key="count" href="#" class="btn btn-sm btn-default"
+                           :class="{ active: count === pagination.parPage }" @click.prevent="setPerPage(count)">
+                            {{count.toLocaleString('en-US')}}
+                        </a>
+                    </div>
+                    <div class="btn-toolbar-spacer pull-right"></div>
+                    <div class="btn-toolbar-label btn-toolbar-label-sm pull-right">Items per page:</div>
+                </template>
+            </div>
 
             <div class="table-responsive">
                 <table class="table table-hover">
@@ -240,7 +264,8 @@
                     JobState: ''
                 },
                 pagination: {
-                    parPage: 10,
+                    parPage: 20,
+                    perPageOptions: [10, 20, 50, 100, 500, 1000, 5000],
                     currentPage: 1
                 }
             }
@@ -469,6 +494,15 @@
                 let page = Number(pageNum);
                 if (page < 1 || page > this.getPageCount) return;
                 this.pagination.currentPage = page;
+            },
+            setPerPage(count) {
+                this.pagination.parPage = count;
+                this.pagination.currentPage = 1;
+            },
+            // move the items-per-page size one option down (-1) or up (+1)
+            stepPerPage(direction) {
+                let next = this.pagination.perPageOptions[this.perPageIndex + direction];
+                if (next !== undefined) this.setPerPage(next);
             }
         },
         created() {
@@ -489,6 +523,9 @@
                     if (this.jobs == null) return [];
                     return [...this.jobs].sort((a, b) =>
                         String(a.Id).localeCompare(String(b.Id), undefined, { numeric: true, sensitivity: 'base' }));
+                },
+                perPageIndex: function () {
+                    return this.pagination.perPageOptions.indexOf(this.pagination.parPage);
                 },
                 jobsCount: function () {
                     return this.jobs != null ? this.jobs.length : 0;
