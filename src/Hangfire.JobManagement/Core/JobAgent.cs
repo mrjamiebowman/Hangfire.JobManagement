@@ -115,6 +115,52 @@ namespace Hangfire.JobManagement.Core
             return outPut;
         }
 
+        /// <summary>
+        /// Number of stopped jobs, without loading each job.
+        /// </summary>
+        public static long GetStoppedJobCount() {
+            using (var connection = JobStorage.Current.GetConnection()) {
+                if (connection is JobStorageConnection storageConnection) {
+                    return storageConnection.GetSetCount(tagStopJob);
+                }
+
+                return connection.GetAllItemsFromSet(tagStopJob).Count;
+            }
+        }
+
+        /// <summary>
+        /// Loads a single stopped job for editing (full class name), or null when the job is not stopped.
+        /// </summary>
+        public static PeriodicJob GetStoppedJobForEdit(string jobId) {
+            if (string.IsNullOrEmpty(jobId)) return null;
+
+            using (var connection = JobStorage.Current.GetConnection()) {
+                if (!connection.GetAllItemsFromSet(tagStopJob).Contains(jobId)) return null;
+
+                var dataJob = connection.GetAllEntriesFromHash($"{tagRecurringJob}:{jobId}");
+                if (dataJob == null) return null;
+
+                var dto = new PeriodicJob { Id = jobId, JobState = "Stopped", Removed = false };
+
+                try {
+                    if (dataJob.TryGetValue("Job", out var payload) && !string.IsNullOrWhiteSpace(payload)) {
+                        var job = InvocationData.DeserializePayload(payload).DeserializeJob();
+                        dto.Method = job.Method.Name;
+                        dto.Class = job.Type.FullName;
+                    }
+                } catch (JobLoadException ex) {
+                    dto.Error = ex.Message;
+                }
+
+                if (dataJob.TryGetValue("Cron", out var cron)) dto.Cron = cron;
+                if (dataJob.TryGetValue("Queue", out var queue)) dto.Queue = queue;
+                if (dataJob.TryGetValue("TimeZoneId", out var timeZoneId)) dto.TimeZoneId = timeZoneId;
+                if (dataJob.TryGetValue("LastJobId", out var lastJobId)) dto.LastJobId = lastJobId;
+
+                return dto;
+            }
+        }
+
         public static bool IsValidJobId(string jobId, string tag = tagRecurringJob) {
             var result = false;
             using (var connection = JobStorage.Current.GetConnection()) {

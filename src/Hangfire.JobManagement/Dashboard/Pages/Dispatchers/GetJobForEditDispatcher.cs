@@ -1,5 +1,6 @@
 ﻿using Hangfire.Annotations;
 using Hangfire.Dashboard;
+using Hangfire.JobManagement.Core;
 using Hangfire.JobManagement.Models;
 using Hangfire.Storage;
 using Microsoft.Extensions.Logging;
@@ -39,6 +40,15 @@ internal sealed class GetJobForEdit : IDashboardDispatcher
         var recurringJob = _connection.GetRecurringJobs().FirstOrDefault(x => x.Id == jobId);
 
         if (recurringJob == null) {
+            // stopped jobs are not in the recurring set, so look them up separately
+            var stoppedJob = JobAgent.GetStoppedJobForEdit(jobId);
+
+            if (stoppedJob != null) {
+                response.Object = stoppedJob;
+                await dashboardContext.Response.WriteAsync(JsonConvert.SerializeObject(response));
+                return;
+            }
+
             response.Status = false;
             response.Message = "Job not found";
 

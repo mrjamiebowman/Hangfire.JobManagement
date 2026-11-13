@@ -30,14 +30,15 @@ internal sealed class GetTimeZonesDispatcher : IDashboardDispatcher
         // vars
         var localZone = TimeZoneInfo.Local;
         var timeZones = Utility.GetTimeZones().ToList();
-        var title = timeZones.SingleOrDefault(x => x.Item1 == localZone.StandardName)?.Item2 ?? localZone.StandardName;
+        var title = timeZones.FirstOrDefault(x => x.Item1 == localZone.Id)?.Item2 ?? localZone.Id;
 
-        // set default time zone
-        timeZones.Insert(0, new Tuple<string, string>(localZone.StandardName, title));
+        // list the server's own time zone first (by id, which is what jobs are saved with)
+        timeZones.RemoveAll(x => x.Item1 == localZone.Id);
+        timeZones.Insert(0, new Tuple<string, string>(localZone.Id, title));
 
         var data = new {
             timeZones = timeZones,
-            defaultTimeZone = _jobManagementConfiguration.DefaultTimeZone ?? localZone.ToString()
+            defaultTimeZone = string.IsNullOrWhiteSpace(_jobManagementConfiguration.DefaultTimeZone) ? localZone.Id : _jobManagementConfiguration.DefaultTimeZone
         };
 
         // data

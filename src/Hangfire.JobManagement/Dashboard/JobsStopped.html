@@ -3,11 +3,11 @@
     <div class="col-md-9">
         <h1 id="page-title" class="page-header">Stopped Jobs</h1>
         
-        <div v-if="jobs.length == 0" class="alert alert-info">
+        <div v-if="jobs != null && jobs.length == 0" class="alert alert-info">
             No jobs found in stopped state.
         </div>
 
-        <div v-else class="js-jobs-list">
+        <div v-else-if="jobs != null" class="js-jobs-list">
             <div class="table-responsive">
                 <table class="table">
                     <thead>
