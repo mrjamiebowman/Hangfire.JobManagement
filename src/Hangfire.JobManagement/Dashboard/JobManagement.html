@@ -128,12 +128,12 @@
                     <!-- bulk actions on the selected jobs -->
                     <template v-if="jobsCount > 0">
                         <button type="button" class="btn btn-sm btn-default" :disabled="bulkBusy || startableIds.length === 0"
-                                title="Start the selected stopped jobs" @click="bulkAction('Start')">
+                                aria-label="Start the selected stopped jobs" @click="bulkAction('Start')">
                             <span class="glyphicon glyphicon-play"></span>
                             Start<span v-if="startableIds.length > 0"> ({{startableIds.length.toLocaleString('en-US')}})</span>
                         </button>
                         <button type="button" class="btn btn-sm btn-default" :disabled="bulkBusy || stoppableIds.length === 0"
-                                title="Stop the selected running jobs" @click="bulkAction('Stop')">
+                                aria-label="Stop the selected running jobs" @click="bulkAction('Stop')">
                             <span class="glyphicon glyphicon-stop"></span>
                             Stop<span v-if="stoppableIds.length > 0"> ({{stoppableIds.length.toLocaleString('en-US')}})</span>
                         </button>
@@ -148,7 +148,7 @@
                                placeholder="Search by id, class, method, queue or cron" aria-label="Search jobs"
                                @keyup.esc="filter.search = ''">
                         <span class="input-group-btn" v-if="filter.search">
-                            <button type="button" class="btn btn-default" title="Clear search" aria-label="Clear search"
+                            <button type="button" class="btn btn-default" aria-label="Clear search"
                                     @click="filter.search = ''">
                                 <span class="glyphicon glyphicon-remove"></span>
                             </button>
@@ -191,7 +191,7 @@
                 <table class="table table-hover">
                     <thead>
                         <tr>
-                            <th class="min-width" style="cursor: pointer;" title="Select all" @click="toggleSelectAll">
+                            <th class="min-width" style="cursor: pointer;" @click="toggleSelectAll">
                                 <input type="checkbox" aria-label="Select all jobs" :checked="allSelected"
                                        :indeterminate="selected.length > 0 && !allSelected"
                                        @click.stop @change="toggleSelectAll">
@@ -212,7 +212,8 @@
                         <tr v-if="jobsCount > 0 && filteredCount === 0">
                             <td colspan="11" class="text-muted" style="text-align: center;"><em>No jobs match the current search or filter.</em></td>
                         </tr>
-                        <tr v-for="job in getItems" :key="job.Id" :class="{ highlight: selected.includes(job.Id) }">
+                        <tr v-for="job in getItems" :key="job.Id" :class="{ highlight: selected.includes(job.Id) }"
+                            style="cursor: pointer;" @click="toggleRow(job.Id, $event)">
                             <td class="min-width">
                                 <input type="checkbox" :aria-label="'Select job ' + job.Id" :value="job.Id" v-model="selected">
                             </td>
@@ -349,6 +350,13 @@
             // select every job on the page currently displayed, or clear if they already are
             toggleSelectAll() {
                 this.selected = this.allSelected ? [] : this.getItems.map(job => job.Id);
+            },
+            // clicking anywhere on a row toggles its checkbox, except on the row's own controls
+            toggleRow(id, event) {
+                if (event.target.closest('button, a, input')) return;
+                let index = this.selected.indexOf(id);
+                if (index === -1) this.selected.push(id);
+                else this.selected.splice(index, 1);
             },
             // start or stop the selected jobs, one request at a time
             async bulkAction(action) {
