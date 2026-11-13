@@ -1,4 +1,4 @@
-# mrjamiebowman.Hangfire.JobManagement (.NET 8)
+# mrjamiebowman.Hangfire.JobManagement (.NET 10)
 [![NuGet](https://img.shields.io/nuget/v/MyNugetPackage.svg)](https://github.com/mrjamiebowman/Hangfire.JobManagement/)
 [![Build status](https://ci.appveyor.com/api/projects/status/u2xrias2vk727beg/branch/master?svg=true)](https://ci.appveyor.com/project/mrjamiebowman/hangfire-jobmanagement/branch/main)
 [![Build Status](https://github.com/mrjamiebowman/Hangfire.JobManagement/actions/workflows/dotnet.yml/badge.svg)](https://github.com/mrjamiebowman/Hangfire.JobManagement/actions)
@@ -19,10 +19,6 @@ A robust extension to .NET Hangfire that adds a Job Management Dashboard, Notifi
 * Batch Jobs
 * Job History
 * Settings
-
-#### Requirements
-* MSSQL Server
-* .NET 8
 
 #### Dockerized & Ready for Kubernetes (Helm Charts)
 // TODO: Share GitHub Sample.
