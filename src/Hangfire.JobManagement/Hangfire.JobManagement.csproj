@@ -77,9 +77,9 @@
      
   <ItemGroup>
     <PackageReference Include="Cronos" Version="0.13.0" />
-    <PackageReference Include="Hangfire" Version="1.8.23" />
-    <PackageReference Include="Hangfire.Core" Version="1.8.23" />
-    <PackageReference Include="Hangfire.SqlServer" Version="1.8.23" />
+    <PackageReference Include="Hangfire" Version="1.8.25" />
+    <PackageReference Include="Hangfire.Core" Version="1.8.25" />
+    <PackageReference Include="Hangfire.SqlServer" Version="1.8.25" />
     <PackageReference Include="Humanizer" Version="3.0.10" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Abstractions" Version="10.0.0" />
@@ -94,7 +94,7 @@
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="10.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="10.0.0" />
     <PackageReference Include="mrjamiebowman.Hangfire.JobManagement.Abstractions" Version="1.0.0" />
-    <PackageReference Include="OpenTelemetry" Version="1.15.3" />
+    <PackageReference Include="OpenTelemetry" Version="1.21.0" />
   </ItemGroup>
      
   <ItemGroup>
