@@ -6,15 +6,7 @@
 [![Official Site](https://img.shields.io/badge/site-hangfire.io-blue.svg)](http://hangfire.io)
 [![License MIT](https://img.shields.io/badge/license-MIT-green.svg)](http://opensource.org/licenses/MIT)
 
-*NOTE:* This is a fork
-
-A robust extension to .NET Hangfire that adds a Job Management Dashboard, Notifications, and Settings. 
-
-#### Features (Coming Soon!)
-* Job Notifications (Web Hooks, Message Queues, Emails)
-* Batch Jobs
-* Job History
-* Settings
+A robust extension to .NET Hangfire that adds a Job Management Dashboard. 
 
 #### Requirements
 * .NET 10
@@ -24,7 +16,6 @@ Install a package from NuGet.
 ```powershell
 Install-Package mrjamiebowman.Hangfire.JobManagement
 ```
-
 
 ## Hangfire Server
 This code is to configure the Hangfire Server (Dashboard) and the Job Management Dashboard. You can add this to your Program.cs file.
