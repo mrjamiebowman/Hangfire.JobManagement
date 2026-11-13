@@ -346,9 +346,9 @@
                         this.selected = this.selected.filter(id => ids.has(id));
                     })
             },
-            // select every job matching the current search/filter (all pages), or clear if they already are
+            // select every job on the page currently displayed, or clear if they already are
             toggleSelectAll() {
-                this.selected = this.allSelected ? [] : this.filteredJobs.map(job => job.Id);
+                this.selected = this.allSelected ? [] : this.getItems.map(job => job.Id);
             },
             // start or stop the selected jobs, one request at a time
             async bulkAction(action) {
@@ -618,7 +618,10 @@
             // a new search or filter starts again from the first page
             // (and clears the selection, so hidden jobs are never acted on)
             'filter.search'() { this.pagination.currentPage = 1; this.selected = []; },
-            'filter.state'() { this.pagination.currentPage = 1; this.selected = []; }
+            'filter.state'() { this.pagination.currentPage = 1; this.selected = []; },
+            // the selection only ever covers the rows on screen
+            'pagination.currentPage'() { this.selected = []; },
+            'pagination.parPage'() { this.selected = []; }
         },
         created() {
             this.GetTimeZones();
@@ -655,7 +658,8 @@
                         String(a.Id).localeCompare(String(b.Id), undefined, { numeric: true, sensitivity: 'base' }));
                 },
                 allSelected: function () {
-                    return this.filteredCount > 0 && this.selected.length === this.filteredCount;
+                    let items = this.getItems || [];
+                    return items.length > 0 && this.selected.length === items.length;
                 },
                 // selected jobs that Start / Stop would actually change
                 startableIds: function () {
