@@ -1,53 +1,180 @@
 ﻿using Hangfire.Annotations;
 using Hangfire.Dashboard;
-using Hangfire.JobManagement.Abstractions;
 using Hangfire.JobManagement.Configuration;
 using Hangfire.JobManagement.Core;
+using Hangfire.JobManagement.Dashboard.Pages;
+using Hangfire.JobManagement.Dashboard.Pages.Dispatchers;
 using Hangfire.JobManagement.Data;
 using Hangfire.JobManagement.Data.Repositories;
 using Hangfire.JobManagement.Data.Repositories.Interfaces;
-using Hangfire.JobManagement.Filters;
-using Hangfire.JobManagement.Pages;
-using Hangfire.JobManagement.Pages.Dispatchers;
-using Hangfire.JobManagement.Services;
-using Hangfire.JobManagement.Services.Interfaces;
-using Hangfire.JobManagement.Services.Notifications;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using OpenTelemetry.Metrics;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
 using System;
-using System.Reflection;
 
 namespace Hangfire.JobManagement;
 
-public class JobManagementFeatures
+public static class Builder
 {
-    public bool Notifications { get; set; } = false;
+    private static JobManagementBuilder Options;
 
-    public bool Settings { get; set; } = true;
-}
+    internal static IServiceCollection Services;
 
-public class JobManagementBuilder 
-{
-    public JobManagementConfiguration Settings { get; set; } = new JobManagementConfiguration();
+    internal static IConfiguration Configuration;
 
-    public JobManagementFeatures Features { get; set; } = new JobManagementFeatures();
-
-    public JobManagementBuilder(IConfiguration configuration)
+    public static TBuilder ConfigureJobManagement<TBuilder>(this TBuilder builder) where TBuilder : IHostApplicationBuilder
     {
-        // configure default services
-        this.ConfigureDefaultServices();
+        // configuration
+        JobManagementConfiguration jobManagementConfiguration = new JobManagementConfiguration();
+        builder.Configuration.GetSection(JobManagementConfiguration.Position).Bind(jobManagementConfiguration);
+        builder.Services.AddSingleton<JobManagementConfiguration>(jobManagementConfiguration);
+
+        // inject: dbcontext factory
+        builder.Services.AddScoped<JobManagementDbFactory, JobManagementDbFactory>();
+
+        // inject: factories
+        builder.Services.AddScoped<IDesignTimeDbContextFactory<JobManagementDbContext>, JobManagementDbFactory>();
+
+        // inject: repositories
+        builder.Services.AddScoped<ISettingsRepository, SettingsRepository>();
+        builder.Services.AddScoped<ISettingsQueueRepository, SettingsQueuesRepository>();
+
+        return builder;
     }
+
+    [PublicAPI]
+    public static IGlobalConfiguration UseJobManagement<TBuilder>(this IGlobalConfiguration config, TBuilder builder, Action<JobManagementBuilder> jobManagementOptions = default) where TBuilder : IHostApplicationBuilder
+    {
+        // injected
+        Services = builder.Services;
+        Configuration = builder.Configuration;
+
+        // instantiate builder 
+        Options = new JobManagementBuilder();
+
+        // customization
+        jobManagementOptions?.Invoke(Options);
+
+        // configure assemblies
+        Options.ConfigureAssemblies();
+
+        // service provider
+        var serviceProdvider = Services.BuildServiceProvider();
+
+        // get all jobs
+        PeriodicJobBuilder.GetAllJobs();
+
+        // set up hangfire integration
+        SetJobManagementHangfireIntegration();
+
+        return config;
+    }
+
+    private static void SetJobManagementHangfireIntegration() 
+    {
+        var serviceProvider = Builder.Services.BuildServiceProvider();
+
+        ISettingsRepository settingsRepository = serviceProvider.GetService<ISettingsRepository>();
+        ISettingsQueueRepository settingsQueueRepository = serviceProvider.GetService<ISettingsQueueRepository>();
+
+        // configuration
+        var jobManagementConfiguration = serviceProvider.GetService<JobManagementConfiguration>();
+
+        // logging
+        ILogger<GetJobsStoppedDispatcher> loggerGetJobsStoppedDispatcher = serviceProvider.GetService<ILogger<GetJobsStoppedDispatcher>>();
+        ILogger<GetJobDispatcher> loggerGetJobDispatcher = serviceProvider.GetService<ILogger<GetJobDispatcher>>();
+        ILogger<ChangeJobDispatcher> loggerChangeJobDispatcher = serviceProvider.GetService<ILogger<ChangeJobDispatcher>>();
+        ILogger<GetJobForEdit> loggerGetJobForEdit = serviceProvider.GetService<ILogger<GetJobForEdit>>();
+        ILogger<JobAgentDispatcher> loggerJobAgentDispatcher = serviceProvider.GetService<ILogger<JobAgentDispatcher>>();
+        ILogger<GetTimeZonesDispatcher> loggerGetTimeZonesDispatcher = serviceProvider.GetService<ILogger<GetTimeZonesDispatcher>>();
+        ILogger<GetQueuesDispatcher> loggerGetQueuesDispatcher = serviceProvider.GetService<ILogger<GetQueuesDispatcher>>();
+        ILogger<GetJobMethodsDispatchers> loggerGetJobMethodsDispatchers = serviceProvider.GetService<ILogger<GetJobMethodsDispatchers>>();
+
+        ILogger<SettingsGetDispatcher> loggerSettingsGetDispatcher = serviceProvider.GetService<ILogger<SettingsGetDispatcher>>();
+        ILogger<SettingsSaveDispatcher> loggerSettingsSaveDispatcher = serviceProvider.GetService<ILogger<SettingsSaveDispatcher>>();
+
+        ILogger<SettingsQueueGetDispatcher> loggerSettingsQueueGetDispatcher = serviceProvider.GetService<ILogger<SettingsQueueGetDispatcher>>();
+        ILogger<SettingsQueueDeleteDispatcher> loggerSettingsQueueDeleteDispatcher = serviceProvider.GetService<ILogger<SettingsQueueDeleteDispatcher>>();
+        ILogger<SettingsQueueSaveDispatcher> loggerSettingsQueueSaveDispatcher = serviceProvider.GetService<ILogger<SettingsQueueSaveDispatcher>>();
+
+        // pages
+        DashboardRoutes.Routes.AddRazorPage(Dashboard.Pages.JobManagement.PageRoute, x => new Dashboard.Pages.JobManagement());
+        DashboardRoutes.Routes.AddRazorPage(JobsStoppedPage.PageRoute, x => new JobsStoppedPage());
+        DashboardRoutes.Routes.AddRazorPage(SettingsPage.PageRoute, x => new SettingsPage());
+        //DashboardRoutes.Routes.AddRazorPage(NotificationsPage.PageRoute, x => new NotificationsPage());
+
+        // routes sidebar
+        DashboardRoutes.Routes.Add("/jobs/GetJobsStopped", new GetJobsStoppedDispatcher(loggerGetJobsStoppedDispatcher));
+
+        // routes
+        DashboardRoutes.Routes.Add("/management/data/GetJobs", new GetJobDispatcher(loggerGetJobDispatcher));
+        DashboardRoutes.Routes.Add("/management/data/UpdateJobs", new ChangeJobDispatcher(loggerChangeJobDispatcher));
+        DashboardRoutes.Routes.Add("/management/data/GetJob", new GetJobForEdit(loggerGetJobForEdit));
+        DashboardRoutes.Routes.Add("/management/data/JobAgent", new JobAgentDispatcher(loggerJobAgentDispatcher));
+        DashboardRoutes.Routes.Add("/management/data/timezones", new GetTimeZonesDispatcher(loggerGetTimeZonesDispatcher, jobManagementConfiguration));
+        DashboardRoutes.Routes.Add("/management/data/queues", new GetQueuesDispatcher(loggerGetQueuesDispatcher));
+        DashboardRoutes.Routes.Add("/management/data/jobs", new GetJobMethodsDispatchers(loggerGetJobMethodsDispatchers));
+
+        // dispatcher: settings
+        DashboardRoutes.Routes.Add("/management/settings/all", new SettingsGetDispatcher(loggerSettingsGetDispatcher, settingsRepository));
+        DashboardRoutes.Routes.Add("/management/settings/save", new SettingsSaveDispatcher(loggerSettingsSaveDispatcher, settingsRepository));
+
+        // dispatcher: queues
+        DashboardRoutes.Routes.Add("/management/settings/queues/all", new SettingsQueueGetDispatcher(loggerSettingsQueueGetDispatcher, settingsRepository, settingsQueueRepository));
+        DashboardRoutes.Routes.Add("/management/settings/queues/delete", new SettingsQueueDeleteDispatcher(loggerSettingsQueueDeleteDispatcher, settingsRepository, settingsQueueRepository));
+        DashboardRoutes.Routes.Add("/management/settings/queues/save", new SettingsQueueSaveDispatcher(loggerSettingsQueueSaveDispatcher, settingsRepository, settingsQueueRepository));
+
+        // jobs stopped
+        DashboardMetrics.AddMetric(TagDashboardMetrics.JobsStoppedCount);
+        DashboardMetrics.AddMetric(TagDashboardMetrics.JobsTotalCount);
+
+        // sidebar
+        JobsSidebarMenu.Items.Add(page => new MenuItem("Jobs Stopped", page.Url.To(JobsStoppedPage.PageRoute)) {
+            Active = page.RequestPath.StartsWith(JobsStoppedPage.PageRoute),
+            Metric = TagDashboardMetrics.JobsStoppedCount,
+        });
+
+        // navbar
+        NavigationMenu.Items.Add(page => new MenuItem(Dashboard.Pages.JobManagement.Title, page.Url.To(Dashboard.Pages.JobManagement.PageRoute)) {
+            Active = page.RequestPath.StartsWith(Dashboard.Pages.JobManagement.PageRoute),
+            Metric = TagDashboardMetrics.JobsTotalCount
+        });
+
+        // css 
+        AddDashboardRouteToEmbeddedResource("/resources/css/jobmanagement", "text/css", "Hangfire.JobManagement.Dashboard.Content.css.jobmanagement.css");
+        AddDashboardRouteToEmbeddedResource("/resources/css/cron-input-ui", "text/css", "Hangfire.JobManagement.Dashboard.Content.css.cron-input-ui.css");
+
+        // js
+        AddDashboardRouteToEmbeddedResource("/resources/js/page", "application/javascript", "Hangfire.JobManagement.Dashboard.Content.js.jobextension.js");
+        AddDashboardRouteToEmbeddedResource("/resources/js/vue", "application/javascript", "Hangfire.JobManagement.Dashboard.Content.js.vue.js");
+        AddDashboardRouteToEmbeddedResource("/resources/js/vue3", "application/javascript", "Hangfire.JobManagement.Dashboard.Content.js.vue.3.4.27.js");
+        AddDashboardRouteToEmbeddedResource("/resources/js/axio", "application/javascript", "Hangfire.JobManagement.Dashboard.Content.js.axios.min.js");
+        AddDashboardRouteToEmbeddedResource("/resources/js/daysjs", "application/javascript", "Hangfire.JobManagement.Dashboard.Content.js.daysjs.min.js");
+        AddDashboardRouteToEmbeddedResource("/resources/js/relativeTime", "application/javascript", "Hangfire.JobManagement.Dashboard.Content.js.relativeTime.min.js");
+        AddDashboardRouteToEmbeddedResource("/resources/js/vuejsPaginate", "application/javascript", "Hangfire.JobManagement.Dashboard.Content.js.vuejs-paginate.js");
+        AddDashboardRouteToEmbeddedResource("/resources/js/sweetalert", "application/javascript", "Hangfire.JobManagement.Dashboard.Content.js.sweetalert.js");
+        AddDashboardRouteToEmbeddedResource("/resources/js/cron-input-ui", "application/javascript", "Hangfire.JobManagement.Dashboard.Content.js.cron-input-ui.js");
+    }
+
+    private static void AddDashboardRouteToEmbeddedResource(string route, string contentType, string resourceName)
+       => DashboardRoutes.Routes.Add(route, new ContentDispatcher(contentType, resourceName, TimeSpan.FromDays(1)));
 }
 
 public static class JobManagementBuilderExtensions
 {
-    public static JobManagementBuilder ConfigureAssemblies(this JobManagementBuilder builder, [NotNull] params Assembly[] assemblies)
+    public static JobManagementBuilder ConfigureAssemblies(this JobManagementBuilder builder)
     {
         builder.ValidateConfiguration();
-        if (assemblies == null) throw new ArgumentNullException(nameof(assemblies));
-        StorageAssemblySingleton.GetInstance().SetCurrentAssembly(assemblies: assemblies);
+        if (builder.Assemblies == null) throw new ArgumentNullException(nameof(builder.Assemblies));
+
+        // include references: this loads all of the DLLs for searching.
+        StorageAssemblySingleton.GetInstance().SetCurrentAssembly(true, assemblies: builder.Assemblies);
+
         return builder;
     }
 
@@ -66,8 +193,6 @@ public static class JobManagementBuilderExtensions
     {
         builder.ValidateConfiguration();
 
-
-
         return builder;
     }
 
@@ -78,172 +203,19 @@ public static class JobManagementBuilderExtensions
     }
 }
 
-public static class Builder
+public static class OpenTelemetryExtensions
 {
-    private static JobManagementBuilder Options { get; set; }
-
-    internal static IServiceCollection Services;
-
-    internal static IConfiguration Configuration;
-
-    internal static IServiceProvider GetServiceProvider()
+    public static TracerProviderBuilder AddHangfireJobManagement(this TracerProviderBuilder builder)
     {
-        return Services?.BuildServiceProvider();
+        ArgumentNullException.ThrowIfNull(builder);
+        builder.AddSource(OTel.Application.Name);
+        return builder;
     }
 
-    [PublicAPI]
-    public static IGlobalConfiguration UseJobManagement(this IGlobalConfiguration config, IServiceCollection services, IConfiguration configuration, Action<JobManagementBuilder> jobManagementOptions)
+    public static MeterProviderBuilder AddHangfireJobManagement(this MeterProviderBuilder builder)
     {
-        // injected
-        Services = services;
-        Configuration = configuration;
-
-        // instantiate builder 
-        Options = new JobManagementBuilder(configuration);
-
-        // customization
-        jobManagementOptions.Invoke(Options);
-
-        // service provider
-        var serviceProvider = services.BuildServiceProvider();
-        var notificationsFactory = serviceProvider.GetRequiredService<INotificationsFactoryService>();
-
-        // filters
-        GlobalJobFilters.Filters.Add(new JobEventsFilter(notificationsFactory));
-
-        // get all jobs
-        PeriodicJobBuilder.GetAllJobs();
-
-        // set up
-        CreateJobManagement();
-
-        return config;
+        ArgumentNullException.ThrowIfNull(builder);
+        builder.AddMeter(OTel.Meters.JobManagementMeter.Name);
+        return builder;
     }
-
-    public static IServiceCollection ConfigureJobManagement(this IServiceCollection services, IConfiguration configuration)
-    {
-        // configuration
-        JobManagementConfiguration jobManagementConfiguration = new JobManagementConfiguration();
-        configuration.GetSection(JobManagementConfiguration.Position).Bind(jobManagementConfiguration);
-        services.TryAddSingleton<JobManagementConfiguration>(jobManagementConfiguration);
-
-        // inject: dbcontext factory
-        services.TryAddTransient<JobManagementDbFactory, JobManagementDbFactory>();
-
-        // inject: factories
-        services.TryAddTransient<IDesignTimeDbContextFactory<JobManagementDbContext>, JobManagementDbFactory>();
-        services.TryAddTransient<INotificationsFactoryService, NotificationsFactoryService>();
-
-        // services
-        services.TryAddTransient<IBatchService, BatchService>();
-        services.TryAddTransient<IJobHistoryService, JobHistoryService>();
-
-        services.TryAddTransient<INotificationService, NotificationDefaultEmailService>();
-        services.TryAddTransient<INotificationService, NotificationDefaultWebHookService>();
-
-        // inject: repositories
-        services.TryAddTransient<ISettingsRepository, SettingsRepository>();
-        services.TryAddTransient<ISettingsQueueRepository, SettingsQueuesRepository>();
-
-        return services;
-    }
-
-    // open telemetry
-
-    //public static IGlobalConfiguration UseJobManagement(this IGlobalConfiguration config, [NotNull] params string[] assemblies) {
-    //    if (assemblies == null) throw new ArgumentNullException(nameof(assemblies));
-
-    //    StorageAssemblySingleton.GetInstance().SetCurrentAssembly(assemblies: assemblies.Select(x => Type.GetType(x).Assembly).ToArray());
-
-    //public static IGlobalConfiguration UseJobManagement(this IGlobalConfiguration config, bool includeReferences = false, [NotNull] params string[] assemblies) {
-
-    ///// <param name="includeReferences">If is true it will load all dlls references of the current project to find all jobs.</param>
-    ///// <param name="assembliess"></param>
-    //[PublicAPI]
-    //public static IGlobalConfiguration UseJobManagement(this IGlobalConfiguration config, bool includeReferences = false, [NotNull] params Assembly[] assemblies) {
-    //    if (assemblies == null) throw new ArgumentNullException(nameof(assemblies));
-
-    //    StorageAssemblySingleton.GetInstance().SetCurrentAssembly(includeReferences, assemblies);
-
-    private static void CreateJobManagement() {
-        // di
-        var serviceProvider = Builder.Services.BuildServiceProvider();
-
-        ISettingsRepository settingsRepository = serviceProvider.GetService<ISettingsRepository>();
-        ISettingsQueueRepository settingsQueueRepository = serviceProvider.GetService<ISettingsQueueRepository>();
-
-        // pages
-        DashboardRoutes.Routes.AddRazorPage(Pages.JobManagement.PageRoute, x => new Pages.JobManagement());
-        DashboardRoutes.Routes.AddRazorPage(JobsStoppedPage.PageRoute, x => new JobsStoppedPage());
-        //DashboardRoutes.Routes.AddRazorPage(SettingsPage.PageRoute, x => new SettingsPage());
-        //DashboardRoutes.Routes.AddRazorPage(NotificationsPage.PageRoute, x => new NotificationsPage());
-
-        // routes sidebar
-        DashboardRoutes.Routes.Add("/jobs/GetJobsStopped", new GetJobsStoppedDispatcher());
-
-        // routes
-        DashboardRoutes.Routes.Add("/management/data/GetJobs", new GetJobDispatcher());
-        DashboardRoutes.Routes.Add("/management/data/UpdateJobs", new ChangeJobDispatcher());
-        DashboardRoutes.Routes.Add("/management/data/GetJob", new GetJobForEdit());
-        DashboardRoutes.Routes.Add("/management/data/JobAgent", new JobAgentDispatcher());
-        DashboardRoutes.Routes.Add("/management/data/timezones", new GetTimeZonesDispatcher());
-
-        // dispatcher: settings
-        DashboardRoutes.Routes.Add("/management/settings/all", new SettingsGetDispatcher(settingsRepository));
-        DashboardRoutes.Routes.Add("/management/settings/save", new SettingsSaveDispatcher(settingsRepository)); //serviceProvider.GetService<ILogger<SettingsSaveDispatcher>>()
-
-        // dispatcher: queues
-        DashboardRoutes.Routes.Add("/management/settings/queues/all", new SettingsQueueGetDispatcher(settingsRepository, settingsQueueRepository));
-        DashboardRoutes.Routes.Add("/management/settings/queues/delete", new SettingsQueueDeleteDispatcher(settingsRepository, settingsQueueRepository));
-        DashboardRoutes.Routes.Add("/management/settings/queues/save", new SettingsQueueSaveDispatcher(settingsRepository, settingsQueueRepository));
-
-        // jobs stopped
-        DashboardMetrics.AddMetric(TagDashboardMetrics.JobsStoppedCount);
-
-        // sidebar
-        JobsSidebarMenu.Items.Add(page => new MenuItem("Jobs Stopped", page.Url.To(JobsStoppedPage.PageRoute)) {
-            Active = page.RequestPath.StartsWith(JobsStoppedPage.PageRoute),
-            Metric = TagDashboardMetrics.JobsStoppedCount,
-        });
-
-        // navbar
-        NavigationMenu.Items.Add(page => new MenuItem(Pages.JobManagement.Title, page.Url.To(Pages.JobManagement.PageRoute)) {
-            Active = page.RequestPath.StartsWith(Pages.JobManagement.PageRoute),
-            Metric = DashboardMetrics.RecurringJobCount
-        });
-
-        //// notifications
-        //if (Builder.Options.Features.Notifications) 
-        //{
-        //    NavigationMenu.Items.Add(page => new MenuItem(NotificationsPage.Title, page.Url.To(NotificationsPage.PageRoute)) {
-        //        Active = page.RequestPath.StartsWith(NotificationsPage.PageRoute)
-        //    });
-        //}
-
-        //// settings
-        //if (Builder.Options.Features.Settings)
-        //{
-        //    NavigationMenu.Items.Add(page => new MenuItem(SettingsPage.Title, page.Url.To(SettingsPage.PageRoute)) {
-        //        Active = page.RequestPath.StartsWith(SettingsPage.PageRoute)
-        //    });
-        //}
-
-        // css 
-        AddDashboardRouteToEmbeddedResource("/resources/css/jobExtension", "text/css", "Hangfire.JobManagement.Dashboard.Content.css.JobExtension.css");
-        AddDashboardRouteToEmbeddedResource("/resources/css/cron-expression-input", "text/css", "Hangfire.JobManagement.Dashboard.Content.css.cron-expression-input.css");
-
-        // js
-        AddDashboardRouteToEmbeddedResource("/resources/js/page", "application/javascript", "Hangfire.JobManagement.Dashboard.Content.js.jobextension.js");
-        AddDashboardRouteToEmbeddedResource("/resources/js/vue", "application/javascript", "Hangfire.JobManagement.Dashboard.Content.js.vue.js");
-        AddDashboardRouteToEmbeddedResource("/resources/js/vue3", "application/javascript", "Hangfire.JobManagement.Dashboard.Content.js.vue.3.4.27.js");
-        AddDashboardRouteToEmbeddedResource("/resources/js/axio", "application/javascript", "Hangfire.JobManagement.Dashboard.Content.js.axios.min.js");
-        AddDashboardRouteToEmbeddedResource("/resources/js/daysjs", "application/javascript", "Hangfire.JobManagement.Dashboard.Content.js.daysjs.min.js");
-        AddDashboardRouteToEmbeddedResource("/resources/js/relativeTime", "application/javascript", "Hangfire.JobManagement.Dashboard.Content.js.relativeTime.min.js");
-        AddDashboardRouteToEmbeddedResource("/resources/js/vuejsPaginate", "application/javascript", "Hangfire.JobManagement.Dashboard.Content.js.vuejs-paginate.js");
-        AddDashboardRouteToEmbeddedResource("/resources/js/sweetalert", "application/javascript", "Hangfire.JobManagement.Dashboard.Content.js.sweetalert.js");
-        AddDashboardRouteToEmbeddedResource("/resources/js/cron-expression-input", "application/javascript", "Hangfire.JobManagement.Dashboard.Content.js.cron-expression-input.js");
-    }
-
-    private static void AddDashboardRouteToEmbeddedResource(string route, string contentType, string resourceName)
-       => DashboardRoutes.Routes.Add(route, new ContentDispatcher(contentType, resourceName, TimeSpan.FromDays(1)));
 }

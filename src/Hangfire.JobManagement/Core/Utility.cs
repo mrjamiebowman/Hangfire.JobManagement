@@ -24,16 +24,6 @@ internal static class Utility
         }
     }
 
-    public static string MD5(string str) {
-        byte[] b = Encoding.UTF8.GetBytes(str);
-        b = new MD5CryptoServiceProvider().ComputeHash(b);
-        string ret = string.Empty;
-        for (int i = 0; i < b.Length; i++) {
-            ret += b[i].ToString("x").PadLeft(2, '0');
-        }
-        return ret;
-    }
-
     /// <summary>
     /// 
     /// </summary>
@@ -52,7 +42,21 @@ internal static class Utility
 
     public static string FormatKey(string serverId) => "utilization:" + serverId;
 
-    public static DateTime ChangeTimeZone(this DateTime dateTime, string timeZoneId) => TimeZoneInfo.ConvertTimeBySystemTimeZoneId(dateTime, timeZoneId);
+    /// <summary>
+    /// Converts to the given time zone. A missing or unknown time zone id leaves the value unchanged,
+    /// so one badly configured job cannot break a whole listing.
+    /// </summary>
+    public static DateTime ChangeTimeZone(this DateTime dateTime, string timeZoneId) {
+        if (string.IsNullOrWhiteSpace(timeZoneId)) return dateTime;
+
+        try {
+            return TimeZoneInfo.ConvertTimeBySystemTimeZoneId(dateTime, timeZoneId);
+        } catch (TimeZoneNotFoundException) {
+            return dateTime;
+        } catch (InvalidTimeZoneException) {
+            return dateTime;
+        }
+    }
 
     public static IEnumerable<Tuple<string, string>> GetTimeZones() {
 #if _WINDOWS 

@@ -1,12 +1,12 @@
-# mrjamiebowman.Hangfire.JobManagement (.NET 10)
+# Hangfire.JobManagement (.NET 10)
+
 [![NuGet](https://img.shields.io/nuget/v/MyNugetPackage.svg)](https://github.com/mrjamiebowman/Hangfire.JobManagement/)
 [![Build status](https://ci.appveyor.com/api/projects/status/u2xrias2vk727beg/branch/master?svg=true)](https://ci.appveyor.com/project/mrjamiebowman/hangfire-jobmanagement/branch/main)
 [![Build Status](https://github.com/mrjamiebowman/Hangfire.JobManagement/actions/workflows/dotnet.yml/badge.svg)](https://github.com/mrjamiebowman/Hangfire.JobManagement/actions)
 [![Official Site](https://img.shields.io/badge/site-hangfire.io-blue.svg)](http://hangfire.io)
 [![License MIT](https://img.shields.io/badge/license-MIT-green.svg)](http://opensource.org/licenses/MIT)
 
-*NOTE:* This is a fork that's going a different direction. I appologize but I'm having to learn how to publish and manage
-        public nuget packages. 09/18/2025 - @mrjamiebowman
+*NOTE:* This is a fork
 
 A robust extension to .NET Hangfire that adds a Job Management Dashboard, Notifications, and Settings. 
 
@@ -19,6 +19,10 @@ A robust extension to .NET Hangfire that adds a Job Management Dashboard, Notifi
 * Batch Jobs
 * Job History
 * Settings
+
+#### Requirements
+* MSSQL Server
+* .NET 10
 
 #### Dockerized & Ready for Kubernetes (Helm Charts)
 // TODO: Share GitHub Sample.
@@ -114,3 +118,9 @@ This project was inspired by other Hangfire projects and forked from Brayan Mota
 ## License
 This project is under MIT license. You can obtain the license copy [here](https://github.com/mrjamiebowman/mrjamiebowman.Hangfire.RecurringJobAdmin/blob/master/LICENSE).
 
+
+## BUG FIXES
+
+### 5/16/2026
+* [Assembly exclusion list.](https://github.com/mrjamiebowman/Hangfire.JobManagement/commit/d990edfbab9aab66ce7a9536de2ef2f3d075065a)   
+* [Default to loading all assemblies](https://github.com/mrjamiebowman/Hangfire.JobManagement/commit/c83251bfa4f276921fbbf74fd86fb9328e20a9bb)

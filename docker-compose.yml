@@ -1,0 +1,25 @@
+name: hangfire-jobmanagement
+
+services:
+
+  # mssql
+  mssql:
+    container_name: mssql
+    hostname: mssql
+    build: 
+        context: ./.docker/mssql/
+        dockerfile: Dockerfile
+    env_file:
+      - .env
+    ports:
+      - 1433:1433
+    restart: always
+    environment:
+      ACCEPT_EULA: 'Y'
+      SA_PASSWORD: '5yyEj47ZlXITk39o9#r'
+      MSSQL_AGENT_ENABLED: 'True'
+    volumes:
+      - mssql-data:/var/opt/mssql
+
+volumes:
+  mssql-data:

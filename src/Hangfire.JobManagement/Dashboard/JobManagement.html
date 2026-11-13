@@ -33,36 +33,62 @@
     <modal v-if="showModal" @close="CloseModal">
         <template #body>
             <form slot="body" id="formJob">
-                <div class="form-group">
-                    <label for="jobId">Job Id</label>
-                    <input type="text" class="form-control" v-model="job.Id" id="jobId" name="jobId" aria-describedby="emailHelp" placeholder="Enter Job Id">
-                </div>
-                <div class="form-group">
-                    <label for="cron">Cron</label>
-                    <cron-expression-input :value="job.Cron" v-on:input="job.Cron = $event.detail.value" color="d58512" />
-                </div>
-
-                <div class="form-group">
-                    <label for="cron">Time Zone</label>
-                    <select id="timezoneid" class="form-control" v-model="job.TimeZoneId" name="cron" placeholder="Enter the Time Zone">
-                        <option v-for="(item, index) in timeZones" :key="index" :value="item.Item1">{{item.Item2}}</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="class">Class</label>
-                    <input type="text" class="form-control" v-model="job.Class" name="class" aria-describedby="class" id="class" placeholder="Enter Class Name">
-                    <small id="class" class="form-text text-muted">Please provider path complete about your class example: Hangfire.RecurringJob.MyClass</small>
+                <div class="row">
+                    <div class="col-sm-12 col-md-6">
+                        <div class="form-group">
+                            <label for="jobId">Job Id</label>
+                            <input type="text" class="form-control" v-model="job.Id" id="jobId" name="jobId" aria-describedby="emailHelp" placeholder="Enter Job Id" :readonly="title === 'Edit Job'">
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md-6">
+                        <div class="form-group">
+                            <label for="cron">Cron</label>
+                            <cron-input-ui :value="job.Cron" v-on:input="job.Cron = $event.detail.value"
+                                color='d58512'
+                                value={this.job.cron}
+                                required
+                                hotValidate />
+                        </div>
+                    </div>
                 </div>
 
-                <div class="form-group">
-                    <label for="method">Method</label>
-                    <input type="text" class="form-control" v-model="job.Method" id="method" name="method" placeholder="Enter Method Name">
+                <div class="row">
+                    <div class="col-sm-12 col-md-6">
+                        <div class="form-group">
+                            <label for="cron">Time Zone</label>
+                            <select id="timezoneid" class="form-control" v-model="job.TimeZoneId" name="cron" placeholder="Enter the Time Zone">
+                                <option v-for="(item, index) in timeZones" :key="index" :value="item.Item1">{{item.Item2}}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md-6">
+                        <div class="form-group">
+                            <label for="queue">Queue</label>
+                            <input type="text" class="form-control" v-model="job.Queue" name="queue" id="queue" placeholder="Enter Queue Name">
+                        </div>
+                    </div>
                 </div>
 
-                <div class="form-group">
-                    <label for="queue">Queue</label>
-                    <input type="text" class="form-control" v-model="job.Queue" name="queue" id="queue" placeholder="Enter Queue Name">
+                <hr />
+
+                <div class="row">
+                    <div class="col-sm-12 col-md-6">
+                        <div class="form-group">
+                            <label for="class">Class</label>
+                            <input type="text" class="form-control" v-model="job.Class" name="class" aria-describedby="class" id="class" placeholder="Enter Class Name" style="margin-bottom: 6px;">
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md-6">
+                        <div class="form-group">
+                            <label for="method">Method</label>
+                            <input type="text" class="form-control" v-model="job.Method" id="method" name="method" placeholder="Enter Method Name">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <small id="class" class="form-text text-muted">Please provider path complete about your class example: Hangfire.RecurringJob.MyClass</small>
+                    </div>
                 </div>
 
                 <div class="form-group">
@@ -90,79 +116,175 @@
     <div class="row">
         <div class="col-md-12">
             <h1 class="page-header">Job Management <span class="badge badge-warning">{{jobsCount}}</span></h1>
-            <button type="button" class="btn btn-primary" style="margin-bottom: 20px;" @click="OpenModal">Add new Job</button>
+
+            <div class="btn-toolbar btn-toolbar-top" style="margin-bottom: 20px; display: flex; align-items: center; flex-wrap: wrap; gap: 10px;">
+                <!-- left: add + state filter -->
+                <div style="flex: 1 1 0; display: flex; align-items: center; gap: 10px;">
+                    <button class="js-jobs-list-command btn btn-sm btn-primary" @click="OpenModal">
+                        <span class="glyphicon glyphicon-plus"></span>
+                        Add new Job
+                    </button>
+
+                    <!-- bulk actions on the selected jobs -->
+                    <template v-if="jobsCount > 0">
+                        <button type="button" class="btn btn-sm btn-default" :disabled="bulkBusy || startableIds.length === 0"
+                                aria-label="Start the selected stopped jobs" @click="bulkAction('Start')">
+                            <span class="glyphicon glyphicon-play"></span>
+                            Start<span v-if="startableIds.length > 0"> ({{startableIds.length.toLocaleString('en-US')}})</span>
+                        </button>
+                        <button type="button" class="btn btn-sm btn-default" :disabled="bulkBusy || stoppableIds.length === 0"
+                                aria-label="Stop the selected running jobs" @click="bulkAction('Stop')">
+                            <span class="glyphicon glyphicon-stop"></span>
+                            Stop<span v-if="stoppableIds.length > 0"> ({{stoppableIds.length.toLocaleString('en-US')}})</span>
+                        </button>
+                    </template>
+                </div>
+
+                <!-- center: text search + state filter -->
+                <div v-if="jobsCount > 0" style="display: flex; align-items: center; gap: 10px;">
+                    <div class="input-group input-group-sm" style="width: 320px;">
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-search"></span></span>
+                        <input type="text" class="form-control" v-model.trim="filter.search"
+                               placeholder="Search by id, class, method, queue or cron" aria-label="Search jobs"
+                               @keyup.esc="filter.search = ''">
+                        <span class="input-group-btn" v-if="filter.search">
+                            <button type="button" class="btn btn-default" aria-label="Clear search"
+                                    @click="filter.search = ''">
+                                <span class="glyphicon glyphicon-remove"></span>
+                            </button>
+                        </span>
+                    </div>
+
+                    <div class="btn-group" style="white-space: nowrap; display: flex;">
+                        <a v-for="state in filter.states" :key="state" href="#" class="btn btn-sm btn-default"
+                           :class="{ active: state === filter.state }" @click.prevent="filter.state = state">
+                            {{state}}
+                        </a>
+                    </div>
+                </div>
+
+                <!-- right: items per page -->
+                <div style="flex: 1 1 0; display: flex; align-items: center; justify-content: flex-end; gap: 10px;">
+                    <template v-if="jobsCount > 0">
+                        <div class="btn-toolbar-label btn-toolbar-label-sm" style="white-space: nowrap;">Items per page:</div>
+                        <div class="btn-group paginator" style="white-space: nowrap; display: flex;">
+                            <a v-for="count in pagination.perPageOptions" :key="count" href="#" class="btn btn-sm btn-default"
+                               :class="{ active: count === pagination.parPage }" @click.prevent="setPerPage(count)">
+                                {{count.toLocaleString('en-US')}}
+                            </a>
+                        </div>
+                        <div class="btn-group paginator" style="white-space: nowrap; display: flex;">
+                            <a href="#" class="btn btn-sm btn-default" :class="{ disabled: perPageIndex <= 0 }"
+                               @click.prevent="stepPerPage(-1)">
+                                Prev
+                            </a>
+                            <a href="#" class="btn btn-sm btn-default" :class="{ disabled: perPageIndex >= pagination.perPageOptions.length - 1 }"
+                               @click.prevent="stepPerPage(1)">
+                                Next
+                            </a>
+                        </div>
+                    </template>
+                </div>
+            </div>
+
             <div class="table-responsive">
-                <table class="table">
+                <table class="table table-hover">
                     <thead>
-                    <tr>
-                        <th>Id</th>
-                        <th>Cron</th>
-                        <th>Queue</th>
-                        <th>State</th>
-                        <th>Class</th>
-                        <th>Method</th>
-                        <th>TimeZone</th>
-                        <th class="align-right">Last Execution</th>
-                        <th class="align-right">Next Execution</th>
-                        <th class="align-right">Options</th>
-                    </tr>
+                        <tr>
+                            <th class="min-width" style="cursor: pointer;" @click="toggleSelectAll">
+                                <input type="checkbox" aria-label="Select all jobs" :checked="allSelected"
+                                       :indeterminate="selected.length > 0 && !allSelected"
+                                       @click.stop @change="toggleSelectAll">
+                            </th>
+                            <th v-for="column in sort.columns" :key="column.key" :class="{ 'align-right': column.right }"
+                                style="cursor: pointer; white-space: nowrap; user-select: none;"
+                                :aria-sort="sort.key === column.key ? (sort.direction === 1 ? 'ascending' : 'descending') : 'none'"
+                                @click="sortBy(column.key)">
+                                {{column.label}}
+                                <span :style="{ visibility: sort.key === column.key ? 'visible' : 'hidden' }">{{sort.direction === 1 ? '&#9650;' : '&#9660;'}}</span>
+                            </th>
+                            <th class="align-right">Options</th>
+                        </tr>
                     </thead>
                     <tbody>
-                    <tr v-for="job in jobs">
-                        <td>{{job.Id}}</td>
-                        <td>{{job.Cron}}</td>
-                        <td>{{job.Queue}}</td>
-                        <td>
-                            <span v-if="job.JobState == 'Running'" class="label label-success">{{job.JobState}}</span>
-                            <span v-if="job.JobState == 'Stopped'" class="label label-danger">{{job.JobState}}</span>
-                        </td>
-                        <td>{{job.Class}}</td>
-                        <td>{{job.Method}}</td>
-                        <td>{{job.TimeZoneId}}</td>
-                        <td class="min-width align-right">
-                            <button type="button" class="btn btn-primary">
-                                {{getTime(job.LastExecution)}}&nbsp;&nbsp;
-                                <span class="badge" style="width: 124px;">{{getLastExecution(job.LastExecution)}}</span>
-                            </button>
-                        </td>
-                        <td class="min-width align-right">
-                            <button type="button" class="btn btn-primary">
-                                {{getTime(job.NextExecution)}}&nbsp;&nbsp;
-                                <span class="badge" style="width: 124px;">{{getNextExecution(job.NextExecution)}}</span>
-                            </button>
-                        </td>
-                        <td class="min-width align-right">
-                            <button type="button" class="btn btn-warning" style="padding-top: 10px; margin-right: 5px;">
-                                <svg width="18px" height="18px" viewBox="0 0 16 16" class="bi bi-pencil-square" fill="currentColor" @click="GetJob(job.Id)">
-                                    <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456l-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
-                                    <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z" />
-                                </svg>
-                            </button>
-                            <button v-if="job.JobState == 'Stopped'" type="button" class="btn btn-success" style="padding: 4px 10px;">
-                                <svg width="24px" height="25px" viewBox="-1 -1.5 16 16" class="bi bi-play" fill="currentColor" @click="StartJob(job.Id)">
-                                    <path fill-rule="evenodd" d="M10.804 8L5 4.633v6.734L10.804 8zm.792-.696a.802.802 0 0 1 0 1.392l-6.363 3.692C4.713 12.69 4 12.345 4 11.692V4.308c0-.653.713-.998 1.233-.696l6.363 3.692z" />
-                                </svg>
-                            </button>
-                            <button v-if="job.JobState == 'Running'" type="button" class="btn btn-danger" style="padding: 4px 10px;">
-                                <svg width="24px" height="25px" viewBox="-0.5 -1.5 16 16" class="bi bi-stop" fill="currentColor" @click="StopJob(job.Id)">
-                                    <path fill-rule="evenodd" d="M3.5 5A1.5 1.5 0 0 1 5 3.5h6A1.5 1.5 0 0 1 12.5 5v6a1.5 1.5 0 0 1-1.5 1.5H5A1.5 1.5 0 0 1 3.5 11V5zM5 4.5a.5.5 0 0 0-.5.5v6a.5.5 0 0 0 .5.5h6a.5.5 0 0 0 .5-.5V5a.5.5 0 0 0-.5-.5H5z" />
-                                </svg>
-                            </button>
-                        </td>
-                    </tr>
+                        <tr v-if="jobsCount > 0 && filteredCount === 0">
+                            <td colspan="11" class="text-muted" style="text-align: center;"><em>No jobs match the current search or filter.</em></td>
+                        </tr>
+                        <tr v-for="job in getItems" :key="job.Id" :class="{ highlight: selected.includes(job.Id) }"
+                            style="cursor: pointer;" @click="toggleRow(job.Id, $event)">
+                            <td class="min-width">
+                                <input type="checkbox" :aria-label="'Select job ' + job.Id" :value="job.Id" v-model="selected">
+                            </td>
+                            <td>{{job.Id}}</td>
+                            <td>{{job.Cron}}</td>
+                            <td>{{job.Queue}}</td>
+                            <td>
+                                <span v-if="job.JobState == 'Running'" class="label label-success">{{job.JobState}}</span>
+                                <span v-if="job.JobState == 'Stopped'" class="label label-danger">{{job.JobState}}</span>
+                            </td>
+                            <td>{{job.Class}}</td>
+                            <td>{{job.Method}}</td>
+                            <td>{{job.TimeZoneId}}</td>
+                            <td class="min-width align-right" :style="hasDate(job.LastExecution) ? null : { textAlign: 'center' }">
+                                <button v-if="hasDate(job.LastExecution)" type="button" class="btn btn-primary">
+                                    {{getTime(job.LastExecution)}}&nbsp;&nbsp;
+                                    <span class="badge" style="width: 124px;">{{getLastExecution(job.LastExecution)}}</span>
+                                </button>
+                                <em v-else class="text-muted">No prior runs</em>
+                            </td>
+                            <td class="min-width align-right" :style="hasDate(job.NextExecution) ? null : { textAlign: 'center' }">
+                                <button v-if="hasDate(job.NextExecution)" type="button" class="btn btn-primary">
+                                    {{getTime(job.NextExecution)}}&nbsp;&nbsp;
+                                    <span class="badge" style="width: 124px;">{{getNextExecution(job.NextExecution)}}</span>
+                                </button>
+                                <em v-else class="text-muted">Not scheduled</em>
+                            </td>
+                            <td class="min-width align-right">
+                                <button type="button" class="btn btn-warning" style="padding-top: 10px; margin-right: 5px;" @click="GetJob(job.Id)">
+                                    <svg width="18px" height="18px" viewBox="0 0 16 16" class="bi bi-pencil-square" fill="currentColor">
+                                        <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456l-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
+                                        <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z" />
+                                    </svg>
+                                </button>
+                                <button v-if="job.JobState == 'Stopped'" type="button" class="btn btn-success" style="padding: 4px 10px;" @click="StartJob(job.Id)">
+                                    <svg width="24px" height="25px" viewBox="-1 -1.5 16 16" class="bi bi-play" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M10.804 8L5 4.633v6.734L10.804 8zm.792-.696a.802.802 0 0 1 0 1.392l-6.363 3.692C4.713 12.69 4 12.345 4 11.692V4.308c0-.653.713-.998 1.233-.696l6.363 3.692z" />
+                                    </svg>
+                                </button>
+                                <button v-if="job.JobState == 'Running'" type="button" class="btn btn-danger" style="padding: 4px 10px;" @click="StopJob(job.Id)">
+                                    <svg width="24px" height="25px" viewBox="-0.5 -1.5 16 16" class="bi bi-stop" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M3.5 5A1.5 1.5 0 0 1 5 3.5h6A1.5 1.5 0 0 1 12.5 5v6a1.5 1.5 0 0 1-1.5 1.5H5A1.5 1.5 0 0 1 3.5 11V5zM5 4.5a.5.5 0 0 0-.5.5v6a.5.5 0 0 0 .5.5h6a.5.5 0 0 0 .5-.5V5a.5.5 0 0 0-.5-.5H5z" />
+                                    </svg>
+                                </button>
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
 
-                <div style="float: right;">
-                    <paginate :page-count="getPageCount"
-                              :page-range="3"
-                              :margin-pages="2"
-                              :click-handler="clickCallbackPagination"
-                              :prev-text="'＜'"
-                              :next-text="'＞'"
-                              :container-class="'pagination'"
-                              :page-class="'page-item'">
-                    </paginate>
+                <div class="btn-toolbar" v-if="jobsCount > 0">
+                    <div class="btn-group paginator" v-if="getPageCount > 1">
+                        <a href="#" class="btn btn-default" :class="{ disabled: pagination.currentPage <= 1 }"
+                           @click.prevent="clickCallbackPagination(pagination.currentPage - 1)">
+                            Prev
+                        </a>
+                        <template v-for="(page, index) in getPages" :key="index">
+                            <a v-if="page === null" href="#" class="btn btn-default disabled" @click.prevent>
+                                &hellip;
+                            </a>
+                            <a v-else href="#" class="btn btn-default" :class="{ active: page === pagination.currentPage }"
+                               @click.prevent="clickCallbackPagination(page)">
+                                {{page}}
+                            </a>
+                        </template>
+                        <a href="#" class="btn btn-default" :class="{ disabled: pagination.currentPage >= getPageCount }"
+                           @click.prevent="clickCallbackPagination(pagination.currentPage + 1)">
+                            Next
+                        </a>
+                    </div>
+                    <div class="btn-toolbar-spacer" v-if="getPageCount > 1"></div>
+                    <div class="btn-toolbar-label">
+                        Total items: {{filteredCount.toLocaleString('en-US')}}
+                    </div>
                 </div>
             </div>
         </div>
@@ -183,7 +305,10 @@
                 jobs: null,
                 showModal: false,
                 errors: [],
+                assemblies: [],
+                methods: [],
                 timeZones: [],
+                queues: [],
                 job: {
                     Id: '',
                     Cron: '',
@@ -193,8 +318,31 @@
                     Method: '',
                     JobState: ''
                 },
+                selected: [],
+                bulkBusy: false,
+                sort: {
+                    key: 'Id',
+                    direction: 1, // 1 = ascending, -1 = descending
+                    columns: [
+                        { key: 'Id', label: 'Id' },
+                        { key: 'Cron', label: 'Cron' },
+                        { key: 'Queue', label: 'Queue' },
+                        { key: 'JobState', label: 'State' },
+                        { key: 'Class', label: 'Class' },
+                        { key: 'Method', label: 'Method' },
+                        { key: 'TimeZoneId', label: 'Time Zone' },
+                        { key: 'LastExecution', label: 'Last Execution', right: true, date: true },
+                        { key: 'NextExecution', label: 'Next Execution', right: true, date: true }
+                    ]
+                },
+                filter: {
+                    search: '',
+                    state: 'All',
+                    states: ['All', 'Running', 'Stopped']
+                },
                 pagination: {
-                    parPage: 10,
+                    parPage: 20,
+                    perPageOptions: [10, 20, 50, 100, 500, 1000, 5000],
                     currentPage: 1
                 }
             }
@@ -205,11 +353,85 @@
             },
             GetJobs() {
                 axios.get('data/GetJobs')
-                     .then(res => (this.jobs = res.data))
+                    .then(res => {
+                        this.jobs = res.data;
+                        // drop selections for jobs that no longer exist
+                        let ids = new Set(this.jobs.map(job => job.Id));
+                        this.selected = this.selected.filter(id => ids.has(id));
+                    })
+            },
+            // sort by a column; clicking the current sort column flips its direction
+            sortBy(key) {
+                if (this.sort.key === key) {
+                    this.sort.direction = -this.sort.direction;
+                } else {
+                    this.sort.key = key;
+                    this.sort.direction = 1;
+                }
+                // the rows on screen change, so start from page 1 with nothing selected
+                this.pagination.currentPage = 1;
+                this.selected = [];
+            },
+            // select every job on the page currently displayed, or clear if they already are
+            toggleSelectAll() {
+                this.selected = this.allSelected ? [] : this.getItems.map(job => job.Id);
+            },
+            // clicking anywhere on a row toggles its checkbox, except on the row's own controls
+            toggleRow(id, event) {
+                if (event.target.closest('button, a, input')) return;
+                let index = this.selected.indexOf(id);
+                if (index === -1) this.selected.push(id);
+                else this.selected.splice(index, 1);
+            },
+            // start or stop the selected jobs, one request at a time
+            async bulkAction(action) {
+                let ids = action === 'Start' ? this.startableIds : this.stoppableIds;
+                if (ids.length === 0 || this.bulkBusy) return;
+
+                let confirmed = await Swal.fire({
+                    title: action + ' ' + ids.length.toLocaleString('en-US') + (ids.length === 1 ? ' job?' : ' jobs?'),
+                    showCancelButton: true,
+                    confirmButtonText: action
+                });
+                if (!confirmed.value) return;
+
+                this.bulkBusy = true;
+                let failures = [];
+                for (const id of ids) {
+                    try {
+                        let response = await axios.get('data/JobAgent?Id=' + encodeURIComponent(id) + '&Action=' + action);
+                        if (!response.data.Status) failures.push(id + ': ' + response.data.Message);
+                    } catch (e) {
+                        console.log(e);
+                        failures.push(id + ': ' + e.message);
+                    }
+                }
+                this.bulkBusy = false;
+                this.selected = [];
+                this.GetJobs();
+
+                if (failures.length > 0) {
+                    Swal.fire({
+                        title: 'Error!',
+                        text: failures.length + ' of ' + ids.length + ' jobs failed to ' + action.toLowerCase() + '. '
+                            + failures.slice(0, 5).join('; ') + (failures.length > 5 ? '; ...' : ''),
+                        type: 'error',
+                        confirmButtonText: 'Okay'
+                    });
+                }
             },
             GetJob(_Id) {
                 this.title = 'Edit Job';
-                axios.get('data/GetJob?Id=' + _Id).then(response => {
+                axios.get('data/GetJob?Id=' + encodeURIComponent(_Id)).then(response => {
+                    if (response.data != null && !response.data.Object) {
+                        Swal.fire({
+                            title: 'Error!',
+                            text: response.data.Message || 'Job not found',
+                            type: 'error',
+                            confirmButtonText: 'Okay'
+                        });
+                        return;
+                    }
                     if (response.data != null) {
                         this.showModal = true;
                         this.job.Id = response.data.Object.Id;
@@ -224,7 +446,7 @@
                 });
             },
             StartJob(_jobId) {
-                axios.get('data/JobAgent?Id=' + _jobId + "&Action=Start").then(response => {
+                axios.get('data/JobAgent?Id=' + encodeURIComponent(_jobId) + "&Action=Start").then(response => {
                     if (!response.data.Status) {
                         this.showModal = false;
 
@@ -245,7 +467,7 @@
                 });
             },
             StopJob(_jobId) {
-                axios.get('data/JobAgent?Id=' + _jobId + "&Action=Stop").then(response => {
+                axios.get('data/JobAgent?Id=' + encodeURIComponent(_jobId) + "&Action=Stop").then(response => {
                     if (!response.data.Status) {
                         this.showModal = false;
 
@@ -272,7 +494,7 @@
 
                 // hangfire: csrf token 
                 var csrfHeader = $('meta[name="csrf-header"]').attr('content');
-                var csrfToken  = $('meta[name="csrf-token"]').attr('content');
+                var csrfToken = $('meta[name="csrf-token"]').attr('content');
 
                 var headers = {};
                 headers[csrfHeader] = csrfToken;
@@ -302,7 +524,7 @@
 
                     for (var key in job) {
                         if (job.hasOwnProperty(key)) {
-                            arr.push(key + '=' + job[key]);
+                            arr.push(encodeURIComponent(key) + '=' + encodeURIComponent(job[key] ?? ''));
                         }
                     };
 
@@ -329,9 +551,25 @@
                     });
                 }
             },
-            getTimeZones() {
+            GetJobsMethods() {
+                axios.get('data/jobs').then(response => {
+                    this.assemblies = response.data.assemblies;
+                    this.methods = response.data.methods;
+                }).catch(e => {
+                    console.log(e);
+                });
+            },
+            GetJobQueues() {
+                axios.get('data/queues').then(response => {
+                    this.queues = response.data;
+                }).catch(e => {
+                    console.log(e);
+                });
+            },
+            GetTimeZones() {
                 axios.get('data/timezones').then(response => {
-                    this.timeZones = response.data;
+                    this.timeZones = response.data.timeZones;
+                    this.defaultTimeZone = response.data.defaultTimeZone;
                 }).catch(e => {
                     console.log(e);
                 });
@@ -349,6 +587,10 @@
             },
             OpenModal() {
                 this.title = 'Add New Job';
+                if (!this.job.TimeZoneId) {
+                    this.job.TimeZoneId = this.defaultTimeZone;
+                }
+
                 this.showModal = true;
             },
             checkForm: function (e) {
@@ -377,47 +619,146 @@
             capitalizeString(s) {
                 return s.charAt(0).toUpperCase() + s.slice(1);
             },
+            // the server sends "N/A" (or nothing) when a job has no last/next execution
+            hasDate(date) {
+                return !!date && date != "N/A" && dayjs(date).isValid();
+            },
             getTime(date) {
-                if (date == "N/A") {
+                if (!this.hasDate(date)) {
                     return "N/A";
                 }
-                var data = dayjs(date).format('hh:mm:ss A');
-                return data;
+                return dayjs(date).format('hh:mm:ss A');
             },
             getLastExecution(lastExecution) {
-                if (lastExecution == "N/A") {
-                    return "";
+                if (!this.hasDate(lastExecution)) {
+                    return "Never";
                 }
-                let str = this.capitalizeString(dayjs().from(dayjs(lastExecution)));
-                return str;
+                return this.capitalizeString(dayjs(lastExecution).fromNow());
             },
             getNextExecution(nextExecution) {
-                return this.capitalizeString(dayjs().to(dayjs(nextExecution)));
+                if (!this.hasDate(nextExecution)) {
+                    return "Not scheduled";
+                }
+                return this.capitalizeString(dayjs(nextExecution).fromNow());
             },
             clickCallbackPagination(pageNum) {
-                this.pagination.currentPage = Number(pageNum);
+                let page = Number(pageNum);
+                if (page < 1 || page > this.getPageCount) return;
+                this.pagination.currentPage = page;
+            },
+            setPerPage(count) {
+                this.pagination.parPage = count;
+                this.pagination.currentPage = 1;
+            },
+            // move the items-per-page size one option down (-1) or up (+1)
+            stepPerPage(direction) {
+                let next = this.pagination.perPageOptions[this.perPageIndex + direction];
+                if (next !== undefined) this.setPerPage(next);
             }
         },
+        watch: {
+            // a new search or filter starts again from the first page
+            // (and clears the selection, so hidden jobs are never acted on)
+            'filter.search'() { this.pagination.currentPage = 1; this.selected = []; },
+            'filter.state'() { this.pagination.currentPage = 1; this.selected = []; },
+            // the selection only ever covers the rows on screen
+            'pagination.currentPage'() { this.selected = []; },
+            'pagination.parPage'() { this.selected = []; }
+        },
         created() {
-            this.getTimeZones();
+            this.GetTimeZones();
+            this.GetJobQueues();
             this.GetJobs();
+            this.GetJobsMethods(); 
         },
         computed: {
                 getItems: function () {
                     let current = this.pagination.currentPage * this.pagination.parPage;
                     let start = current - this.pagination.parPage;
-                    if (this.jobs != null) return this.jobs.slice(start, current);
+                    if (this.jobs != null) return this.filteredJobs.slice(start, current);
                     else return null;
+                },
+                // sorted jobs narrowed by the state filter and the text search
+                filteredJobs: function () {
+                    let state = this.filter.state;
+                    let terms = this.filter.search.toLowerCase().split(/\s+/).filter(t => t);
+                    return this.sortedJobs.filter(job => {
+                        if (state !== 'All' && job.JobState !== state) return false;
+                        if (terms.length === 0) return true;
+                        let text = [job.Id, job.Cron, job.Queue, job.Class, job.Method, job.TimeZoneId]
+                            .filter(v => v != null).join(' ').toLowerCase();
+                        return terms.every(term => text.includes(term));
+                    });
+                },
+                filteredCount: function () {
+                    return this.filteredJobs.length;
+                },
+                // jobs ordered by the chosen column (default Id); text is case-insensitive and
+                // number-aware ("job2" before "job10"), ties fall back to Id, empty values go last
+                sortedJobs: function () {
+                    if (this.jobs == null) return [];
+
+                    let column = this.sort.columns.find(c => c.key === this.sort.key) || this.sort.columns[0];
+                    let direction = this.sort.direction;
+                    let text = (a, b) => String(a).localeCompare(String(b), undefined, { numeric: true, sensitivity: 'base' });
+
+                    // work out each job's sort value once, not on every comparison
+                    let rows = this.jobs.map(job => {
+                        let value = job[column.key];
+                        if (column.date) value = this.hasDate(value) ? dayjs(value).valueOf() : null;
+                        else if (value === undefined || value === '') value = null;
+                        return { job, value };
+                    });
+
+                    rows.sort((a, b) => {
+                        if (a.value === null && b.value === null) return text(a.job.Id, b.job.Id);
+                        if (a.value === null) return 1;
+                        if (b.value === null) return -1;
+                        let result = column.date ? a.value - b.value : text(a.value, b.value);
+                        return result !== 0 ? result * direction : text(a.job.Id, b.job.Id);
+                    });
+
+                    return rows.map(row => row.job);
+                },
+                allSelected: function () {
+                    let items = this.getItems || [];
+                    return items.length > 0 && this.selected.length === items.length;
+                },
+                // selected jobs that Start / Stop would actually change
+                startableIds: function () {
+                    let selected = new Set(this.selected);
+                    return this.filteredJobs.filter(job => selected.has(job.Id) && job.JobState === 'Stopped').map(job => job.Id);
+                },
+                stoppableIds: function () {
+                    let selected = new Set(this.selected);
+                    return this.filteredJobs.filter(job => selected.has(job.Id) && job.JobState === 'Running').map(job => job.Id);
+                },
+                perPageIndex: function () {
+                    return this.pagination.perPageOptions.indexOf(this.pagination.parPage);
                 },
                 jobsCount: function () {
                     return this.jobs != null ? this.jobs.length : 0;
                 },
                 getPageCount: function () {
-                    return Math.ceil(this.jobs?.length / this.pagination.parPage);
+                    return Math.ceil(this.filteredCount / this.pagination.parPage);
+                },
+                // page numbers to show: first, last and a window around the current page; null = gap
+                getPages: function () {
+                    let total = this.getPageCount;
+                    let current = this.pagination.currentPage;
+                    let pages = [];
+                    let last = 0;
+                    for (let page = 1; page <= total; page++) {
+                        if (page === 1 || page === total || Math.abs(page - current) <= 2) {
+                            if (page - last > 1) pages.push(null);
+                            pages.push(page);
+                            last = page;
+                        }
+                    }
+                    return pages;
                 }
             }
         })
-        .component('paginate', VuejsPaginateNext)
         .component('modal', {
             template: '#modal-template',
             methods: {
