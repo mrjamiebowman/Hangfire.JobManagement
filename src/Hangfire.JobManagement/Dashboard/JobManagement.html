@@ -210,8 +210,8 @@
                     </tbody>
                 </table>
 
-                <div class="btn-toolbar" v-if="getPageCount > 1">
-                    <div class="btn-group paginator">
+                <div class="btn-toolbar" v-if="jobsCount > 0">
+                    <div class="btn-group paginator" v-if="getPageCount > 1">
                         <a href="#" class="btn btn-default" :class="{ disabled: pagination.currentPage <= 1 }"
                            @click.prevent="clickCallbackPagination(pagination.currentPage - 1)">
                             Prev
@@ -229,6 +229,10 @@
                            @click.prevent="clickCallbackPagination(pagination.currentPage + 1)">
                             Next
                         </a>
+                    </div>
+                    <div class="btn-toolbar-spacer" v-if="getPageCount > 1"></div>
+                    <div class="btn-toolbar-label">
+                        Total items: {{jobsCount.toLocaleString('en-US')}}
                     </div>
                 </div>
             </div>
