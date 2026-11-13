@@ -18,7 +18,6 @@ internal sealed class JobManagement : PageBase
     public override void Execute() 
     {
         using var activity = OTel.Application.StartActivity($"{nameof(JobManagement)}.{nameof(Execute)}");
-
         WriteEmptyLine();
         Layout = new LayoutPage(Title);
         WriteResources();

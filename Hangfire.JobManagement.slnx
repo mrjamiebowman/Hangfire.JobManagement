@@ -1,18 +1,20 @@
 <Solution>
-  <Folder Name="/.Solution Items/">
-    <File Path=".gitignore" />
-    <File Path="appveyor.yml" />
-    <File Path="README.md" />
-  </Folder>
   <Folder Name="/aspire/">
     <Project Path="aspire/JobManagement.AppHost/JobManagement.AppHost.csproj" />
-    <Project Path="aspire/JobManagement.ServiceDefaults/JobManagement.ServiceDefaults.csproj" />
   </Folder>
   <Folder Name="/src/">
+    <Project Path="../Hangfire.JobManagement.Abstractions/Hangfire.JobManagement.Abstractions/Hangfire.JobManagement.Abstractions.csproj" />
     <Project Path="src/Hangfire.JobManagement/Hangfire.JobManagement.csproj" />
   </Folder>
   <Folder Name="/test/">
-    <Project Path="test/Hangfire.JobManagement.Test.Jobs/Hangfire.JobManagement.Test.Jobs.csproj" Id="156510a5-122e-4de0-bdc2-f84efab4b32e" />
+    <Project Path="aspire/JobManagement.ServiceDefaults/JobManagement.ServiceDefaults.csproj" />
+    <Project Path="test/Hangfire.JobManagement.Test.Jobs/Hangfire.JobManagement.Test.Jobs.csproj" />
     <Project Path="test/Hangfire.JobManagement.Test.SampleServer/Hangfire.JobManagement.Test.SampleServer.csproj" />
+  </Folder>
+  <Folder Name="/_Solution Items/">
+    <File Path=".github/workflows/publish-abstractions.yml" />
+    <File Path=".github/workflows/publish-nuget.yml" />
+    <File Path=".gitignore" />
+    <File Path="README.md" />
   </Folder>
 </Solution>

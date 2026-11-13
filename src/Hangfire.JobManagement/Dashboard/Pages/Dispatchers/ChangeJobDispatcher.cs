@@ -123,7 +123,6 @@ internal sealed class ChangeJobDispatcher : IDashboardDispatcher
                   timeZone,
                   job.Queue ?? EnqueuedState.DefaultQueue);
 
-
         context.Response.StatusCode = (int)HttpStatusCode.OK;
 
         await context.Response.WriteAsync(JsonConvert.SerializeObject(response));

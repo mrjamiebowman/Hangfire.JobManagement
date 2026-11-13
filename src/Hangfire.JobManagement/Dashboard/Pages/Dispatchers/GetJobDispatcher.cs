@@ -6,8 +6,10 @@ using Hangfire.Storage;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Hangfire.JobManagement.Dashboard.Pages.Dispatchers;
@@ -59,8 +61,22 @@ internal sealed class GetJobDispatcher : IDashboardDispatcher
             });
         }
 
-        //Add job was stopped:
-        periodicJob.AddRange(JobAgent.GetAllJobStopped());
+        // stopped jobs
+        var stoppedJobs = JobAgent.GetAllJobStopped();
+
+        // cross reference (this can happen when adding/deleting jobs while they are paused.)
+        var matchedRunningJobs = stoppedJobs.Where(item1 => periodicJob.Any(item2 => item2.Id == item1.Id)).ToList();
+
+        foreach (var job in matchedRunningJobs) {
+            JobAgent.StartBackgroundJob(job.Id);
+            stoppedJobs.Remove(job);
+        }
+
+        // add job was stopped:
+        periodicJob.AddRange(stoppedJobs);
+
+        // sort
+        periodicJob = periodicJob.OrderBy(x => x.Id).ToList();
 
         await context.Response.WriteAsync(JsonConvert.SerializeObject(periodicJob));
     }

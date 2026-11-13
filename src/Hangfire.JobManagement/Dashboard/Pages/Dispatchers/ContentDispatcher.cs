@@ -20,7 +20,6 @@ internal class ContentDispatcher : IDashboardDispatcher
 
     public async Task Dispatch(DashboardContext context) {
         using var activity = OTel.Application.StartActivity($"{nameof(ContentDispatcher)}.{nameof(Dispatch)}");
-
         context.Response.ContentType = _contentType;
         context.Response.SetExpire(DateTimeOffset.UtcNow + _expiresIn);
         await WriteResourceAsync(context);
