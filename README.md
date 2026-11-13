@@ -11,11 +11,7 @@
 A robust extension to .NET Hangfire that adds a Job Management Dashboard, Notifications, and Settings. 
 
 #### Features (Coming Soon!)
-* Dashboard
-* Start / Stops Jobs
-* Edit Jobs
 * Job Notifications (Web Hooks, Message Queues, Emails)
-* Search Capabilities
 * Batch Jobs
 * Job History
 * Settings
@@ -24,13 +20,10 @@ A robust extension to .NET Hangfire that adds a Job Management Dashboard, Notifi
 * MSSQL Server
 * .NET 10
 
-#### Dockerized & Ready for Kubernetes (Helm Charts)
-// TODO: Share GitHub Sample.
-
 ## Instructions
 Install a package from NuGet. 
-```
-Install-Package Hangfire.JobManagement
+```powershell
+Install-Package mrjamiebowman.Hangfire.JobManagement
 ```
 
 Then add this in your code:
@@ -120,6 +113,9 @@ This project is under MIT license. You can obtain the license copy [here](https:
 
 
 ## BUG FIXES
+
+### 11/13/2026
+* Improved the Dashboard and fixed bugs.
 
 ### 5/16/2026
 * [Assembly exclusion list.](https://github.com/mrjamiebowman/Hangfire.JobManagement/commit/d990edfbab9aab66ce7a9536de2ef2f3d075065a)   
