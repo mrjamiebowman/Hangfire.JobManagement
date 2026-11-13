@@ -15,6 +15,10 @@ jobs:
   publish:
     runs-on: ubuntu-latest
 
+    permissions:
+      contents: read
+      id-token: write   # lets the job request a GitHub OIDC token for NuGet Trusted Publishing
+
     env:
       DOTNET_NOLOGO: true
       CONFIGURATION: Release
@@ -71,14 +75,17 @@ jobs:
             dotnet pack --no-build -c $CONFIGURATION -o artifacts
           fi
 
+      # Trusted Publishing: exchange the GitHub OIDC token for a short-lived NuGet API key (no stored secret)
+      - name: NuGet login (Trusted Publishing)
+        id: nuget-login
+        uses: NuGet/login@v1
+        with:
+          user: ${{ secrets.NUGET_USER }}   # nuget.org profile name (not the email address)
+
       - name: Publish to NuGet.org
-        if: always()
         env:
-          NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+          NUGET_API_KEY: ${{ steps.nuget-login.outputs.NUGET_API_KEY }}
         run: |
-          if [ -z "$NUGET_API_KEY" ]; then
-            echo "Missing NUGET_API_KEY secret"; exit 1
-          fi
           dotnet nuget push "artifacts/*.nupkg" \
             --api-key "$NUGET_API_KEY" \
             --source "$NUGET_SOURCE" \
@@ -88,7 +95,7 @@ jobs:
       # Optional: publish symbols/snupkg (if you pack symbols)
       # - name: Publish symbols to NuGet.org
       #   env:
-      #     NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+      #     NUGET_API_KEY: ${{ steps.nuget-login.outputs.NUGET_API_KEY }}
       #   run: dotnet nuget push "artifacts/*.snupkg" --api-key "$NUGET_API_KEY" --source https://api.nuget.org/v3/index.json --skip-duplicate
 
       # Optional: also push to GitHub Packages
