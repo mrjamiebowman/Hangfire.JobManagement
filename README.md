@@ -17,7 +17,6 @@ A robust extension to .NET Hangfire that adds a Job Management Dashboard, Notifi
 * Settings
 
 #### Requirements
-* MSSQL Server
 * .NET 10
 
 ## Instructions
@@ -26,10 +25,9 @@ Install a package from NuGet.
 Install-Package mrjamiebowman.Hangfire.JobManagement
 ```
 
-Then add this in your code:
 
-## For .NET
-for service side:
+## Hangfire Server
+This code is to configure the Hangfire Server (Dashboard) and the Job Management Dashboard. You can add this to your Program.cs file.
 
 ```csharp
 // job management
