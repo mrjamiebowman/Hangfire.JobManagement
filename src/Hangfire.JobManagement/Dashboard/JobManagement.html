@@ -117,33 +117,50 @@
         <div class="col-md-12">
             <h1 class="page-header">Job Management <span class="badge badge-warning">{{jobsCount}}</span></h1>
 
-            <div class="btn-toolbar btn-toolbar-top" style="margin-bottom: 20px;">
-                <button class="js-jobs-list-command btn btn-sm btn-primary" @click="OpenModal">
-                    <span class="glyphicon glyphicon-plus"></span>
-                    Add new Job
-                </button>
+            <div class="btn-toolbar btn-toolbar-top" style="margin-bottom: 20px; display: flex; align-items: center; flex-wrap: wrap; gap: 10px;">
+                <!-- left: add + state filter -->
+                <div style="flex: 1 1 0; display: flex; align-items: center; gap: 10px;">
+                    <button class="js-jobs-list-command btn btn-sm btn-primary" @click="OpenModal">
+                        <span class="glyphicon glyphicon-plus"></span>
+                        Add new Job
+                    </button>
 
-                <template v-if="jobsCount > 0">
-                    <div class="btn-group pull-right paginator">
-                        <a href="#" class="btn btn-sm btn-default" :class="{ disabled: perPageIndex <= 0 }"
-                           @click.prevent="stepPerPage(-1)">
-                            Prev
-                        </a>
-                        <a href="#" class="btn btn-sm btn-default" :class="{ disabled: perPageIndex >= pagination.perPageOptions.length - 1 }"
-                           @click.prevent="stepPerPage(1)">
-                            Next
+                    <div class="btn-group" v-if="jobsCount > 0">
+                        <a v-for="state in filter.states" :key="state" href="#" class="btn btn-sm btn-default"
+                           :class="{ active: state === filter.state }" @click.prevent="filter.state = state">
+                            {{state}}
                         </a>
                     </div>
-                    <div class="btn-toolbar-spacer pull-right"></div>
-                    <div class="btn-group pull-right paginator">
-                        <a v-for="count in pagination.perPageOptions" :key="count" href="#" class="btn btn-sm btn-default"
-                           :class="{ active: count === pagination.parPage }" @click.prevent="setPerPage(count)">
-                            {{count.toLocaleString('en-US')}}
-                        </a>
-                    </div>
-                    <div class="btn-toolbar-spacer pull-right"></div>
-                    <div class="btn-toolbar-label btn-toolbar-label-sm pull-right">Items per page:</div>
-                </template>
+                </div>
+
+                <!-- center: text search -->
+                <div v-if="jobsCount > 0" style="flex: 0 1 320px;">
+                    <input type="search" class="form-control input-sm" v-model.trim="filter.search"
+                           placeholder="Search jobs..." aria-label="Search jobs">
+                </div>
+
+                <!-- right: items per page -->
+                <div style="flex: 1 1 0; display: flex; align-items: center; justify-content: flex-end; gap: 10px;">
+                    <template v-if="jobsCount > 0">
+                        <div class="btn-toolbar-label btn-toolbar-label-sm" style="white-space: nowrap;">Items per page:</div>
+                        <div class="btn-group paginator" style="white-space: nowrap; display: flex;">
+                            <a v-for="count in pagination.perPageOptions" :key="count" href="#" class="btn btn-sm btn-default"
+                               :class="{ active: count === pagination.parPage }" @click.prevent="setPerPage(count)">
+                                {{count.toLocaleString('en-US')}}
+                            </a>
+                        </div>
+                        <div class="btn-group paginator" style="white-space: nowrap; display: flex;">
+                            <a href="#" class="btn btn-sm btn-default" :class="{ disabled: perPageIndex <= 0 }"
+                               @click.prevent="stepPerPage(-1)">
+                                Prev
+                            </a>
+                            <a href="#" class="btn btn-sm btn-default" :class="{ disabled: perPageIndex >= pagination.perPageOptions.length - 1 }"
+                               @click.prevent="stepPerPage(1)">
+                                Next
+                            </a>
+                        </div>
+                    </template>
+                </div>
             </div>
 
             <div class="table-responsive">
@@ -163,6 +180,9 @@
                         </tr>
                     </thead>
                     <tbody>
+                        <tr v-if="jobsCount > 0 && filteredCount === 0">
+                            <td colspan="10" class="text-muted" style="text-align: center;"><em>No jobs match the current search or filter.</em></td>
+                        </tr>
                         <tr v-for="job in getItems" :key="job.Id">
                             <td>{{job.Id}}</td>
                             <td>{{job.Cron}}</td>
@@ -232,7 +252,7 @@
                     </div>
                     <div class="btn-toolbar-spacer" v-if="getPageCount > 1"></div>
                     <div class="btn-toolbar-label">
-                        Total items: {{jobsCount.toLocaleString('en-US')}}
+                        Total items: {{filteredCount.toLocaleString('en-US')}}
                     </div>
                 </div>
             </div>
@@ -266,6 +286,11 @@
                     Class: '',
                     Method: '',
                     JobState: ''
+                },
+                filter: {
+                    search: '',
+                    state: 'All',
+                    states: ['All', 'Running', 'Stopped']
                 },
                 pagination: {
                     parPage: 20,
@@ -509,6 +534,11 @@
                 if (next !== undefined) this.setPerPage(next);
             }
         },
+        watch: {
+            // a new search or filter starts again from the first page
+            'filter.search'() { this.pagination.currentPage = 1; },
+            'filter.state'() { this.pagination.currentPage = 1; }
+        },
         created() {
             this.GetTimeZones();
             this.GetJobQueues();
@@ -519,8 +549,23 @@
                 getItems: function () {
                     let current = this.pagination.currentPage * this.pagination.parPage;
                     let start = current - this.pagination.parPage;
-                    if (this.jobs != null) return this.sortedJobs.slice(start, current);
+                    if (this.jobs != null) return this.filteredJobs.slice(start, current);
                     else return null;
+                },
+                // sorted jobs narrowed by the state filter and the text search
+                filteredJobs: function () {
+                    let state = this.filter.state;
+                    let terms = this.filter.search.toLowerCase().split(/\s+/).filter(t => t);
+                    return this.sortedJobs.filter(job => {
+                        if (state !== 'All' && job.JobState !== state) return false;
+                        if (terms.length === 0) return true;
+                        let text = [job.Id, job.Cron, job.Queue, job.Class, job.Method, job.TimeZoneId]
+                            .filter(v => v != null).join(' ').toLowerCase();
+                        return terms.every(term => text.includes(term));
+                    });
+                },
+                filteredCount: function () {
+                    return this.filteredJobs.length;
                 },
                 // always ordered by Id (case-insensitive, "job2" before "job10")
                 sortedJobs: function () {
@@ -535,7 +580,7 @@
                     return this.jobs != null ? this.jobs.length : 0;
                 },
                 getPageCount: function () {
-                    return Math.ceil(this.jobsCount / this.pagination.parPage);
+                    return Math.ceil(this.filteredCount / this.pagination.parPage);
                 },
                 // page numbers to show: first, last and a window around the current page; null = gap
                 getPages: function () {
