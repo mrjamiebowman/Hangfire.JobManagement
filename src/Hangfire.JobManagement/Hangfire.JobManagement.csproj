@@ -11,7 +11,7 @@
       <RepositoryUrl>https://github.com/mrjamiebowman/Hangfire.JobManagement.git</RepositoryUrl>
       <Version>9.0.8</Version>
       <PackOnBuild>true</PackOnBuild>
-      <Description>A .NET 8 extension for Hangfire that supports Job Management.</Description>
+      <Description>A .NET 10 extension for Hangfire that supports Job Management.</Description>
       <Title>mrjamiebowman.Hangfire.JobManagement</Title>
       <PackageReadmeFile>README.md</PackageReadmeFile>
       <IncludeSymbols>True</IncludeSymbols>
