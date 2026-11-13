@@ -58,7 +58,7 @@ public static class Builder
         Options = new JobManagementBuilder();
 
         // customization
-        jobManagementOptions.Invoke(Options);
+        jobManagementOptions?.Invoke(Options);
 
         // configure assemblies
         Options.ConfigureAssemblies();
