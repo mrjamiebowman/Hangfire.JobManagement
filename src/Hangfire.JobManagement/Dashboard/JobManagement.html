@@ -150,17 +150,19 @@
                             <td>{{job.Class}}</td>
                             <td>{{job.Method}}</td>
                             <td>{{job.TimeZoneId}}</td>
-                            <td class="min-width align-right">
-                                <button type="button" class="btn btn-primary">
+                            <td class="min-width align-right" :style="hasDate(job.LastExecution) ? null : { textAlign: 'center' }">
+                                <button v-if="hasDate(job.LastExecution)" type="button" class="btn btn-primary">
                                     {{getTime(job.LastExecution)}}&nbsp;&nbsp;
                                     <span class="badge" style="width: 124px;">{{getLastExecution(job.LastExecution)}}</span>
                                 </button>
+                                <em v-else class="text-muted">No prior runs</em>
                             </td>
-                            <td class="min-width align-right">
-                                <button type="button" class="btn btn-primary">
+                            <td class="min-width align-right" :style="hasDate(job.NextExecution) ? null : { textAlign: 'center' }">
+                                <button v-if="hasDate(job.NextExecution)" type="button" class="btn btn-primary">
                                     {{getTime(job.NextExecution)}}&nbsp;&nbsp;
                                     <span class="badge" style="width: 124px;">{{getNextExecution(job.NextExecution)}}</span>
                                 </button>
+                                <em v-else class="text-muted">Not scheduled</em>
                             </td>
                             <td class="min-width align-right">
                                 <button type="button" class="btn btn-warning" style="padding-top: 10px; margin-right: 5px;">
@@ -441,22 +443,27 @@
             capitalizeString(s) {
                 return s.charAt(0).toUpperCase() + s.slice(1);
             },
+            // the server sends "N/A" (or nothing) when a job has no last/next execution
+            hasDate(date) {
+                return !!date && date != "N/A" && dayjs(date).isValid();
+            },
             getTime(date) {
-                if (date == "N/A") {
+                if (!this.hasDate(date)) {
                     return "N/A";
                 }
-                var data = dayjs(date).format('hh:mm:ss A');
-                return data;
+                return dayjs(date).format('hh:mm:ss A');
             },
             getLastExecution(lastExecution) {
-                if (lastExecution == "N/A") {
-                    return "";
+                if (!this.hasDate(lastExecution)) {
+                    return "Never";
                 }
-                let str = this.capitalizeString(dayjs().from(dayjs(lastExecution)));
-                return str;
+                return this.capitalizeString(dayjs(lastExecution).fromNow());
             },
             getNextExecution(nextExecution) {
-                return this.capitalizeString(dayjs().to(dayjs(nextExecution)));
+                if (!this.hasDate(nextExecution)) {
+                    return "Not scheduled";
+                }
+                return this.capitalizeString(dayjs(nextExecution).fromNow());
             },
             clickCallbackPagination(pageNum) {
                 let page = Number(pageNum);
@@ -474,8 +481,14 @@
                 getItems: function () {
                     let current = this.pagination.currentPage * this.pagination.parPage;
                     let start = current - this.pagination.parPage;
-                    if (this.jobs != null) return this.jobs.slice(start, current);
+                    if (this.jobs != null) return this.sortedJobs.slice(start, current);
                     else return null;
+                },
+                // always ordered by Id (case-insensitive, "job2" before "job10")
+                sortedJobs: function () {
+                    if (this.jobs == null) return [];
+                    return [...this.jobs].sort((a, b) =>
+                        String(a.Id).localeCompare(String(b.Id), undefined, { numeric: true, sensitivity: 'base' }));
                 },
                 jobsCount: function () {
                     return this.jobs != null ? this.jobs.length : 0;
