@@ -8,6 +8,8 @@
 
 A robust extension to .NET Hangfire that adds a Job Management Dashboard. 
 
+![Hangfire Job Management Dashboard](.docs/mrjamiebowman-hangfire-dashboard.png)
+
 #### Requirements
 * .NET 10
 
@@ -26,7 +28,8 @@ builder.Services.ConfigureJobManagement(builder.Configuration);
 
 // hangfire
 services.AddHangfire(h => h.UseSqlServerStorage(Configuration.GetConnectionString("HangfireConnection"))
-    /* job management */
+
+    // job management
     .UseJobManagement(jobManagementConfig, b => {
         // assemblies
         b.ConfigureAssemblies(new Assembly[] {
@@ -45,7 +48,7 @@ services.AddHangfire(h => h.UseSqlServerStorage(Configuration.GetConnectionStrin
 ```
 
 ## Controller Job Management
-Typically, I use a controller to rapidly set up (Add or Update) or remove all of the jobs rapidly. This is useful for deploying to multiple environments.   
+A controller can be used to rapidly set up (Add or Update) or remove jobs. This is useful for deploying to multiple environments.   
 
 ```csharp
 app.MapGet("/setup/jobs", () =>
